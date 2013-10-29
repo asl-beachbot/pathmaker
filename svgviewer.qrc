@@ -1,0 +1,5 @@
+<RCC>
+    <qresource prefix="/">
+        <file>files/bubbles.svg</file>
+    </qresource>
+</RCC>
