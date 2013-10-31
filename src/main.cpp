@@ -23,7 +23,7 @@ int main(int argc, char **argv) {
     cout << "Welcome to the Pathfinder. Finding a path through the dark since 1999." << endl << "  (c) BeachBot Productions LLC. ";
     ptree pt;
 
-    read_xml("/home/wolf/projects/pathmaker/files/bubbles.svg", pt);
+    read_xml("./assets/bubbles.svg", pt);
     pretty_print_property_tree(pt);
     string test = pt.get<string>("svg");
     cout << test; 
