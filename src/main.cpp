@@ -3,6 +3,7 @@
  *     Version: @Pathfinder_VERSION_MAJOR@.@Pathfinder_VERSION_MINOR@
  */
 
+#include <iostream>
 #include <boost/foreach.hpp>
 #include <boost/property_tree/ptree.hpp>
 #include <boost/property_tree/xml_parser.hpp>

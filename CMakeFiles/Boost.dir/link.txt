@@ -1,2 +1,0 @@
-/usr/bin/ar cr libBoost.a  CMakeFiles/Boost.dir/svg_calculate.cpp.o
-/usr/bin/ranlib libBoost.a

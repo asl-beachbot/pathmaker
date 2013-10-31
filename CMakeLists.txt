@@ -5,11 +5,13 @@ project(Pathfinder)
 set (Pathfinder_VERSION_MAJOR 1)
 set (Pathfinder_VERSION_MINOR 0)
 
-configure_file(
-    "${PROJECT_SOURCE_DIR}/PathfinderConfig.h.in"
-    "${PROJECT_BINARY_DIR}/PathfinderConfig.h"
-    )
+set(PROJECT_BINARY_DIR ./bin)
+set(PROJECT_SRC_DIR ./src)
 
+configure_file(
+    "${PROJECT_SOURCE_DIR}/config/PathfinderConfig.h.in"
+    "${PROJECT_BINARY_DIR}/config/PathfinderConfig.h"
+    )
 include_directories("${PROJECT_BINARY_DIR}")
 
 set(Boost_USE_STATIC_LIBS OFF)
@@ -20,7 +22,7 @@ find_package(Boost 1.49.0 COMPONENTS)
 
 include_directories({$Boost_INCLUDE_DIRS})
 
-add_library(Boost svg_calculate.cpp)
+add_library(Boost src/svg_calculate.cpp)
 
-add_executable(Pathfinder main.cpp)
-target_link_libraries(Pathfinder ${Boost_LIBRARIES})
+add_executable(bin/Pathfinder src/main.cpp)
+target_link_libraries(bin/Pathfinder ${Boost_LIBRARIES})
