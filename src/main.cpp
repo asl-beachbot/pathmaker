@@ -1,6 +1,7 @@
 /*     Pathfinder
  *
- *     Version: @Pathfinder_VERSION_MAJOR@.@Pathfinder_VERSION_MINOR@
+ *     Released under GPLv3
+ *     Developed by Wolf Vollprecht
  */
 
 #include <iostream>
@@ -8,8 +9,11 @@
 #include <boost/property_tree/ptree.hpp>
 #include <boost/property_tree/xml_parser.hpp>
 
+// Own libraries
+#include "svg_calculate.cpp"
+
 using namespace std;
-using boost::property_tree::ptree;
+// using boost::property_tree::ptree;
 void pretty_print_property_tree(ptree const& pt) {
     
     ptree::const_iterator end = pt.end();
@@ -24,7 +28,6 @@ int main(int argc, char **argv) {
     ptree pt;
 
     read_xml("./assets/bubbles.svg", pt);
-    pretty_print_property_tree(pt);
-    string test = pt.get<string>("svg");
-    cout << test; 
+
+    SVGCalculate * test = new SVGCalculate(pt);
 }
