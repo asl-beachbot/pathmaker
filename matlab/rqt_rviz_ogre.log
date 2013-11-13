@@ -1,0 +1,2096 @@
+22:40:02: Creating resource group General
+22:40:02: Creating resource group Internal
+22:40:02: Creating resource group Autodetect
+22:40:02: SceneManagerFactory for type 'DefaultSceneManager' registered.
+22:40:02: Registering ResourceManager for type Material
+22:40:02: Registering ResourceManager for type Mesh
+22:40:02: Registering ResourceManager for type Skeleton
+22:40:02: MovableObjectFactory for type 'ParticleSystem' registered.
+22:40:02: OverlayElementFactory for type Panel registered.
+22:40:02: OverlayElementFactory for type BorderPanel registered.
+22:40:02: OverlayElementFactory for type TextArea registered.
+22:40:02: Registering ResourceManager for type Font
+22:40:02: ArchiveFactory for archive type FileSystem registered.
+22:40:02: ArchiveFactory for archive type Zip registered.
+22:40:02: DDS codec registering
+22:40:02: FreeImage version: 3.15.1
+22:40:02: This program uses FreeImage, a free, open source image library supporting all common bitmap formats. See http://freeimage.sourceforge.net for details
+22:40:02: Supported formats: bmp,ico,jpg,jif,jpeg,jpe,jng,koa,iff,lbm,mng,pbm,pbm,pcd,pcx,pgm,pgm,png,ppm,ppm,ras,tga,targa,tif,tiff,wap,wbmp,wbm,psd,cut,xbm,xpm,gif,hdr,g3,sgi,exr,j2k,j2c,jp2,pfm,pct,pict,pic,3fr,arw,bay,bmq,cap,cine,cr2,crw,cs1,dc2,dcr,drf,dsc,dng,erf,fff,ia,iiq,k25,kc2,kdc,mdc,mef,mos,mrw,nef,nrw,orf,pef,ptx,pxn,qtk,raf,raw,rdc,rw2,rwl,rwz,sr2,srf,sti
+22:40:02: Registering ResourceManager for type HighLevelGpuProgram
+22:40:02: Registering ResourceManager for type Compositor
+22:40:02: MovableObjectFactory for type 'Entity' registered.
+22:40:02: MovableObjectFactory for type 'Light' registered.
+22:40:02: MovableObjectFactory for type 'BillboardSet' registered.
+22:40:02: MovableObjectFactory for type 'ManualObject' registered.
+22:40:02: MovableObjectFactory for type 'BillboardChain' registered.
+22:40:02: MovableObjectFactory for type 'RibbonTrail' registered.
+22:40:02: *-*-* OGRE Initialising
+22:40:02: *-*-* Version 1.7.4 (Cthugha)
+22:40:02: Loading library /usr/lib/x86_64-linux-gnu/OGRE-1.7.4/RenderSystem_GL
+22:40:02: Installing plugin: GL RenderSystem
+22:40:02: OpenGL Rendering Subsystem created.
+22:40:02: Plugin successfully installed
+22:40:02: Loading library /usr/lib/x86_64-linux-gnu/OGRE-1.7.4/Plugin_OctreeSceneManager
+22:40:02: Installing plugin: Octree & Terrain Scene Manager
+22:40:02: Plugin successfully installed
+22:40:02: Loading library /usr/lib/x86_64-linux-gnu/OGRE-1.7.4/Plugin_ParticleFX
+22:40:02: Installing plugin: ParticleFX
+22:40:02: Particle Emitter Type 'Point' registered
+22:40:02: Particle Emitter Type 'Box' registered
+22:40:02: Particle Emitter Type 'Ellipsoid' registered
+22:40:02: Particle Emitter Type 'Cylinder' registered
+22:40:02: Particle Emitter Type 'Ring' registered
+22:40:02: Particle Emitter Type 'HollowEllipsoid' registered
+22:40:02: Particle Affector Type 'LinearForce' registered
+22:40:02: Particle Affector Type 'ColourFader' registered
+22:40:02: Particle Affector Type 'ColourFader2' registered
+22:40:02: Particle Affector Type 'ColourImage' registered
+22:40:02: Particle Affector Type 'ColourInterpolator' registered
+22:40:02: Particle Affector Type 'Scaler' registered
+22:40:02: Particle Affector Type 'Rotator' registered
+22:40:02: Particle Affector Type 'DirectionRandomiser' registered
+22:40:02: Particle Affector Type 'DeflectorPlane' registered
+22:40:02: Plugin successfully installed
+22:40:02: CPU Identifier & Features
+22:40:02: -------------------------
+22:40:02:  *   CPU ID: GenuineIntel: Intel(R) Core(TM)2 Duo CPU     E8400  @ 3.00GHz
+22:40:02:  *      SSE: yes
+22:40:02:  *     SSE2: yes
+22:40:02:  *     SSE3: yes
+22:40:02:  *      MMX: yes
+22:40:02:  *   MMXEXT: yes
+22:40:02:  *    3DNOW: no
+22:40:02:  * 3DNOWEXT: no
+22:40:02:  *     CMOV: yes
+22:40:02:  *      TSC: yes
+22:40:02:  *      FPU: yes
+22:40:02:  *      PRO: yes
+22:40:02:  *       HT: no
+22:40:02: -------------------------
+22:40:02: ******************************
+*** Starting GLX Subsystem ***
+******************************
+22:40:02: GLRenderSystem::_createRenderWindow "OgreWindow(0)", 1x1 windowed  miscParams: externalGLControl= macAPI=carbon parentWindowHandle=83886081 
+22:40:02: GLXWindow::create used FBConfigID = 261
+22:40:02: GL_VERSION = 3.3.0 NVIDIA 313.30
+22:40:02: GL_VENDOR = NVIDIA Corporation
+22:40:02: GL_RENDERER = Quadro FX 1700/PCIe/SSE2
+22:40:02: GL_EXTENSIONS = GL_ARB_arrays_of_arrays GL_ARB_base_instance GL_ARB_blend_func_extended GL_ARB_clear_buffer_object GL_ARB_color_buffer_float GL_ARB_compatibility GL_ARB_compressed_texture_pixel_storage GL_ARB_conservative_depth GL_ARB_copy_buffer GL_ARB_copy_image GL_ARB_debug_output GL_ARB_depth_buffer_float GL_ARB_depth_clamp GL_ARB_depth_texture GL_ARB_draw_buffers GL_ARB_draw_elements_base_vertex GL_ARB_draw_instanced GL_ARB_ES2_compatibility GL_ARB_ES3_compatibility GL_ARB_explicit_attrib_location GL_ARB_explicit_uniform_location GL_ARB_fragment_coord_conventions GL_ARB_fragment_layer_viewport GL_ARB_fragment_program GL_ARB_fragment_program_shadow GL_ARB_fragment_shader GL_ARB_framebuffer_no_attachments GL_ARB_framebuffer_object GL_ARB_framebuffer_sRGB GL_ARB_geometry_shader4 GL_ARB_get_program_binary GL_ARB_half_float_pixel GL_ARB_half_float_vertex GL_ARB_imaging GL_ARB_instanced_arrays GL_ARB_internalformat_query GL_ARB_internalformat_query2 GL_ARB_invalidate_subdata GL_ARB_map_buffer_alignment GL_ARB_map_buffer_range GL_ARB_multisample GL_ARB_multitexture GL_ARB_occlusion_query GL_ARB_occlusion_query2 GL_ARB_pixel_buffer_object GL_ARB_point_parameters GL_ARB_point_sprite GL_ARB_program_interface_query GL_ARB_provoking_vertex GL_ARB_robust_buffer_access_behavior GL_ARB_robustness GL_ARB_sampler_objects GL_ARB_seamless_cube_map GL_ARB_separate_shader_objects GL_ARB_shader_bit_encoding GL_ARB_shader_objects GL_ARB_shader_texture_lod GL_ARB_shading_language_100 GL_ARB_shading_language_420pack GL_ARB_shading_language_include GL_ARB_shading_language_packing GL_ARB_shadow GL_ARB_stencil_texturing GL_ARB_sync GL_ARB_texture_border_clamp GL_ARB_texture_buffer_object GL_ARB_texture_buffer_range GL_ARB_texture_compression GL_ARB_texture_compression_rgtc GL_ARB_texture_cube_map GL_ARB_texture_env_add GL_ARB_texture_env_combine GL_ARB_texture_env_crossbar GL_ARB_texture_env_dot3 GL_ARB_texture_float GL_ARB_texture_mirrored_repeat GL_ARB_texture_multisample GL_ARB_texture_non_power_of_two GL_ARB_texture_query_levels GL_ARB_texture_rectangle GL_ARB_texture_rg GL_ARB_texture_rgb10_a2ui GL_ARB_texture_storage GL_ARB_texture_storage_multisample GL_ARB_texture_swizzle GL_ARB_texture_view GL_ARB_timer_query GL_ARB_transpose_matrix GL_ARB_uniform_buffer_object GL_ARB_vertex_array_bgra GL_ARB_vertex_array_object GL_ARB_vertex_attrib_binding GL_ARB_vertex_buffer_object GL_ARB_vertex_program GL_ARB_vertex_shader GL_ARB_vertex_type_2_10_10_10_rev GL_ARB_viewport_array GL_ARB_window_pos GL_ATI_draw_buffers GL_ATI_texture_float GL_ATI_texture_mirror_once GL_S3_s3tc GL_EXT_texture_env_add GL_EXT_abgr GL_EXT_bgra GL_EXT_bindable_uniform GL_EXT_blend_color GL_EXT_blend_equation_separate GL_EXT_blend_func_separate GL_EXT_blend_minmax GL_EXT_blend_subtract GL_EXT_compiled_vertex_array GL_EXT_Cg_shader GL_EXT_depth_bounds_test GL_EXT_direct_state_access GL_EXT_draw_buffers2 GL_EXT_draw_instanced GL_EXT_draw_range_elements GL_EXT_fog_coord GL_EXT_framebuffer_blit GL_EXT_framebuffer_multisample GL_EXTX_framebuffer_mixed_formats GL_EXT_framebuffer_multisample_blit_scaled GL_EXT_framebuffer_object GL_EXT_framebuffer_sRGB GL_EXT_geometry_shader4 GL_EXT_gpu_program_parameters GL_EXT_gpu_shader4 GL_EXT_multi_draw_arrays GL_EXT_packed_depth_stencil GL_EXT_packed_float GL_EXT_packed_pixels GL_EXT_pixel_buffer_object GL_EXT_point_parameters GL_EXT_provoking_vertex GL_EXT_rescale_normal GL_EXT_secondary_color GL_EXT_separate_shader_objects GL_EXT_separate_specular_color GL_EXT_shadow_funcs GL_EXT_stencil_two_side GL_EXT_stencil_wrap GL_EXT_texture3D GL_EXT_texture_array GL_EXT_texture_buffer_object GL_EXT_texture_compression_dxt1 GL_EXT_texture_compression_latc GL_EXT_texture_compression_rgtc GL_EXT_texture_compression_s3tc GL_EXT_texture_cube_map GL_EXT_texture_edge_clamp GL_EXT_texture_env_combine GL_EXT_texture_env_dot3 GL_EXT_texture_filter_anisotropic GL_EXT_texture_integer GL_EXT_texture_lod GL_EXT_texture_lod_bias GL_EXT_texture_mirror_clamp GL_EXT_texture_object GL_EXT_texture_shared_exponent GL_EXT_texture_sRGB GL_EXT_texture_sRGB_decode GL_EXT_texture_storage GL_EXT_texture_swizzle GL_EXT_timer_query GL_EXT_vertex_array GL_EXT_vertex_array_bgra GL_EXT_x11_sync_object GL_EXT_import_sync_object GL_IBM_rasterpos_clip GL_IBM_texture_mirrored_repeat GL_KHR_debug GL_KTX_buffer_region GL_NV_blend_square GL_NV_conditional_render GL_NV_copy_depth_to_color GL_NV_copy_image GL_NV_depth_buffer_float GL_NV_depth_clamp GL_NV_ES1_1_compatibility GL_NV_explicit_multisample GL_NV_fence GL_NV_float_buffer GL_NV_fog_distance GL_NV_fragment_program GL_NV_fragment_program_option GL_NV_fragment_program2 GL_NV_framebuffer_multisample_coverage GL_NV_geometry_shader4 GL_NV_gpu_program4 GL_NV_half_float GL_NV_light_max_exponent GL_NV_multisample_coverage GL_NV_multisample_filter_hint GL_NV_occlusion_query GL_NV_packed_depth_stencil GL_NV_parameter_buffer_object GL_NV_parameter_buffer_object2 GL_NV_path_rendering GL_NV_pixel_data_range GL_NV_point_sprite GL_NV_primitive_restart GL_NV_register_combiners GL_NV_register_combiners2 GL_NV_shader_buffer_load GL_NV_texgen_reflection GL_NV_texture_barrier GL_NV_texture_compression_vtc GL_NV_texture_env_combine4 GL_NV_texture_expand_normal GL_NV_texture_multisample GL_NV_texture_rectangle GL_NV_texture_shader GL_NV_texture_shader2 GL_NV_texture_shader3 GL_NV_transform_feedback GL_NV_vdpau_interop GL_NV_vertex_array_range GL_NV_vertex_array_range2 GL_NV_vertex_buffer_unified_memory GL_NV_vertex_program GL_NV_vertex_program1_1 GL_NV_vertex_program2 GL_NV_vertex_program2_option GL_NV_vertex_program3 GL_NVX_conditional_render GL_NVX_gpu_memory_info GL_SGIS_generate_mipmap GL_SGIS_texture_lod GL_SGIX_depth_texture GL_SGIX_shadow GL_SUN_slice_accum 
+22:40:02: Supported GLX extensions: GLX_EXT_visual_info GLX_EXT_visual_rating GLX_SGIX_fbconfig GLX_SGIX_pbuffer GLX_SGI_video_sync GLX_SGI_swap_control GLX_EXT_swap_control GLX_EXT_swap_control_tear GLX_EXT_texture_from_pixmap GLX_EXT_buffer_age GLX_ARB_create_context GLX_ARB_create_context_profile GLX_EXT_create_context_es_profile GLX_EXT_create_context_es2_profile GLX_ARB_create_context_robustness GLX_ARB_multisample GLX_NV_float_buffer GLX_ARB_fbconfig_float GLX_NV_swap_group GLX_EXT_framebuffer_sRGB GLX_NV_multisample_coverage GLX_NV_copy_image GLX_NV_video_capture GLX_ARB_get_proc_address 
+22:40:02: ***************************
+22:40:02: *** GL Renderer Started ***
+22:40:02: ***************************
+22:40:02: Registering ResourceManager for type GpuProgram
+22:40:02: GLSL support detected
+22:40:02: GL: Using GL_EXT_framebuffer_object for rendering to textures (best)
+22:40:02: FBO PF_UNKNOWN depth/stencil support: D0S8 D16S0 D24S0 D32S0 Packed-D24S8 
+22:40:02: FBO PF_L8 depth/stencil support: D0S0 D0S8 D16S0 D24S0 D32S0 Packed-D24S8 
+22:40:02: FBO PF_A8 depth/stencil support: D0S0 D0S8 D16S0 D24S0 D32S0 Packed-D24S8 
+22:40:02: FBO PF_A4L4 depth/stencil support: D0S0 D0S8 D16S0 D24S0 D32S0 Packed-D24S8 
+22:40:02: FBO PF_BYTE_LA depth/stencil support: D0S0 D0S8 D16S0 D24S0 D32S0 Packed-D24S8 
+22:40:02: FBO PF_R5G6B5 depth/stencil support: D0S0 D0S8 D16S0 D24S0 D32S0 Packed-D24S8 
+22:40:02: FBO PF_B5G6R5 depth/stencil support: D0S0 D0S8 D16S0 D24S0 D32S0 Packed-D24S8 
+22:40:02: FBO PF_A4R4G4B4 depth/stencil support: D0S0 D0S8 D16S0 D24S0 D32S0 Packed-D24S8 
+22:40:02: FBO PF_A1R5G5B5 depth/stencil support: D0S0 D0S8 D16S0 D24S0 D32S0 Packed-D24S8 
+22:40:02: FBO PF_R8G8B8 depth/stencil support: D0S0 D0S8 D16S0 D24S0 D32S0 Packed-D24S8 
+22:40:02: FBO PF_B8G8R8 depth/stencil support: D0S0 D0S8 D16S0 D24S0 D32S0 Packed-D24S8 
+22:40:02: FBO PF_A8R8G8B8 depth/stencil support: D0S0 D0S8 D16S0 D24S0 D32S0 Packed-D24S8 
+22:40:02: FBO PF_B8G8R8A8 depth/stencil support: D0S0 D0S8 D16S0 D24S0 D32S0 Packed-D24S8 
+22:40:02: FBO PF_A2R10G10B10 depth/stencil support: D0S0 D0S8 D16S0 D24S0 D32S0 Packed-D24S8 
+22:40:02: FBO PF_A2B10G10R10 depth/stencil support: D0S0 D0S8 D16S0 D24S0 D32S0 Packed-D24S8 
+22:40:02: FBO PF_FLOAT16_RGB depth/stencil support: D0S0 D0S8 D16S0 D24S0 D32S0 Packed-D24S8 
+22:40:02: FBO PF_FLOAT16_RGBA depth/stencil support: D0S0 D0S8 D16S0 D24S0 D32S0 Packed-D24S8 
+22:40:02: FBO PF_FLOAT32_RGB depth/stencil support: D0S0 D0S8 D16S0 D24S0 D32S0 Packed-D24S8 
+22:40:02: FBO PF_FLOAT32_RGBA depth/stencil support: D0S0 D0S8 D16S0 D24S0 D32S0 Packed-D24S8 
+22:40:02: FBO PF_X8R8G8B8 depth/stencil support: D0S0 D0S8 D16S0 D24S0 D32S0 Packed-D24S8 
+22:40:02: FBO PF_X8B8G8R8 depth/stencil support: D0S0 D0S8 D16S0 D24S0 D32S0 Packed-D24S8 
+22:40:02: FBO PF_SHORT_RGBA depth/stencil support: D0S0 D0S8 D16S0 D24S0 D32S0 Packed-D24S8 
+22:40:02: FBO PF_R3G3B2 depth/stencil support: D0S0 D0S8 D16S0 D24S0 D32S0 Packed-D24S8 
+22:40:02: FBO PF_FLOAT16_R depth/stencil support: D0S0 D0S8 D16S0 D24S0 D32S0 Packed-D24S8 
+22:40:02: FBO PF_FLOAT32_R depth/stencil support: D0S0 D0S8 D16S0 D24S0 D32S0 Packed-D24S8 
+22:40:02: FBO PF_FLOAT16_GR depth/stencil support: D0S0 D0S8 D16S0 D24S0 D32S0 Packed-D24S8 
+22:40:02: FBO PF_FLOAT32_GR depth/stencil support: D0S0 D0S8 D16S0 D24S0 D32S0 Packed-D24S8 
+22:40:02: FBO PF_SHORT_RGB depth/stencil support: D0S0 D0S8 D16S0 D24S0 D32S0 Packed-D24S8 
+22:40:02: [GL] : Valid FBO targets PF_UNKNOWN PF_L8 PF_A8 PF_A4L4 PF_BYTE_LA PF_R5G6B5 PF_B5G6R5 PF_A4R4G4B4 PF_A1R5G5B5 PF_R8G8B8 PF_B8G8R8 PF_A8R8G8B8 PF_B8G8R8A8 PF_A2R10G10B10 PF_A2B10G10R10 PF_FLOAT16_RGB PF_FLOAT16_RGBA PF_FLOAT32_RGB PF_FLOAT32_RGBA PF_X8R8G8B8 PF_X8B8G8R8 PF_SHORT_RGBA PF_R3G3B2 PF_FLOAT16_R PF_FLOAT32_R PF_FLOAT16_GR PF_FLOAT32_GR PF_SHORT_RGB 
+22:40:02: RenderSystem capabilities
+22:40:02: -------------------------
+22:40:02: RenderSystem Name: OpenGL Rendering Subsystem
+22:40:02: GPU Vendor: nvidia
+22:40:02: Device Name: Quadro FX 1700/PCIe/SSE2
+22:40:02: Driver Version: 3.3.0.0
+22:40:02:  * Fixed function pipeline: yes
+22:40:02:  * Hardware generation of mipmaps: yes
+22:40:02:  * Texture blending: yes
+22:40:02:  * Anisotropic texture filtering: yes
+22:40:02:  * Dot product texture operation: yes
+22:40:02:  * Cube mapping: yes
+22:40:02:  * Hardware stencil buffer: yes
+22:40:02:    - Stencil depth: 8
+22:40:02:    - Two sided stencil support: yes
+22:40:02:    - Wrap stencil values: yes
+22:40:02:  * Hardware vertex / index buffers: yes
+22:40:02:  * Vertex programs: yes
+22:40:02:  * Number of floating-point constants for vertex programs: 1024
+22:40:02:  * Number of integer constants for vertex programs: 0
+22:40:02:  * Number of boolean constants for vertex programs: 0
+22:40:02:  * Fragment programs: yes
+22:40:02:  * Number of floating-point constants for fragment programs: 512
+22:40:02:  * Number of integer constants for fragment programs: 0
+22:40:02:  * Number of boolean constants for fragment programs: 0
+22:40:02:  * Geometry programs: yes
+22:40:02:  * Number of floating-point constants for geometry programs: 2048
+22:40:02:  * Number of integer constants for geometry programs: 0
+22:40:02:  * Number of boolean constants for geometry programs: 0
+22:40:02:  * Supported Shader Profiles: arbfp1 arbvp1 fp20 fp30 fp40 glsl gp4gp gp4vp gpu_gp gpu_vp nvgp4 vp30 vp40
+22:40:02:  * Texture Compression: yes
+22:40:02:    - DXT: yes
+22:40:02:    - VTC: yes
+22:40:02:    - PVRTC: no
+22:40:02:  * Scissor Rectangle: yes
+22:40:02:  * Hardware Occlusion Query: yes
+22:40:02:  * User clip planes: yes
+22:40:02:  * VET_UBYTE4 vertex element type: yes
+22:40:02:  * Infinite far plane projection: yes
+22:40:02:  * Hardware render-to-texture: yes
+22:40:02:  * Floating point textures: yes
+22:40:02:  * Non-power-of-two textures: yes
+22:40:02:  * Volume textures: yes
+22:40:02:  * Multiple Render Targets: 8
+22:40:02:    - With different bit depths: yes
+22:40:02:  * Point Sprites: yes
+22:40:02:  * Extended point parameters: yes
+22:40:02:  * Max Point Size: 63.375
+22:40:02:  * Vertex texture fetch: yes
+22:40:02:  * Number of world matrices: 0
+22:40:02:  * Number of texture units: 32
+22:40:02:  * Stencil buffer depth: 8
+22:40:02:  * Number of vertex blend matrices: 0
+22:40:02:    - Max vertex textures: 32
+22:40:02:    - Vertex textures shared: yes
+22:40:02:  * Render to Vertex Buffer : yes
+22:40:02:  * GL 1.5 without VBO workaround: no
+22:40:02:  * Frame Buffer objects: yes
+22:40:02:  * Frame Buffer objects (ARB extension): no
+22:40:02:  * Frame Buffer objects (ATI extension): no
+22:40:02:  * PBuffer support: yes
+22:40:02:  * GL 1.5 without HW-occlusion workaround: no
+22:40:02: Registering ResourceManager for type Texture
+22:40:02: DefaultWorkQueue('Root') initialising on thread 0x619a7b0.
+22:40:02: DefaultWorkQueue('Root')::WorkerFunc - thread 0x5c18390 starting.
+22:40:02: DefaultWorkQueue('Root')::WorkerFunc - thread 0x56e4210 starting.
+22:40:02: Particle Renderer Type 'billboard' registered
+22:40:02: SceneManagerFactory for type 'OctreeSceneManager' registered.
+22:40:02: SceneManagerFactory for type 'TerrainSceneManager' registered.
+22:40:02: Creating resource group rviz
+22:40:02: Added resource location '/opt/ros/hydro/share/rviz/ogre_media' of type 'FileSystem' to resource group 'rviz'
+22:40:02: Added resource location '/opt/ros/hydro/share/rviz/ogre_media/textures' of type 'FileSystem' to resource group 'rviz'
+22:40:02: Added resource location '/opt/ros/hydro/share/rviz/ogre_media/fonts' of type 'FileSystem' to resource group 'rviz'
+22:40:02: Added resource location '/opt/ros/hydro/share/rviz/ogre_media/models' of type 'FileSystem' to resource group 'rviz'
+22:40:02: Added resource location '/opt/ros/hydro/share/rviz/ogre_media/materials' of type 'FileSystem' to resource group 'rviz'
+22:40:02: Added resource location '/opt/ros/hydro/share/rviz/ogre_media/materials/scripts' of type 'FileSystem' to resource group 'rviz'
+22:40:02: Added resource location '/opt/ros/hydro/share/rviz/ogre_media/materials/glsl120' of type 'FileSystem' to resource group 'rviz'
+22:40:02: Added resource location '/opt/ros/hydro/share/rviz/ogre_media/materials/glsl120/nogp' of type 'FileSystem' to resource group 'rviz'
+22:40:02: Added resource location '/opt/ros/hydro/share/rviz/ogre_media/materials/glsl150' of type 'FileSystem' to resource group 'rviz'
+22:40:02: Added resource location '/opt/ros/hydro/share/rviz/ogre_media/materials/scripts150' of type 'FileSystem' to resource group 'rviz'
+22:40:02: Parsing scripts for resource group Autodetect
+22:40:02: Finished parsing scripts for resource group Autodetect
+22:40:02: Parsing scripts for resource group General
+22:40:02: Finished parsing scripts for resource group General
+22:40:02: Parsing scripts for resource group Internal
+22:40:02: Finished parsing scripts for resource group Internal
+22:40:02: Parsing scripts for resource group rviz
+22:40:02: Parsing script glsl120.program
+22:40:02: GLSL compiling: rviz/glsl120/include/pack_depth.frag
+22:40:02: GLSL compiled : rviz/glsl120/include/pack_depth.frag
+22:40:02: GLSL compiling: rviz/glsl120/include/circle_impl.frag
+22:40:02: GLSL compiled : rviz/glsl120/include/circle_impl.frag
+22:40:02: GLSL compiling: rviz/glsl120/depth_circle.frag
+22:40:02: GLSL compiled : rviz/glsl120/depth_circle.frag
+22:40:02: GLSL compiling: rviz/glsl120/include/pack_depth.frag
+22:40:02: GLSL compiled : rviz/glsl120/include/pack_depth.frag
+22:40:02: GLSL compiling: rviz/glsl120/depth.frag
+22:40:02: GLSL compiled : rviz/glsl120/depth.frag
+22:40:02: GLSL compiling: rviz/glsl120/include/pass_depth.vert
+22:40:02: GLSL compiled : rviz/glsl120/include/pass_depth.vert
+22:40:02: GLSL compiling: rviz/glsl120/depth.vert
+22:40:02: GLSL compiled : rviz/glsl120/depth.vert
+22:40:02: GLSL compiling: rviz/glsl120/flat_color.frag
+22:40:02: GLSL compiled : rviz/glsl120/flat_color.frag
+22:40:02: GLSL compiling: rviz/glsl120/include/circle_impl.frag
+22:40:02: GLSL compiled : rviz/glsl120/include/circle_impl.frag
+22:40:02: GLSL compiling: rviz/glsl120/flat_color_circle.frag
+22:40:02: GLSL compiled : rviz/glsl120/flat_color_circle.frag
+22:40:02: GLSL compiling: rviz/glsl120/indexed_8bit_image.frag
+22:40:02: GLSL compiled : rviz/glsl120/indexed_8bit_image.frag
+22:40:02: GLSL compiling: rviz/glsl120/include/circle_impl.frag
+22:40:02: GLSL compiled : rviz/glsl120/include/circle_impl.frag
+22:40:02: GLSL compiling: rviz/glsl120/include/circle_impl.frag
+22:40:02: GLSL compiled : rviz/glsl120/include/circle_impl.frag
+22:40:02: GLSL compiling: rviz/glsl120/pickcolor_circle.frag
+22:40:02: GLSL compiled : rviz/glsl120/pickcolor_circle.frag
+22:40:02: GLSL compiling: rviz/glsl120/pickcolor.frag
+22:40:02: GLSL compiled : rviz/glsl120/pickcolor.frag
+22:40:02: GLSL compiling: rviz/glsl120/point.vert
+22:40:02: GLSL compiled : rviz/glsl120/point.vert
+22:40:02: GLSL compiling: rviz/glsl120/include/pass_depth.vert
+22:40:02: GLSL compiled : rviz/glsl120/include/pass_depth.vert
+22:40:02: GLSL compiling: rviz/glsl120/point.vert(with_depth)
+22:40:02: GLSL compiled : rviz/glsl120/point.vert(with_depth)
+22:40:02: GLSL compiling: rviz/glsl120/shaded_circle.frag
+22:40:02: GLSL compiled : rviz/glsl120/shaded_circle.frag
+22:40:02: GLSL compiling: rviz/glsl120/smooth_square.frag
+22:40:02: GLSL compiled : rviz/glsl120/smooth_square.frag
+22:40:02: Parsing script nogp.program
+22:40:02: GLSL compiling: rviz/glsl120/nogp/billboard_tile.vert
+22:40:02: GLSL compiled : rviz/glsl120/nogp/billboard_tile.vert
+22:40:02: GLSL compiling: rviz/glsl120/include/pass_depth.vert
+22:40:02: GLSL compiled : rviz/glsl120/include/pass_depth.vert
+22:40:02: GLSL compiling: rviz/glsl120/nogp/billboard_tile.vert(with_depth)
+22:40:02: GLSL compiled : rviz/glsl120/nogp/billboard_tile.vert(with_depth)
+22:40:02: GLSL compiling: rviz/glsl120/nogp/billboard.vert
+22:40:02: GLSL compiled : rviz/glsl120/nogp/billboard.vert
+22:40:02: GLSL compiling: rviz/glsl120/include/pass_depth.vert
+22:40:02: GLSL compiled : rviz/glsl120/include/pass_depth.vert
+22:40:02: GLSL compiling: rviz/glsl120/nogp/billboard.vert(with_depth)
+22:40:02: GLSL compiled : rviz/glsl120/nogp/billboard.vert(with_depth)
+22:40:02: GLSL compiling: rviz/glsl120/nogp/box.vert
+22:40:02: GLSL compiled : rviz/glsl120/nogp/box.vert
+22:40:02: GLSL compiling: rviz/glsl120/include/pass_depth.vert
+22:40:02: GLSL compiled : rviz/glsl120/include/pass_depth.vert
+22:40:02: GLSL compiling: rviz/glsl120/nogp/box.vert(with_depth)
+22:40:02: GLSL compiled : rviz/glsl120/nogp/box.vert(with_depth)
+22:40:02: GLSL compiling: rviz/glsl120/nogp/box.frag
+22:40:02: GLSL compiled : rviz/glsl120/nogp/box.frag
+22:40:02: Parsing script glsl150.program
+22:40:02: GLSL compiling: rviz/glsl150/billboard.geom
+22:40:02: GLSL compiled : rviz/glsl150/billboard.geom
+22:40:02: GLSL compiling: rviz/glsl150/billboard.geom(with_depth)
+22:40:02: GLSL compiled : rviz/glsl150/billboard.geom(with_depth)
+22:40:02: GLSL compiling: rviz/glsl150/box.geom
+22:40:02: GLSL compiled : rviz/glsl150/box.geom
+22:40:02: GLSL compiling: rviz/glsl150/box.geom(with_depth)
+22:40:02: GLSL compiled : rviz/glsl150/box.geom(with_depth)
+22:40:02: GLSL compiling: rviz/glsl150/box.geom(with_lighting)
+22:40:02: GLSL compiled : rviz/glsl150/box.geom(with_lighting)
+22:40:02: Parsing script point_cloud_tile.material
+22:40:02: GLSL compiling: rviz/glsl120/pass_color.frag
+22:40:02: GLSL compiled : rviz/glsl120/pass_color.frag
+22:40:02: Parsing script indexed_8bit_image.material
+22:40:02: GLSL compiling: rviz/glsl120/indexed_8bit_image.vert
+22:40:02: GLSL compiled : rviz/glsl120/indexed_8bit_image.vert
+22:40:02: Parsing script default_pick_and_depth.material
+22:40:02: GLSL compiling: rviz/glsl120/black.frag
+22:40:02: GLSL compiled : rviz/glsl120/black.frag
+22:40:02: Parsing script point_cloud_point.material
+22:40:02: GLSL compiling: rviz/glsl120/pass_color_circle.frag
+22:40:02: GLSL compiled : rviz/glsl120/pass_color_circle.frag
+22:40:02: Parsing script point_cloud_flat_square.material
+22:40:02: GLSL compiling: rviz/glsl150/pass_pos_color.vert
+22:40:02: GLSL compiled : rviz/glsl150/pass_pos_color.vert
+22:40:02: Parsing script point_cloud_box.material
+22:40:02: Compiler error: reference to a non existing object in point_cloud_box.material(47)
+22:40:02: Parsing script point_cloud_sphere.material
+22:40:02: Parsing script point_cloud_square.material
+22:40:02: Parsing script arial.fontdef
+22:40:02: Finished parsing scripts for resource group rviz
+22:40:03: GLRenderSystem::_createRenderWindow "OgreWindow(1)", 100x30 windowed  miscParams: externalGLControl= macAPI=carbon parentWindowHandle=79691937 
+22:40:03: GLXWindow::create used FBConfigID = 261
+22:40:04: Mesh: Loading rviz_sphere.mesh.
+22:40:04: Texture: SelectionRect0Texture: Loading 1 faces(PF_R8G8B8A8,1x1x1) with 0 generated mipmaps from Image. Internal format is PF_A8R8G8B8,1x1x1.
+22:40:04: Mesh: Loading rviz_cylinder.mesh.
+22:40:04: Mesh: Loading rviz_cone.mesh.
+22:40:11: Error attaching rviz/glsl120/black.frag shader object to GLSL Program Objectinvalid value
+22:40:11: Error linking GLSL Program Object : Link info
+---------
+No shader objects attached.
+22:40:11: OGRE EXCEPTION(7:InternalErrorException): Error linking GLSL Program Object : Error linking GLSL Program Object : Link info
+---------
+No shader objects attached. in GLSLLinkProgram::Activate at /build/buildd/ogre-1.7.4+dfsg1/RenderSystems/GL/src/GLSL/src/OgreGLSLExtSupport.cpp (line 65)
+22:40:11: Error linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached.
+22:40:11: OGRE EXCEPTION(7:InternalErrorException): Error linking GLSL Program Object : invalid framebuffer operationError linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached. in GLSLLinkProgram::Activate at /build/buildd/ogre-1.7.4+dfsg1/RenderSystems/GL/src/GLSL/src/OgreGLSLExtSupport.cpp (line 65)
+22:40:11: Error linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached.
+22:40:11: OGRE EXCEPTION(7:InternalErrorException): Error linking GLSL Program Object : invalid framebuffer operationError linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached. in GLSLLinkProgram::Activate at /build/buildd/ogre-1.7.4+dfsg1/RenderSystems/GL/src/GLSL/src/OgreGLSLExtSupport.cpp (line 65)
+22:40:11: Error linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached.
+22:40:11: OGRE EXCEPTION(7:InternalErrorException): Error linking GLSL Program Object : invalid framebuffer operationError linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached. in GLSLLinkProgram::Activate at /build/buildd/ogre-1.7.4+dfsg1/RenderSystems/GL/src/GLSL/src/OgreGLSLExtSupport.cpp (line 65)
+22:40:11: Error linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached.
+22:40:11: OGRE EXCEPTION(7:InternalErrorException): Error linking GLSL Program Object : invalid framebuffer operationError linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached. in GLSLLinkProgram::Activate at /build/buildd/ogre-1.7.4+dfsg1/RenderSystems/GL/src/GLSL/src/OgreGLSLExtSupport.cpp (line 65)
+22:40:11: Error linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached.
+22:40:11: OGRE EXCEPTION(7:InternalErrorException): Error linking GLSL Program Object : invalid framebuffer operationError linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached. in GLSLLinkProgram::Activate at /build/buildd/ogre-1.7.4+dfsg1/RenderSystems/GL/src/GLSL/src/OgreGLSLExtSupport.cpp (line 65)
+22:40:11: Error linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached.
+22:40:11: OGRE EXCEPTION(7:InternalErrorException): Error linking GLSL Program Object : invalid framebuffer operationError linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached. in GLSLLinkProgram::Activate at /build/buildd/ogre-1.7.4+dfsg1/RenderSystems/GL/src/GLSL/src/OgreGLSLExtSupport.cpp (line 65)
+22:40:11: Error linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached.
+22:40:11: OGRE EXCEPTION(7:InternalErrorException): Error linking GLSL Program Object : invalid framebuffer operationError linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached. in GLSLLinkProgram::Activate at /build/buildd/ogre-1.7.4+dfsg1/RenderSystems/GL/src/GLSL/src/OgreGLSLExtSupport.cpp (line 65)
+22:40:21: Error linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached.
+22:40:21: OGRE EXCEPTION(7:InternalErrorException): Error linking GLSL Program Object : invalid framebuffer operationError linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached. in GLSLLinkProgram::Activate at /build/buildd/ogre-1.7.4+dfsg1/RenderSystems/GL/src/GLSL/src/OgreGLSLExtSupport.cpp (line 65)
+22:40:21: Error linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached.
+22:40:21: OGRE EXCEPTION(7:InternalErrorException): Error linking GLSL Program Object : invalid framebuffer operationError linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached. in GLSLLinkProgram::Activate at /build/buildd/ogre-1.7.4+dfsg1/RenderSystems/GL/src/GLSL/src/OgreGLSLExtSupport.cpp (line 65)
+22:40:21: Error linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached.
+22:40:21: OGRE EXCEPTION(7:InternalErrorException): Error linking GLSL Program Object : invalid framebuffer operationError linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached. in GLSLLinkProgram::Activate at /build/buildd/ogre-1.7.4+dfsg1/RenderSystems/GL/src/GLSL/src/OgreGLSLExtSupport.cpp (line 65)
+22:40:21: Error linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached.
+22:40:21: OGRE EXCEPTION(7:InternalErrorException): Error linking GLSL Program Object : invalid framebuffer operationError linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached. in GLSLLinkProgram::Activate at /build/buildd/ogre-1.7.4+dfsg1/RenderSystems/GL/src/GLSL/src/OgreGLSLExtSupport.cpp (line 65)
+22:40:21: Error linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached.
+22:40:21: OGRE EXCEPTION(7:InternalErrorException): Error linking GLSL Program Object : invalid framebuffer operationError linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached. in GLSLLinkProgram::Activate at /build/buildd/ogre-1.7.4+dfsg1/RenderSystems/GL/src/GLSL/src/OgreGLSLExtSupport.cpp (line 65)
+22:40:22: Error linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached.
+22:40:22: OGRE EXCEPTION(7:InternalErrorException): Error linking GLSL Program Object : invalid framebuffer operationError linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached. in GLSLLinkProgram::Activate at /build/buildd/ogre-1.7.4+dfsg1/RenderSystems/GL/src/GLSL/src/OgreGLSLExtSupport.cpp (line 65)
+22:40:22: Error linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached.
+22:40:22: OGRE EXCEPTION(7:InternalErrorException): Error linking GLSL Program Object : invalid framebuffer operationError linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached. in GLSLLinkProgram::Activate at /build/buildd/ogre-1.7.4+dfsg1/RenderSystems/GL/src/GLSL/src/OgreGLSLExtSupport.cpp (line 65)
+22:40:22: Error linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached.
+22:40:22: OGRE EXCEPTION(7:InternalErrorException): Error linking GLSL Program Object : invalid framebuffer operationError linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached. in GLSLLinkProgram::Activate at /build/buildd/ogre-1.7.4+dfsg1/RenderSystems/GL/src/GLSL/src/OgreGLSLExtSupport.cpp (line 65)
+22:40:22: Error linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached.
+22:40:22: OGRE EXCEPTION(7:InternalErrorException): Error linking GLSL Program Object : invalid framebuffer operationError linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached. in GLSLLinkProgram::Activate at /build/buildd/ogre-1.7.4+dfsg1/RenderSystems/GL/src/GLSL/src/OgreGLSLExtSupport.cpp (line 65)
+22:40:22: Error linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached.
+22:40:22: OGRE EXCEPTION(7:InternalErrorException): Error linking GLSL Program Object : invalid framebuffer operationError linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached. in GLSLLinkProgram::Activate at /build/buildd/ogre-1.7.4+dfsg1/RenderSystems/GL/src/GLSL/src/OgreGLSLExtSupport.cpp (line 65)
+22:40:22: Error linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached.
+22:40:22: OGRE EXCEPTION(7:InternalErrorException): Error linking GLSL Program Object : invalid framebuffer operationError linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached. in GLSLLinkProgram::Activate at /build/buildd/ogre-1.7.4+dfsg1/RenderSystems/GL/src/GLSL/src/OgreGLSLExtSupport.cpp (line 65)
+22:40:22: Error linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached.
+22:40:22: OGRE EXCEPTION(7:InternalErrorException): Error linking GLSL Program Object : invalid framebuffer operationError linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached. in GLSLLinkProgram::Activate at /build/buildd/ogre-1.7.4+dfsg1/RenderSystems/GL/src/GLSL/src/OgreGLSLExtSupport.cpp (line 65)
+22:40:22: Error linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached.
+22:40:22: OGRE EXCEPTION(7:InternalErrorException): Error linking GLSL Program Object : invalid framebuffer operationError linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached. in GLSLLinkProgram::Activate at /build/buildd/ogre-1.7.4+dfsg1/RenderSystems/GL/src/GLSL/src/OgreGLSLExtSupport.cpp (line 65)
+22:40:22: Error linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached.
+22:40:22: OGRE EXCEPTION(7:InternalErrorException): Error linking GLSL Program Object : invalid framebuffer operationError linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached. in GLSLLinkProgram::Activate at /build/buildd/ogre-1.7.4+dfsg1/RenderSystems/GL/src/GLSL/src/OgreGLSLExtSupport.cpp (line 65)
+22:40:22: Error linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached.
+22:40:22: OGRE EXCEPTION(7:InternalErrorException): Error linking GLSL Program Object : invalid framebuffer operationError linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached. in GLSLLinkProgram::Activate at /build/buildd/ogre-1.7.4+dfsg1/RenderSystems/GL/src/GLSL/src/OgreGLSLExtSupport.cpp (line 65)
+22:40:22: Error linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached.
+22:40:22: OGRE EXCEPTION(7:InternalErrorException): Error linking GLSL Program Object : invalid framebuffer operationError linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached. in GLSLLinkProgram::Activate at /build/buildd/ogre-1.7.4+dfsg1/RenderSystems/GL/src/GLSL/src/OgreGLSLExtSupport.cpp (line 65)
+22:40:22: Error linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached.
+22:40:22: OGRE EXCEPTION(7:InternalErrorException): Error linking GLSL Program Object : invalid framebuffer operationError linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached. in GLSLLinkProgram::Activate at /build/buildd/ogre-1.7.4+dfsg1/RenderSystems/GL/src/GLSL/src/OgreGLSLExtSupport.cpp (line 65)
+22:40:22: Error linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached.
+22:40:22: OGRE EXCEPTION(7:InternalErrorException): Error linking GLSL Program Object : invalid framebuffer operationError linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached. in GLSLLinkProgram::Activate at /build/buildd/ogre-1.7.4+dfsg1/RenderSystems/GL/src/GLSL/src/OgreGLSLExtSupport.cpp (line 65)
+22:40:22: Error linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached.
+22:40:22: OGRE EXCEPTION(7:InternalErrorException): Error linking GLSL Program Object : invalid framebuffer operationError linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached. in GLSLLinkProgram::Activate at /build/buildd/ogre-1.7.4+dfsg1/RenderSystems/GL/src/GLSL/src/OgreGLSLExtSupport.cpp (line 65)
+22:40:22: Error linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached.
+22:40:22: OGRE EXCEPTION(7:InternalErrorException): Error linking GLSL Program Object : invalid framebuffer operationError linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached. in GLSLLinkProgram::Activate at /build/buildd/ogre-1.7.4+dfsg1/RenderSystems/GL/src/GLSL/src/OgreGLSLExtSupport.cpp (line 65)
+22:40:22: Error linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached.
+22:40:22: OGRE EXCEPTION(7:InternalErrorException): Error linking GLSL Program Object : invalid framebuffer operationError linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached. in GLSLLinkProgram::Activate at /build/buildd/ogre-1.7.4+dfsg1/RenderSystems/GL/src/GLSL/src/OgreGLSLExtSupport.cpp (line 65)
+22:40:22: Error linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached.
+22:40:22: OGRE EXCEPTION(7:InternalErrorException): Error linking GLSL Program Object : invalid framebuffer operationError linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached. in GLSLLinkProgram::Activate at /build/buildd/ogre-1.7.4+dfsg1/RenderSystems/GL/src/GLSL/src/OgreGLSLExtSupport.cpp (line 65)
+22:40:22: Error linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached.
+22:40:22: OGRE EXCEPTION(7:InternalErrorException): Error linking GLSL Program Object : invalid framebuffer operationError linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached. in GLSLLinkProgram::Activate at /build/buildd/ogre-1.7.4+dfsg1/RenderSystems/GL/src/GLSL/src/OgreGLSLExtSupport.cpp (line 65)
+22:40:22: Error linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached.
+22:40:22: OGRE EXCEPTION(7:InternalErrorException): Error linking GLSL Program Object : invalid framebuffer operationError linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached. in GLSLLinkProgram::Activate at /build/buildd/ogre-1.7.4+dfsg1/RenderSystems/GL/src/GLSL/src/OgreGLSLExtSupport.cpp (line 65)
+22:40:22: Error linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached.
+22:40:22: OGRE EXCEPTION(7:InternalErrorException): Error linking GLSL Program Object : invalid framebuffer operationError linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached. in GLSLLinkProgram::Activate at /build/buildd/ogre-1.7.4+dfsg1/RenderSystems/GL/src/GLSL/src/OgreGLSLExtSupport.cpp (line 65)
+22:40:22: Error linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached.
+22:40:22: OGRE EXCEPTION(7:InternalErrorException): Error linking GLSL Program Object : invalid framebuffer operationError linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached. in GLSLLinkProgram::Activate at /build/buildd/ogre-1.7.4+dfsg1/RenderSystems/GL/src/GLSL/src/OgreGLSLExtSupport.cpp (line 65)
+22:40:22: Error linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached.
+22:40:22: OGRE EXCEPTION(7:InternalErrorException): Error linking GLSL Program Object : invalid framebuffer operationError linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached. in GLSLLinkProgram::Activate at /build/buildd/ogre-1.7.4+dfsg1/RenderSystems/GL/src/GLSL/src/OgreGLSLExtSupport.cpp (line 65)
+22:40:22: Error linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached.
+22:40:22: OGRE EXCEPTION(7:InternalErrorException): Error linking GLSL Program Object : invalid framebuffer operationError linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached. in GLSLLinkProgram::Activate at /build/buildd/ogre-1.7.4+dfsg1/RenderSystems/GL/src/GLSL/src/OgreGLSLExtSupport.cpp (line 65)
+22:40:22: Error linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached.
+22:40:22: OGRE EXCEPTION(7:InternalErrorException): Error linking GLSL Program Object : invalid framebuffer operationError linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached. in GLSLLinkProgram::Activate at /build/buildd/ogre-1.7.4+dfsg1/RenderSystems/GL/src/GLSL/src/OgreGLSLExtSupport.cpp (line 65)
+22:40:22: Error linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached.
+22:40:22: OGRE EXCEPTION(7:InternalErrorException): Error linking GLSL Program Object : invalid framebuffer operationError linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached. in GLSLLinkProgram::Activate at /build/buildd/ogre-1.7.4+dfsg1/RenderSystems/GL/src/GLSL/src/OgreGLSLExtSupport.cpp (line 65)
+22:40:22: Error linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached.
+22:40:22: OGRE EXCEPTION(7:InternalErrorException): Error linking GLSL Program Object : invalid framebuffer operationError linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached. in GLSLLinkProgram::Activate at /build/buildd/ogre-1.7.4+dfsg1/RenderSystems/GL/src/GLSL/src/OgreGLSLExtSupport.cpp (line 65)
+22:40:22: Error linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached.
+22:40:22: OGRE EXCEPTION(7:InternalErrorException): Error linking GLSL Program Object : invalid framebuffer operationError linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached. in GLSLLinkProgram::Activate at /build/buildd/ogre-1.7.4+dfsg1/RenderSystems/GL/src/GLSL/src/OgreGLSLExtSupport.cpp (line 65)
+22:40:22: Error linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached.
+22:40:22: OGRE EXCEPTION(7:InternalErrorException): Error linking GLSL Program Object : invalid framebuffer operationError linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached. in GLSLLinkProgram::Activate at /build/buildd/ogre-1.7.4+dfsg1/RenderSystems/GL/src/GLSL/src/OgreGLSLExtSupport.cpp (line 65)
+22:40:22: Error linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached.
+22:40:22: OGRE EXCEPTION(7:InternalErrorException): Error linking GLSL Program Object : invalid framebuffer operationError linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached. in GLSLLinkProgram::Activate at /build/buildd/ogre-1.7.4+dfsg1/RenderSystems/GL/src/GLSL/src/OgreGLSLExtSupport.cpp (line 65)
+22:40:22: Error linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached.
+22:40:22: OGRE EXCEPTION(7:InternalErrorException): Error linking GLSL Program Object : invalid framebuffer operationError linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached. in GLSLLinkProgram::Activate at /build/buildd/ogre-1.7.4+dfsg1/RenderSystems/GL/src/GLSL/src/OgreGLSLExtSupport.cpp (line 65)
+22:40:23: Error linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached.
+22:40:23: OGRE EXCEPTION(7:InternalErrorException): Error linking GLSL Program Object : invalid framebuffer operationError linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached. in GLSLLinkProgram::Activate at /build/buildd/ogre-1.7.4+dfsg1/RenderSystems/GL/src/GLSL/src/OgreGLSLExtSupport.cpp (line 65)
+22:40:28: Error linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached.
+22:40:28: OGRE EXCEPTION(7:InternalErrorException): Error linking GLSL Program Object : invalid framebuffer operationError linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached. in GLSLLinkProgram::Activate at /build/buildd/ogre-1.7.4+dfsg1/RenderSystems/GL/src/GLSL/src/OgreGLSLExtSupport.cpp (line 65)
+22:40:28: Error linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached.
+22:40:28: OGRE EXCEPTION(7:InternalErrorException): Error linking GLSL Program Object : invalid framebuffer operationError linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached. in GLSLLinkProgram::Activate at /build/buildd/ogre-1.7.4+dfsg1/RenderSystems/GL/src/GLSL/src/OgreGLSLExtSupport.cpp (line 65)
+22:40:28: Error linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached.
+22:40:28: OGRE EXCEPTION(7:InternalErrorException): Error linking GLSL Program Object : invalid framebuffer operationError linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached. in GLSLLinkProgram::Activate at /build/buildd/ogre-1.7.4+dfsg1/RenderSystems/GL/src/GLSL/src/OgreGLSLExtSupport.cpp (line 65)
+22:40:28: Error linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached.
+22:40:28: OGRE EXCEPTION(7:InternalErrorException): Error linking GLSL Program Object : invalid framebuffer operationError linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached. in GLSLLinkProgram::Activate at /build/buildd/ogre-1.7.4+dfsg1/RenderSystems/GL/src/GLSL/src/OgreGLSLExtSupport.cpp (line 65)
+22:40:28: Error linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached.
+22:40:28: OGRE EXCEPTION(7:InternalErrorException): Error linking GLSL Program Object : invalid framebuffer operationError linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached. in GLSLLinkProgram::Activate at /build/buildd/ogre-1.7.4+dfsg1/RenderSystems/GL/src/GLSL/src/OgreGLSLExtSupport.cpp (line 65)
+22:40:28: Error linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached.
+22:40:28: OGRE EXCEPTION(7:InternalErrorException): Error linking GLSL Program Object : invalid framebuffer operationError linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached. in GLSLLinkProgram::Activate at /build/buildd/ogre-1.7.4+dfsg1/RenderSystems/GL/src/GLSL/src/OgreGLSLExtSupport.cpp (line 65)
+22:40:28: Error linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached.
+22:40:28: OGRE EXCEPTION(7:InternalErrorException): Error linking GLSL Program Object : invalid framebuffer operationError linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached. in GLSLLinkProgram::Activate at /build/buildd/ogre-1.7.4+dfsg1/RenderSystems/GL/src/GLSL/src/OgreGLSLExtSupport.cpp (line 65)
+22:40:28: Error linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached.
+22:40:28: OGRE EXCEPTION(7:InternalErrorException): Error linking GLSL Program Object : invalid framebuffer operationError linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached. in GLSLLinkProgram::Activate at /build/buildd/ogre-1.7.4+dfsg1/RenderSystems/GL/src/GLSL/src/OgreGLSLExtSupport.cpp (line 65)
+22:40:29: Error linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached.
+22:40:29: OGRE EXCEPTION(7:InternalErrorException): Error linking GLSL Program Object : invalid framebuffer operationError linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached. in GLSLLinkProgram::Activate at /build/buildd/ogre-1.7.4+dfsg1/RenderSystems/GL/src/GLSL/src/OgreGLSLExtSupport.cpp (line 65)
+22:40:29: Error linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached.
+22:40:29: OGRE EXCEPTION(7:InternalErrorException): Error linking GLSL Program Object : invalid framebuffer operationError linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached. in GLSLLinkProgram::Activate at /build/buildd/ogre-1.7.4+dfsg1/RenderSystems/GL/src/GLSL/src/OgreGLSLExtSupport.cpp (line 65)
+22:40:29: Error linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached.
+22:40:29: OGRE EXCEPTION(7:InternalErrorException): Error linking GLSL Program Object : invalid framebuffer operationError linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached. in GLSLLinkProgram::Activate at /build/buildd/ogre-1.7.4+dfsg1/RenderSystems/GL/src/GLSL/src/OgreGLSLExtSupport.cpp (line 65)
+22:40:29: Error linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached.
+22:40:29: OGRE EXCEPTION(7:InternalErrorException): Error linking GLSL Program Object : invalid framebuffer operationError linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached. in GLSLLinkProgram::Activate at /build/buildd/ogre-1.7.4+dfsg1/RenderSystems/GL/src/GLSL/src/OgreGLSLExtSupport.cpp (line 65)
+22:40:29: Error linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached.
+22:40:29: OGRE EXCEPTION(7:InternalErrorException): Error linking GLSL Program Object : invalid framebuffer operationError linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached. in GLSLLinkProgram::Activate at /build/buildd/ogre-1.7.4+dfsg1/RenderSystems/GL/src/GLSL/src/OgreGLSLExtSupport.cpp (line 65)
+22:40:29: Error linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached.
+22:40:29: OGRE EXCEPTION(7:InternalErrorException): Error linking GLSL Program Object : invalid framebuffer operationError linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached. in GLSLLinkProgram::Activate at /build/buildd/ogre-1.7.4+dfsg1/RenderSystems/GL/src/GLSL/src/OgreGLSLExtSupport.cpp (line 65)
+22:40:29: Error linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached.
+22:40:29: OGRE EXCEPTION(7:InternalErrorException): Error linking GLSL Program Object : invalid framebuffer operationError linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached. in GLSLLinkProgram::Activate at /build/buildd/ogre-1.7.4+dfsg1/RenderSystems/GL/src/GLSL/src/OgreGLSLExtSupport.cpp (line 65)
+22:40:29: Error linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached.
+22:40:29: OGRE EXCEPTION(7:InternalErrorException): Error linking GLSL Program Object : invalid framebuffer operationError linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached. in GLSLLinkProgram::Activate at /build/buildd/ogre-1.7.4+dfsg1/RenderSystems/GL/src/GLSL/src/OgreGLSLExtSupport.cpp (line 65)
+22:40:29: Error linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached.
+22:40:29: OGRE EXCEPTION(7:InternalErrorException): Error linking GLSL Program Object : invalid framebuffer operationError linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached. in GLSLLinkProgram::Activate at /build/buildd/ogre-1.7.4+dfsg1/RenderSystems/GL/src/GLSL/src/OgreGLSLExtSupport.cpp (line 65)
+22:40:29: Error linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached.
+22:40:29: OGRE EXCEPTION(7:InternalErrorException): Error linking GLSL Program Object : invalid framebuffer operationError linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached. in GLSLLinkProgram::Activate at /build/buildd/ogre-1.7.4+dfsg1/RenderSystems/GL/src/GLSL/src/OgreGLSLExtSupport.cpp (line 65)
+22:40:29: Error linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached.
+22:40:29: OGRE EXCEPTION(7:InternalErrorException): Error linking GLSL Program Object : invalid framebuffer operationError linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached. in GLSLLinkProgram::Activate at /build/buildd/ogre-1.7.4+dfsg1/RenderSystems/GL/src/GLSL/src/OgreGLSLExtSupport.cpp (line 65)
+22:40:29: Error linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached.
+22:40:29: OGRE EXCEPTION(7:InternalErrorException): Error linking GLSL Program Object : invalid framebuffer operationError linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached. in GLSLLinkProgram::Activate at /build/buildd/ogre-1.7.4+dfsg1/RenderSystems/GL/src/GLSL/src/OgreGLSLExtSupport.cpp (line 65)
+22:40:29: Error linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached.
+22:40:29: OGRE EXCEPTION(7:InternalErrorException): Error linking GLSL Program Object : invalid framebuffer operationError linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached. in GLSLLinkProgram::Activate at /build/buildd/ogre-1.7.4+dfsg1/RenderSystems/GL/src/GLSL/src/OgreGLSLExtSupport.cpp (line 65)
+22:40:29: Error linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached.
+22:40:29: OGRE EXCEPTION(7:InternalErrorException): Error linking GLSL Program Object : invalid framebuffer operationError linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached. in GLSLLinkProgram::Activate at /build/buildd/ogre-1.7.4+dfsg1/RenderSystems/GL/src/GLSL/src/OgreGLSLExtSupport.cpp (line 65)
+22:40:29: Error linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached.
+22:40:29: OGRE EXCEPTION(7:InternalErrorException): Error linking GLSL Program Object : invalid framebuffer operationError linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached. in GLSLLinkProgram::Activate at /build/buildd/ogre-1.7.4+dfsg1/RenderSystems/GL/src/GLSL/src/OgreGLSLExtSupport.cpp (line 65)
+22:40:29: Error linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached.
+22:40:29: OGRE EXCEPTION(7:InternalErrorException): Error linking GLSL Program Object : invalid framebuffer operationError linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached. in GLSLLinkProgram::Activate at /build/buildd/ogre-1.7.4+dfsg1/RenderSystems/GL/src/GLSL/src/OgreGLSLExtSupport.cpp (line 65)
+22:40:29: Error linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached.
+22:40:29: OGRE EXCEPTION(7:InternalErrorException): Error linking GLSL Program Object : invalid framebuffer operationError linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached. in GLSLLinkProgram::Activate at /build/buildd/ogre-1.7.4+dfsg1/RenderSystems/GL/src/GLSL/src/OgreGLSLExtSupport.cpp (line 65)
+22:40:29: Error linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached.
+22:40:29: OGRE EXCEPTION(7:InternalErrorException): Error linking GLSL Program Object : invalid framebuffer operationError linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached. in GLSLLinkProgram::Activate at /build/buildd/ogre-1.7.4+dfsg1/RenderSystems/GL/src/GLSL/src/OgreGLSLExtSupport.cpp (line 65)
+22:40:29: Error linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached.
+22:40:29: OGRE EXCEPTION(7:InternalErrorException): Error linking GLSL Program Object : invalid framebuffer operationError linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached. in GLSLLinkProgram::Activate at /build/buildd/ogre-1.7.4+dfsg1/RenderSystems/GL/src/GLSL/src/OgreGLSLExtSupport.cpp (line 65)
+22:40:29: Error linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached.
+22:40:29: OGRE EXCEPTION(7:InternalErrorException): Error linking GLSL Program Object : invalid framebuffer operationError linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached. in GLSLLinkProgram::Activate at /build/buildd/ogre-1.7.4+dfsg1/RenderSystems/GL/src/GLSL/src/OgreGLSLExtSupport.cpp (line 65)
+22:40:29: Error linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached.
+22:40:29: OGRE EXCEPTION(7:InternalErrorException): Error linking GLSL Program Object : invalid framebuffer operationError linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached. in GLSLLinkProgram::Activate at /build/buildd/ogre-1.7.4+dfsg1/RenderSystems/GL/src/GLSL/src/OgreGLSLExtSupport.cpp (line 65)
+22:40:29: Error linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached.
+22:40:29: OGRE EXCEPTION(7:InternalErrorException): Error linking GLSL Program Object : invalid framebuffer operationError linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached. in GLSLLinkProgram::Activate at /build/buildd/ogre-1.7.4+dfsg1/RenderSystems/GL/src/GLSL/src/OgreGLSLExtSupport.cpp (line 65)
+22:40:31: Error linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached.
+22:40:31: OGRE EXCEPTION(7:InternalErrorException): Error linking GLSL Program Object : invalid framebuffer operationError linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached. in GLSLLinkProgram::Activate at /build/buildd/ogre-1.7.4+dfsg1/RenderSystems/GL/src/GLSL/src/OgreGLSLExtSupport.cpp (line 65)
+22:40:31: Error linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached.
+22:40:31: OGRE EXCEPTION(7:InternalErrorException): Error linking GLSL Program Object : invalid framebuffer operationError linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached. in GLSLLinkProgram::Activate at /build/buildd/ogre-1.7.4+dfsg1/RenderSystems/GL/src/GLSL/src/OgreGLSLExtSupport.cpp (line 65)
+22:40:31: Error linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached.
+22:40:31: OGRE EXCEPTION(7:InternalErrorException): Error linking GLSL Program Object : invalid framebuffer operationError linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached. in GLSLLinkProgram::Activate at /build/buildd/ogre-1.7.4+dfsg1/RenderSystems/GL/src/GLSL/src/OgreGLSLExtSupport.cpp (line 65)
+22:40:31: Error linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached.
+22:40:31: OGRE EXCEPTION(7:InternalErrorException): Error linking GLSL Program Object : invalid framebuffer operationError linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached. in GLSLLinkProgram::Activate at /build/buildd/ogre-1.7.4+dfsg1/RenderSystems/GL/src/GLSL/src/OgreGLSLExtSupport.cpp (line 65)
+22:40:31: Error linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached.
+22:40:31: OGRE EXCEPTION(7:InternalErrorException): Error linking GLSL Program Object : invalid framebuffer operationError linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached. in GLSLLinkProgram::Activate at /build/buildd/ogre-1.7.4+dfsg1/RenderSystems/GL/src/GLSL/src/OgreGLSLExtSupport.cpp (line 65)
+22:40:31: Error linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached.
+22:40:31: OGRE EXCEPTION(7:InternalErrorException): Error linking GLSL Program Object : invalid framebuffer operationError linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached. in GLSLLinkProgram::Activate at /build/buildd/ogre-1.7.4+dfsg1/RenderSystems/GL/src/GLSL/src/OgreGLSLExtSupport.cpp (line 65)
+22:40:31: Error linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached.
+22:40:31: OGRE EXCEPTION(7:InternalErrorException): Error linking GLSL Program Object : invalid framebuffer operationError linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached. in GLSLLinkProgram::Activate at /build/buildd/ogre-1.7.4+dfsg1/RenderSystems/GL/src/GLSL/src/OgreGLSLExtSupport.cpp (line 65)
+22:40:31: Error linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached.
+22:40:31: OGRE EXCEPTION(7:InternalErrorException): Error linking GLSL Program Object : invalid framebuffer operationError linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached. in GLSLLinkProgram::Activate at /build/buildd/ogre-1.7.4+dfsg1/RenderSystems/GL/src/GLSL/src/OgreGLSLExtSupport.cpp (line 65)
+22:40:31: Error linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached.
+22:40:31: OGRE EXCEPTION(7:InternalErrorException): Error linking GLSL Program Object : invalid framebuffer operationError linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached. in GLSLLinkProgram::Activate at /build/buildd/ogre-1.7.4+dfsg1/RenderSystems/GL/src/GLSL/src/OgreGLSLExtSupport.cpp (line 65)
+22:40:31: Error linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached.
+22:40:31: OGRE EXCEPTION(7:InternalErrorException): Error linking GLSL Program Object : invalid framebuffer operationError linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached. in GLSLLinkProgram::Activate at /build/buildd/ogre-1.7.4+dfsg1/RenderSystems/GL/src/GLSL/src/OgreGLSLExtSupport.cpp (line 65)
+22:40:31: Error linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached.
+22:40:31: OGRE EXCEPTION(7:InternalErrorException): Error linking GLSL Program Object : invalid framebuffer operationError linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached. in GLSLLinkProgram::Activate at /build/buildd/ogre-1.7.4+dfsg1/RenderSystems/GL/src/GLSL/src/OgreGLSLExtSupport.cpp (line 65)
+22:40:32: Error linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached.
+22:40:32: OGRE EXCEPTION(7:InternalErrorException): Error linking GLSL Program Object : invalid framebuffer operationError linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached. in GLSLLinkProgram::Activate at /build/buildd/ogre-1.7.4+dfsg1/RenderSystems/GL/src/GLSL/src/OgreGLSLExtSupport.cpp (line 65)
+22:40:32: Error linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached.
+22:40:32: OGRE EXCEPTION(7:InternalErrorException): Error linking GLSL Program Object : invalid framebuffer operationError linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached. in GLSLLinkProgram::Activate at /build/buildd/ogre-1.7.4+dfsg1/RenderSystems/GL/src/GLSL/src/OgreGLSLExtSupport.cpp (line 65)
+22:40:32: Error linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached.
+22:40:32: OGRE EXCEPTION(7:InternalErrorException): Error linking GLSL Program Object : invalid framebuffer operationError linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached. in GLSLLinkProgram::Activate at /build/buildd/ogre-1.7.4+dfsg1/RenderSystems/GL/src/GLSL/src/OgreGLSLExtSupport.cpp (line 65)
+22:40:32: Error linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached.
+22:40:32: OGRE EXCEPTION(7:InternalErrorException): Error linking GLSL Program Object : invalid framebuffer operationError linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached. in GLSLLinkProgram::Activate at /build/buildd/ogre-1.7.4+dfsg1/RenderSystems/GL/src/GLSL/src/OgreGLSLExtSupport.cpp (line 65)
+22:40:32: Error linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached.
+22:40:32: OGRE EXCEPTION(7:InternalErrorException): Error linking GLSL Program Object : invalid framebuffer operationError linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached. in GLSLLinkProgram::Activate at /build/buildd/ogre-1.7.4+dfsg1/RenderSystems/GL/src/GLSL/src/OgreGLSLExtSupport.cpp (line 65)
+22:40:32: Error linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached.
+22:40:32: OGRE EXCEPTION(7:InternalErrorException): Error linking GLSL Program Object : invalid framebuffer operationError linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached. in GLSLLinkProgram::Activate at /build/buildd/ogre-1.7.4+dfsg1/RenderSystems/GL/src/GLSL/src/OgreGLSLExtSupport.cpp (line 65)
+22:40:32: Error linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached.
+22:40:32: OGRE EXCEPTION(7:InternalErrorException): Error linking GLSL Program Object : invalid framebuffer operationError linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached. in GLSLLinkProgram::Activate at /build/buildd/ogre-1.7.4+dfsg1/RenderSystems/GL/src/GLSL/src/OgreGLSLExtSupport.cpp (line 65)
+22:40:32: Error linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached.
+22:40:32: OGRE EXCEPTION(7:InternalErrorException): Error linking GLSL Program Object : invalid framebuffer operationError linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached. in GLSLLinkProgram::Activate at /build/buildd/ogre-1.7.4+dfsg1/RenderSystems/GL/src/GLSL/src/OgreGLSLExtSupport.cpp (line 65)
+22:40:32: Error linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached.
+22:40:32: OGRE EXCEPTION(7:InternalErrorException): Error linking GLSL Program Object : invalid framebuffer operationError linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached. in GLSLLinkProgram::Activate at /build/buildd/ogre-1.7.4+dfsg1/RenderSystems/GL/src/GLSL/src/OgreGLSLExtSupport.cpp (line 65)
+22:40:32: Error linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached.
+22:40:32: OGRE EXCEPTION(7:InternalErrorException): Error linking GLSL Program Object : invalid framebuffer operationError linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached. in GLSLLinkProgram::Activate at /build/buildd/ogre-1.7.4+dfsg1/RenderSystems/GL/src/GLSL/src/OgreGLSLExtSupport.cpp (line 65)
+22:40:32: Error linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached.
+22:40:32: OGRE EXCEPTION(7:InternalErrorException): Error linking GLSL Program Object : invalid framebuffer operationError linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached. in GLSLLinkProgram::Activate at /build/buildd/ogre-1.7.4+dfsg1/RenderSystems/GL/src/GLSL/src/OgreGLSLExtSupport.cpp (line 65)
+22:40:32: Error linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached.
+22:40:32: OGRE EXCEPTION(7:InternalErrorException): Error linking GLSL Program Object : invalid framebuffer operationError linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached. in GLSLLinkProgram::Activate at /build/buildd/ogre-1.7.4+dfsg1/RenderSystems/GL/src/GLSL/src/OgreGLSLExtSupport.cpp (line 65)
+22:40:58: Error linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached.
+22:40:58: OGRE EXCEPTION(7:InternalErrorException): Error linking GLSL Program Object : invalid framebuffer operationError linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached. in GLSLLinkProgram::Activate at /build/buildd/ogre-1.7.4+dfsg1/RenderSystems/GL/src/GLSL/src/OgreGLSLExtSupport.cpp (line 65)
+22:40:58: Error linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached.
+22:40:58: OGRE EXCEPTION(7:InternalErrorException): Error linking GLSL Program Object : invalid framebuffer operationError linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached. in GLSLLinkProgram::Activate at /build/buildd/ogre-1.7.4+dfsg1/RenderSystems/GL/src/GLSL/src/OgreGLSLExtSupport.cpp (line 65)
+22:40:58: Error linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached.
+22:40:58: OGRE EXCEPTION(7:InternalErrorException): Error linking GLSL Program Object : invalid framebuffer operationError linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached. in GLSLLinkProgram::Activate at /build/buildd/ogre-1.7.4+dfsg1/RenderSystems/GL/src/GLSL/src/OgreGLSLExtSupport.cpp (line 65)
+22:40:58: Error linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached.
+22:40:58: OGRE EXCEPTION(7:InternalErrorException): Error linking GLSL Program Object : invalid framebuffer operationError linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached. in GLSLLinkProgram::Activate at /build/buildd/ogre-1.7.4+dfsg1/RenderSystems/GL/src/GLSL/src/OgreGLSLExtSupport.cpp (line 65)
+22:40:58: Error linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached.
+22:40:58: OGRE EXCEPTION(7:InternalErrorException): Error linking GLSL Program Object : invalid framebuffer operationError linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached. in GLSLLinkProgram::Activate at /build/buildd/ogre-1.7.4+dfsg1/RenderSystems/GL/src/GLSL/src/OgreGLSLExtSupport.cpp (line 65)
+22:40:58: Error linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached.
+22:40:58: OGRE EXCEPTION(7:InternalErrorException): Error linking GLSL Program Object : invalid framebuffer operationError linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached. in GLSLLinkProgram::Activate at /build/buildd/ogre-1.7.4+dfsg1/RenderSystems/GL/src/GLSL/src/OgreGLSLExtSupport.cpp (line 65)
+22:40:58: Error linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached.
+22:40:58: OGRE EXCEPTION(7:InternalErrorException): Error linking GLSL Program Object : invalid framebuffer operationError linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached. in GLSLLinkProgram::Activate at /build/buildd/ogre-1.7.4+dfsg1/RenderSystems/GL/src/GLSL/src/OgreGLSLExtSupport.cpp (line 65)
+22:40:58: Error linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached.
+22:40:58: OGRE EXCEPTION(7:InternalErrorException): Error linking GLSL Program Object : invalid framebuffer operationError linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached. in GLSLLinkProgram::Activate at /build/buildd/ogre-1.7.4+dfsg1/RenderSystems/GL/src/GLSL/src/OgreGLSLExtSupport.cpp (line 65)
+22:40:58: Error linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached.
+22:40:58: OGRE EXCEPTION(7:InternalErrorException): Error linking GLSL Program Object : invalid framebuffer operationError linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached. in GLSLLinkProgram::Activate at /build/buildd/ogre-1.7.4+dfsg1/RenderSystems/GL/src/GLSL/src/OgreGLSLExtSupport.cpp (line 65)
+22:40:58: Error linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached.
+22:40:58: OGRE EXCEPTION(7:InternalErrorException): Error linking GLSL Program Object : invalid framebuffer operationError linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached. in GLSLLinkProgram::Activate at /build/buildd/ogre-1.7.4+dfsg1/RenderSystems/GL/src/GLSL/src/OgreGLSLExtSupport.cpp (line 65)
+22:40:58: Error linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached.
+22:40:58: OGRE EXCEPTION(7:InternalErrorException): Error linking GLSL Program Object : invalid framebuffer operationError linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached. in GLSLLinkProgram::Activate at /build/buildd/ogre-1.7.4+dfsg1/RenderSystems/GL/src/GLSL/src/OgreGLSLExtSupport.cpp (line 65)
+22:40:58: Error linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached.
+22:40:58: OGRE EXCEPTION(7:InternalErrorException): Error linking GLSL Program Object : invalid framebuffer operationError linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached. in GLSLLinkProgram::Activate at /build/buildd/ogre-1.7.4+dfsg1/RenderSystems/GL/src/GLSL/src/OgreGLSLExtSupport.cpp (line 65)
+22:40:58: Error linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached.
+22:40:58: OGRE EXCEPTION(7:InternalErrorException): Error linking GLSL Program Object : invalid framebuffer operationError linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached. in GLSLLinkProgram::Activate at /build/buildd/ogre-1.7.4+dfsg1/RenderSystems/GL/src/GLSL/src/OgreGLSLExtSupport.cpp (line 65)
+22:40:58: Error linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached.
+22:40:58: OGRE EXCEPTION(7:InternalErrorException): Error linking GLSL Program Object : invalid framebuffer operationError linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached. in GLSLLinkProgram::Activate at /build/buildd/ogre-1.7.4+dfsg1/RenderSystems/GL/src/GLSL/src/OgreGLSLExtSupport.cpp (line 65)
+22:40:58: Error linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached.
+22:40:58: OGRE EXCEPTION(7:InternalErrorException): Error linking GLSL Program Object : invalid framebuffer operationError linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached. in GLSLLinkProgram::Activate at /build/buildd/ogre-1.7.4+dfsg1/RenderSystems/GL/src/GLSL/src/OgreGLSLExtSupport.cpp (line 65)
+22:40:59: Error linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached.
+22:40:59: OGRE EXCEPTION(7:InternalErrorException): Error linking GLSL Program Object : invalid framebuffer operationError linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached. in GLSLLinkProgram::Activate at /build/buildd/ogre-1.7.4+dfsg1/RenderSystems/GL/src/GLSL/src/OgreGLSLExtSupport.cpp (line 65)
+22:40:59: Error linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached.
+22:40:59: OGRE EXCEPTION(7:InternalErrorException): Error linking GLSL Program Object : invalid framebuffer operationError linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached. in GLSLLinkProgram::Activate at /build/buildd/ogre-1.7.4+dfsg1/RenderSystems/GL/src/GLSL/src/OgreGLSLExtSupport.cpp (line 65)
+22:40:59: Error linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached.
+22:40:59: OGRE EXCEPTION(7:InternalErrorException): Error linking GLSL Program Object : invalid framebuffer operationError linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached. in GLSLLinkProgram::Activate at /build/buildd/ogre-1.7.4+dfsg1/RenderSystems/GL/src/GLSL/src/OgreGLSLExtSupport.cpp (line 65)
+22:40:59: Error linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached.
+22:40:59: OGRE EXCEPTION(7:InternalErrorException): Error linking GLSL Program Object : invalid framebuffer operationError linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached. in GLSLLinkProgram::Activate at /build/buildd/ogre-1.7.4+dfsg1/RenderSystems/GL/src/GLSL/src/OgreGLSLExtSupport.cpp (line 65)
+22:40:59: Error linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached.
+22:40:59: OGRE EXCEPTION(7:InternalErrorException): Error linking GLSL Program Object : invalid framebuffer operationError linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached. in GLSLLinkProgram::Activate at /build/buildd/ogre-1.7.4+dfsg1/RenderSystems/GL/src/GLSL/src/OgreGLSLExtSupport.cpp (line 65)
+22:40:59: Error linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached.
+22:40:59: OGRE EXCEPTION(7:InternalErrorException): Error linking GLSL Program Object : invalid framebuffer operationError linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached. in GLSLLinkProgram::Activate at /build/buildd/ogre-1.7.4+dfsg1/RenderSystems/GL/src/GLSL/src/OgreGLSLExtSupport.cpp (line 65)
+22:40:59: Error linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached.
+22:40:59: OGRE EXCEPTION(7:InternalErrorException): Error linking GLSL Program Object : invalid framebuffer operationError linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached. in GLSLLinkProgram::Activate at /build/buildd/ogre-1.7.4+dfsg1/RenderSystems/GL/src/GLSL/src/OgreGLSLExtSupport.cpp (line 65)
+22:40:59: Error linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached.
+22:40:59: OGRE EXCEPTION(7:InternalErrorException): Error linking GLSL Program Object : invalid framebuffer operationError linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached. in GLSLLinkProgram::Activate at /build/buildd/ogre-1.7.4+dfsg1/RenderSystems/GL/src/GLSL/src/OgreGLSLExtSupport.cpp (line 65)
+22:40:59: Error linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached.
+22:40:59: OGRE EXCEPTION(7:InternalErrorException): Error linking GLSL Program Object : invalid framebuffer operationError linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached. in GLSLLinkProgram::Activate at /build/buildd/ogre-1.7.4+dfsg1/RenderSystems/GL/src/GLSL/src/OgreGLSLExtSupport.cpp (line 65)
+22:40:59: Error linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached.
+22:40:59: OGRE EXCEPTION(7:InternalErrorException): Error linking GLSL Program Object : invalid framebuffer operationError linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached. in GLSLLinkProgram::Activate at /build/buildd/ogre-1.7.4+dfsg1/RenderSystems/GL/src/GLSL/src/OgreGLSLExtSupport.cpp (line 65)
+22:40:59: Error linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached.
+22:40:59: OGRE EXCEPTION(7:InternalErrorException): Error linking GLSL Program Object : invalid framebuffer operationError linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached. in GLSLLinkProgram::Activate at /build/buildd/ogre-1.7.4+dfsg1/RenderSystems/GL/src/GLSL/src/OgreGLSLExtSupport.cpp (line 65)
+22:40:59: Error linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached.
+22:40:59: OGRE EXCEPTION(7:InternalErrorException): Error linking GLSL Program Object : invalid framebuffer operationError linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached. in GLSLLinkProgram::Activate at /build/buildd/ogre-1.7.4+dfsg1/RenderSystems/GL/src/GLSL/src/OgreGLSLExtSupport.cpp (line 65)
+22:40:59: Error linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached.
+22:40:59: OGRE EXCEPTION(7:InternalErrorException): Error linking GLSL Program Object : invalid framebuffer operationError linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached. in GLSLLinkProgram::Activate at /build/buildd/ogre-1.7.4+dfsg1/RenderSystems/GL/src/GLSL/src/OgreGLSLExtSupport.cpp (line 65)
+22:40:59: Error linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached.
+22:40:59: OGRE EXCEPTION(7:InternalErrorException): Error linking GLSL Program Object : invalid framebuffer operationError linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached. in GLSLLinkProgram::Activate at /build/buildd/ogre-1.7.4+dfsg1/RenderSystems/GL/src/GLSL/src/OgreGLSLExtSupport.cpp (line 65)
+22:40:59: Error linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached.
+22:40:59: OGRE EXCEPTION(7:InternalErrorException): Error linking GLSL Program Object : invalid framebuffer operationError linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached. in GLSLLinkProgram::Activate at /build/buildd/ogre-1.7.4+dfsg1/RenderSystems/GL/src/GLSL/src/OgreGLSLExtSupport.cpp (line 65)
+22:40:59: Error linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached.
+22:40:59: OGRE EXCEPTION(7:InternalErrorException): Error linking GLSL Program Object : invalid framebuffer operationError linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached. in GLSLLinkProgram::Activate at /build/buildd/ogre-1.7.4+dfsg1/RenderSystems/GL/src/GLSL/src/OgreGLSLExtSupport.cpp (line 65)
+22:41:00: Error linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached.
+22:41:00: OGRE EXCEPTION(7:InternalErrorException): Error linking GLSL Program Object : invalid framebuffer operationError linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached. in GLSLLinkProgram::Activate at /build/buildd/ogre-1.7.4+dfsg1/RenderSystems/GL/src/GLSL/src/OgreGLSLExtSupport.cpp (line 65)
+22:41:00: Error linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached.
+22:41:00: OGRE EXCEPTION(7:InternalErrorException): Error linking GLSL Program Object : invalid framebuffer operationError linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached. in GLSLLinkProgram::Activate at /build/buildd/ogre-1.7.4+dfsg1/RenderSystems/GL/src/GLSL/src/OgreGLSLExtSupport.cpp (line 65)
+22:41:11: Error linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached.
+22:41:11: OGRE EXCEPTION(7:InternalErrorException): Error linking GLSL Program Object : invalid framebuffer operationError linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached. in GLSLLinkProgram::Activate at /build/buildd/ogre-1.7.4+dfsg1/RenderSystems/GL/src/GLSL/src/OgreGLSLExtSupport.cpp (line 65)
+22:41:11: Error linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached.
+22:41:11: OGRE EXCEPTION(7:InternalErrorException): Error linking GLSL Program Object : invalid framebuffer operationError linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached. in GLSLLinkProgram::Activate at /build/buildd/ogre-1.7.4+dfsg1/RenderSystems/GL/src/GLSL/src/OgreGLSLExtSupport.cpp (line 65)
+22:41:11: Error linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached.
+22:41:11: OGRE EXCEPTION(7:InternalErrorException): Error linking GLSL Program Object : invalid framebuffer operationError linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached. in GLSLLinkProgram::Activate at /build/buildd/ogre-1.7.4+dfsg1/RenderSystems/GL/src/GLSL/src/OgreGLSLExtSupport.cpp (line 65)
+22:41:11: Error linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached.
+22:41:11: OGRE EXCEPTION(7:InternalErrorException): Error linking GLSL Program Object : invalid framebuffer operationError linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached. in GLSLLinkProgram::Activate at /build/buildd/ogre-1.7.4+dfsg1/RenderSystems/GL/src/GLSL/src/OgreGLSLExtSupport.cpp (line 65)
+22:41:11: Error linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached.
+22:41:11: OGRE EXCEPTION(7:InternalErrorException): Error linking GLSL Program Object : invalid framebuffer operationError linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached. in GLSLLinkProgram::Activate at /build/buildd/ogre-1.7.4+dfsg1/RenderSystems/GL/src/GLSL/src/OgreGLSLExtSupport.cpp (line 65)
+22:41:11: Error linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached.
+22:41:11: OGRE EXCEPTION(7:InternalErrorException): Error linking GLSL Program Object : invalid framebuffer operationError linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached. in GLSLLinkProgram::Activate at /build/buildd/ogre-1.7.4+dfsg1/RenderSystems/GL/src/GLSL/src/OgreGLSLExtSupport.cpp (line 65)
+22:41:11: Error linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached.
+22:41:11: OGRE EXCEPTION(7:InternalErrorException): Error linking GLSL Program Object : invalid framebuffer operationError linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached. in GLSLLinkProgram::Activate at /build/buildd/ogre-1.7.4+dfsg1/RenderSystems/GL/src/GLSL/src/OgreGLSLExtSupport.cpp (line 65)
+22:41:11: Error linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached.
+22:41:11: OGRE EXCEPTION(7:InternalErrorException): Error linking GLSL Program Object : invalid framebuffer operationError linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached. in GLSLLinkProgram::Activate at /build/buildd/ogre-1.7.4+dfsg1/RenderSystems/GL/src/GLSL/src/OgreGLSLExtSupport.cpp (line 65)
+22:41:11: Error linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached.
+22:41:11: OGRE EXCEPTION(7:InternalErrorException): Error linking GLSL Program Object : invalid framebuffer operationError linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached. in GLSLLinkProgram::Activate at /build/buildd/ogre-1.7.4+dfsg1/RenderSystems/GL/src/GLSL/src/OgreGLSLExtSupport.cpp (line 65)
+22:41:11: Error linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached.
+22:41:11: OGRE EXCEPTION(7:InternalErrorException): Error linking GLSL Program Object : invalid framebuffer operationError linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached. in GLSLLinkProgram::Activate at /build/buildd/ogre-1.7.4+dfsg1/RenderSystems/GL/src/GLSL/src/OgreGLSLExtSupport.cpp (line 65)
+22:41:11: Error linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached.
+22:41:11: OGRE EXCEPTION(7:InternalErrorException): Error linking GLSL Program Object : invalid framebuffer operationError linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached. in GLSLLinkProgram::Activate at /build/buildd/ogre-1.7.4+dfsg1/RenderSystems/GL/src/GLSL/src/OgreGLSLExtSupport.cpp (line 65)
+22:41:11: Error linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached.
+22:41:11: OGRE EXCEPTION(7:InternalErrorException): Error linking GLSL Program Object : invalid framebuffer operationError linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached. in GLSLLinkProgram::Activate at /build/buildd/ogre-1.7.4+dfsg1/RenderSystems/GL/src/GLSL/src/OgreGLSLExtSupport.cpp (line 65)
+22:41:11: Error linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached.
+22:41:11: OGRE EXCEPTION(7:InternalErrorException): Error linking GLSL Program Object : invalid framebuffer operationError linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached. in GLSLLinkProgram::Activate at /build/buildd/ogre-1.7.4+dfsg1/RenderSystems/GL/src/GLSL/src/OgreGLSLExtSupport.cpp (line 65)
+22:41:11: Error linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached.
+22:41:11: OGRE EXCEPTION(7:InternalErrorException): Error linking GLSL Program Object : invalid framebuffer operationError linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached. in GLSLLinkProgram::Activate at /build/buildd/ogre-1.7.4+dfsg1/RenderSystems/GL/src/GLSL/src/OgreGLSLExtSupport.cpp (line 65)
+22:41:11: Error linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached.
+22:41:11: OGRE EXCEPTION(7:InternalErrorException): Error linking GLSL Program Object : invalid framebuffer operationError linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached. in GLSLLinkProgram::Activate at /build/buildd/ogre-1.7.4+dfsg1/RenderSystems/GL/src/GLSL/src/OgreGLSLExtSupport.cpp (line 65)
+22:41:11: Error linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached.
+22:41:11: OGRE EXCEPTION(7:InternalErrorException): Error linking GLSL Program Object : invalid framebuffer operationError linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached. in GLSLLinkProgram::Activate at /build/buildd/ogre-1.7.4+dfsg1/RenderSystems/GL/src/GLSL/src/OgreGLSLExtSupport.cpp (line 65)
+22:41:11: Error linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached.
+22:41:11: OGRE EXCEPTION(7:InternalErrorException): Error linking GLSL Program Object : invalid framebuffer operationError linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached. in GLSLLinkProgram::Activate at /build/buildd/ogre-1.7.4+dfsg1/RenderSystems/GL/src/GLSL/src/OgreGLSLExtSupport.cpp (line 65)
+22:41:11: Error linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached.
+22:41:11: OGRE EXCEPTION(7:InternalErrorException): Error linking GLSL Program Object : invalid framebuffer operationError linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached. in GLSLLinkProgram::Activate at /build/buildd/ogre-1.7.4+dfsg1/RenderSystems/GL/src/GLSL/src/OgreGLSLExtSupport.cpp (line 65)
+22:41:11: Error linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached.
+22:41:11: OGRE EXCEPTION(7:InternalErrorException): Error linking GLSL Program Object : invalid framebuffer operationError linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached. in GLSLLinkProgram::Activate at /build/buildd/ogre-1.7.4+dfsg1/RenderSystems/GL/src/GLSL/src/OgreGLSLExtSupport.cpp (line 65)
+22:41:11: Error linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached.
+22:41:11: OGRE EXCEPTION(7:InternalErrorException): Error linking GLSL Program Object : invalid framebuffer operationError linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached. in GLSLLinkProgram::Activate at /build/buildd/ogre-1.7.4+dfsg1/RenderSystems/GL/src/GLSL/src/OgreGLSLExtSupport.cpp (line 65)
+22:41:11: Error linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached.
+22:41:11: OGRE EXCEPTION(7:InternalErrorException): Error linking GLSL Program Object : invalid framebuffer operationError linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached. in GLSLLinkProgram::Activate at /build/buildd/ogre-1.7.4+dfsg1/RenderSystems/GL/src/GLSL/src/OgreGLSLExtSupport.cpp (line 65)
+22:41:11: Error linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached.
+22:41:11: OGRE EXCEPTION(7:InternalErrorException): Error linking GLSL Program Object : invalid framebuffer operationError linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached. in GLSLLinkProgram::Activate at /build/buildd/ogre-1.7.4+dfsg1/RenderSystems/GL/src/GLSL/src/OgreGLSLExtSupport.cpp (line 65)
+22:41:12: Error linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached.
+22:41:12: OGRE EXCEPTION(7:InternalErrorException): Error linking GLSL Program Object : invalid framebuffer operationError linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached. in GLSLLinkProgram::Activate at /build/buildd/ogre-1.7.4+dfsg1/RenderSystems/GL/src/GLSL/src/OgreGLSLExtSupport.cpp (line 65)
+22:41:12: Error linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached.
+22:41:12: OGRE EXCEPTION(7:InternalErrorException): Error linking GLSL Program Object : invalid framebuffer operationError linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached. in GLSLLinkProgram::Activate at /build/buildd/ogre-1.7.4+dfsg1/RenderSystems/GL/src/GLSL/src/OgreGLSLExtSupport.cpp (line 65)
+22:41:12: Error linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached.
+22:41:12: OGRE EXCEPTION(7:InternalErrorException): Error linking GLSL Program Object : invalid framebuffer operationError linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached. in GLSLLinkProgram::Activate at /build/buildd/ogre-1.7.4+dfsg1/RenderSystems/GL/src/GLSL/src/OgreGLSLExtSupport.cpp (line 65)
+22:41:12: Error linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached.
+22:41:12: OGRE EXCEPTION(7:InternalErrorException): Error linking GLSL Program Object : invalid framebuffer operationError linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached. in GLSLLinkProgram::Activate at /build/buildd/ogre-1.7.4+dfsg1/RenderSystems/GL/src/GLSL/src/OgreGLSLExtSupport.cpp (line 65)
+22:41:12: Error linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached.
+22:41:12: OGRE EXCEPTION(7:InternalErrorException): Error linking GLSL Program Object : invalid framebuffer operationError linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached. in GLSLLinkProgram::Activate at /build/buildd/ogre-1.7.4+dfsg1/RenderSystems/GL/src/GLSL/src/OgreGLSLExtSupport.cpp (line 65)
+22:41:12: Error linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached.
+22:41:12: OGRE EXCEPTION(7:InternalErrorException): Error linking GLSL Program Object : invalid framebuffer operationError linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached. in GLSLLinkProgram::Activate at /build/buildd/ogre-1.7.4+dfsg1/RenderSystems/GL/src/GLSL/src/OgreGLSLExtSupport.cpp (line 65)
+22:41:12: Error linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached.
+22:41:12: OGRE EXCEPTION(7:InternalErrorException): Error linking GLSL Program Object : invalid framebuffer operationError linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached. in GLSLLinkProgram::Activate at /build/buildd/ogre-1.7.4+dfsg1/RenderSystems/GL/src/GLSL/src/OgreGLSLExtSupport.cpp (line 65)
+22:41:12: Error linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached.
+22:41:12: OGRE EXCEPTION(7:InternalErrorException): Error linking GLSL Program Object : invalid framebuffer operationError linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached. in GLSLLinkProgram::Activate at /build/buildd/ogre-1.7.4+dfsg1/RenderSystems/GL/src/GLSL/src/OgreGLSLExtSupport.cpp (line 65)
+22:41:12: Error linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached.
+22:41:12: OGRE EXCEPTION(7:InternalErrorException): Error linking GLSL Program Object : invalid framebuffer operationError linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached. in GLSLLinkProgram::Activate at /build/buildd/ogre-1.7.4+dfsg1/RenderSystems/GL/src/GLSL/src/OgreGLSLExtSupport.cpp (line 65)
+22:41:12: Error linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached.
+22:41:12: OGRE EXCEPTION(7:InternalErrorException): Error linking GLSL Program Object : invalid framebuffer operationError linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached. in GLSLLinkProgram::Activate at /build/buildd/ogre-1.7.4+dfsg1/RenderSystems/GL/src/GLSL/src/OgreGLSLExtSupport.cpp (line 65)
+22:41:22: Error linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached.
+22:41:22: OGRE EXCEPTION(7:InternalErrorException): Error linking GLSL Program Object : invalid framebuffer operationError linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached. in GLSLLinkProgram::Activate at /build/buildd/ogre-1.7.4+dfsg1/RenderSystems/GL/src/GLSL/src/OgreGLSLExtSupport.cpp (line 65)
+22:41:22: Error linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached.
+22:41:22: OGRE EXCEPTION(7:InternalErrorException): Error linking GLSL Program Object : invalid framebuffer operationError linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached. in GLSLLinkProgram::Activate at /build/buildd/ogre-1.7.4+dfsg1/RenderSystems/GL/src/GLSL/src/OgreGLSLExtSupport.cpp (line 65)
+22:41:22: Error linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached.
+22:41:22: OGRE EXCEPTION(7:InternalErrorException): Error linking GLSL Program Object : invalid framebuffer operationError linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached. in GLSLLinkProgram::Activate at /build/buildd/ogre-1.7.4+dfsg1/RenderSystems/GL/src/GLSL/src/OgreGLSLExtSupport.cpp (line 65)
+22:41:22: Error linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached.
+22:41:22: OGRE EXCEPTION(7:InternalErrorException): Error linking GLSL Program Object : invalid framebuffer operationError linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached. in GLSLLinkProgram::Activate at /build/buildd/ogre-1.7.4+dfsg1/RenderSystems/GL/src/GLSL/src/OgreGLSLExtSupport.cpp (line 65)
+22:41:22: Error linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached.
+22:41:22: OGRE EXCEPTION(7:InternalErrorException): Error linking GLSL Program Object : invalid framebuffer operationError linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached. in GLSLLinkProgram::Activate at /build/buildd/ogre-1.7.4+dfsg1/RenderSystems/GL/src/GLSL/src/OgreGLSLExtSupport.cpp (line 65)
+22:41:22: Error linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached.
+22:41:22: OGRE EXCEPTION(7:InternalErrorException): Error linking GLSL Program Object : invalid framebuffer operationError linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached. in GLSLLinkProgram::Activate at /build/buildd/ogre-1.7.4+dfsg1/RenderSystems/GL/src/GLSL/src/OgreGLSLExtSupport.cpp (line 65)
+22:41:22: Error linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached.
+22:41:22: OGRE EXCEPTION(7:InternalErrorException): Error linking GLSL Program Object : invalid framebuffer operationError linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached. in GLSLLinkProgram::Activate at /build/buildd/ogre-1.7.4+dfsg1/RenderSystems/GL/src/GLSL/src/OgreGLSLExtSupport.cpp (line 65)
+22:41:22: Error linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached.
+22:41:22: OGRE EXCEPTION(7:InternalErrorException): Error linking GLSL Program Object : invalid framebuffer operationError linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached. in GLSLLinkProgram::Activate at /build/buildd/ogre-1.7.4+dfsg1/RenderSystems/GL/src/GLSL/src/OgreGLSLExtSupport.cpp (line 65)
+22:41:22: Error linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached.
+22:41:22: OGRE EXCEPTION(7:InternalErrorException): Error linking GLSL Program Object : invalid framebuffer operationError linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached. in GLSLLinkProgram::Activate at /build/buildd/ogre-1.7.4+dfsg1/RenderSystems/GL/src/GLSL/src/OgreGLSLExtSupport.cpp (line 65)
+22:41:22: Error linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached.
+22:41:22: OGRE EXCEPTION(7:InternalErrorException): Error linking GLSL Program Object : invalid framebuffer operationError linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached. in GLSLLinkProgram::Activate at /build/buildd/ogre-1.7.4+dfsg1/RenderSystems/GL/src/GLSL/src/OgreGLSLExtSupport.cpp (line 65)
+22:41:22: Error linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached.
+22:41:22: OGRE EXCEPTION(7:InternalErrorException): Error linking GLSL Program Object : invalid framebuffer operationError linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached. in GLSLLinkProgram::Activate at /build/buildd/ogre-1.7.4+dfsg1/RenderSystems/GL/src/GLSL/src/OgreGLSLExtSupport.cpp (line 65)
+22:41:23: Error linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached.
+22:41:23: OGRE EXCEPTION(7:InternalErrorException): Error linking GLSL Program Object : invalid framebuffer operationError linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached. in GLSLLinkProgram::Activate at /build/buildd/ogre-1.7.4+dfsg1/RenderSystems/GL/src/GLSL/src/OgreGLSLExtSupport.cpp (line 65)
+22:41:23: Error linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached.
+22:41:23: OGRE EXCEPTION(7:InternalErrorException): Error linking GLSL Program Object : invalid framebuffer operationError linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached. in GLSLLinkProgram::Activate at /build/buildd/ogre-1.7.4+dfsg1/RenderSystems/GL/src/GLSL/src/OgreGLSLExtSupport.cpp (line 65)
+22:41:23: Error linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached.
+22:41:23: OGRE EXCEPTION(7:InternalErrorException): Error linking GLSL Program Object : invalid framebuffer operationError linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached. in GLSLLinkProgram::Activate at /build/buildd/ogre-1.7.4+dfsg1/RenderSystems/GL/src/GLSL/src/OgreGLSLExtSupport.cpp (line 65)
+22:41:23: Error linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached.
+22:41:23: OGRE EXCEPTION(7:InternalErrorException): Error linking GLSL Program Object : invalid framebuffer operationError linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached. in GLSLLinkProgram::Activate at /build/buildd/ogre-1.7.4+dfsg1/RenderSystems/GL/src/GLSL/src/OgreGLSLExtSupport.cpp (line 65)
+22:41:23: Error linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached.
+22:41:23: OGRE EXCEPTION(7:InternalErrorException): Error linking GLSL Program Object : invalid framebuffer operationError linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached. in GLSLLinkProgram::Activate at /build/buildd/ogre-1.7.4+dfsg1/RenderSystems/GL/src/GLSL/src/OgreGLSLExtSupport.cpp (line 65)
+22:41:23: Error linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached.
+22:41:23: OGRE EXCEPTION(7:InternalErrorException): Error linking GLSL Program Object : invalid framebuffer operationError linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached. in GLSLLinkProgram::Activate at /build/buildd/ogre-1.7.4+dfsg1/RenderSystems/GL/src/GLSL/src/OgreGLSLExtSupport.cpp (line 65)
+22:41:23: Error linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached.
+22:41:23: OGRE EXCEPTION(7:InternalErrorException): Error linking GLSL Program Object : invalid framebuffer operationError linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached. in GLSLLinkProgram::Activate at /build/buildd/ogre-1.7.4+dfsg1/RenderSystems/GL/src/GLSL/src/OgreGLSLExtSupport.cpp (line 65)
+22:41:23: Error linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached.
+22:41:23: OGRE EXCEPTION(7:InternalErrorException): Error linking GLSL Program Object : invalid framebuffer operationError linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached. in GLSLLinkProgram::Activate at /build/buildd/ogre-1.7.4+dfsg1/RenderSystems/GL/src/GLSL/src/OgreGLSLExtSupport.cpp (line 65)
+22:41:23: Error linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached.
+22:41:23: OGRE EXCEPTION(7:InternalErrorException): Error linking GLSL Program Object : invalid framebuffer operationError linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached. in GLSLLinkProgram::Activate at /build/buildd/ogre-1.7.4+dfsg1/RenderSystems/GL/src/GLSL/src/OgreGLSLExtSupport.cpp (line 65)
+22:41:23: Error linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached.
+22:41:23: OGRE EXCEPTION(7:InternalErrorException): Error linking GLSL Program Object : invalid framebuffer operationError linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached. in GLSLLinkProgram::Activate at /build/buildd/ogre-1.7.4+dfsg1/RenderSystems/GL/src/GLSL/src/OgreGLSLExtSupport.cpp (line 65)
+22:41:23: Error linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached.
+22:41:23: OGRE EXCEPTION(7:InternalErrorException): Error linking GLSL Program Object : invalid framebuffer operationError linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached. in GLSLLinkProgram::Activate at /build/buildd/ogre-1.7.4+dfsg1/RenderSystems/GL/src/GLSL/src/OgreGLSLExtSupport.cpp (line 65)
+22:41:23: Error linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached.
+22:41:23: OGRE EXCEPTION(7:InternalErrorException): Error linking GLSL Program Object : invalid framebuffer operationError linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached. in GLSLLinkProgram::Activate at /build/buildd/ogre-1.7.4+dfsg1/RenderSystems/GL/src/GLSL/src/OgreGLSLExtSupport.cpp (line 65)
+22:41:23: Error linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached.
+22:41:23: OGRE EXCEPTION(7:InternalErrorException): Error linking GLSL Program Object : invalid framebuffer operationError linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached. in GLSLLinkProgram::Activate at /build/buildd/ogre-1.7.4+dfsg1/RenderSystems/GL/src/GLSL/src/OgreGLSLExtSupport.cpp (line 65)
+22:41:23: Error linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached.
+22:41:23: OGRE EXCEPTION(7:InternalErrorException): Error linking GLSL Program Object : invalid framebuffer operationError linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached. in GLSLLinkProgram::Activate at /build/buildd/ogre-1.7.4+dfsg1/RenderSystems/GL/src/GLSL/src/OgreGLSLExtSupport.cpp (line 65)
+22:41:23: Error linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached.
+22:41:23: OGRE EXCEPTION(7:InternalErrorException): Error linking GLSL Program Object : invalid framebuffer operationError linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached. in GLSLLinkProgram::Activate at /build/buildd/ogre-1.7.4+dfsg1/RenderSystems/GL/src/GLSL/src/OgreGLSLExtSupport.cpp (line 65)
+22:41:23: Error linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached.
+22:41:23: OGRE EXCEPTION(7:InternalErrorException): Error linking GLSL Program Object : invalid framebuffer operationError linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached. in GLSLLinkProgram::Activate at /build/buildd/ogre-1.7.4+dfsg1/RenderSystems/GL/src/GLSL/src/OgreGLSLExtSupport.cpp (line 65)
+22:41:23: Error linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached.
+22:41:23: OGRE EXCEPTION(7:InternalErrorException): Error linking GLSL Program Object : invalid framebuffer operationError linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached. in GLSLLinkProgram::Activate at /build/buildd/ogre-1.7.4+dfsg1/RenderSystems/GL/src/GLSL/src/OgreGLSLExtSupport.cpp (line 65)
+22:41:23: Error linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached.
+22:41:23: OGRE EXCEPTION(7:InternalErrorException): Error linking GLSL Program Object : invalid framebuffer operationError linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached. in GLSLLinkProgram::Activate at /build/buildd/ogre-1.7.4+dfsg1/RenderSystems/GL/src/GLSL/src/OgreGLSLExtSupport.cpp (line 65)
+22:41:28: Error linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached.
+22:41:28: OGRE EXCEPTION(7:InternalErrorException): Error linking GLSL Program Object : invalid framebuffer operationError linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached. in GLSLLinkProgram::Activate at /build/buildd/ogre-1.7.4+dfsg1/RenderSystems/GL/src/GLSL/src/OgreGLSLExtSupport.cpp (line 65)
+22:41:28: Error linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached.
+22:41:28: OGRE EXCEPTION(7:InternalErrorException): Error linking GLSL Program Object : invalid framebuffer operationError linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached. in GLSLLinkProgram::Activate at /build/buildd/ogre-1.7.4+dfsg1/RenderSystems/GL/src/GLSL/src/OgreGLSLExtSupport.cpp (line 65)
+22:41:28: Error linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached.
+22:41:28: OGRE EXCEPTION(7:InternalErrorException): Error linking GLSL Program Object : invalid framebuffer operationError linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached. in GLSLLinkProgram::Activate at /build/buildd/ogre-1.7.4+dfsg1/RenderSystems/GL/src/GLSL/src/OgreGLSLExtSupport.cpp (line 65)
+22:41:28: Error linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached.
+22:41:28: OGRE EXCEPTION(7:InternalErrorException): Error linking GLSL Program Object : invalid framebuffer operationError linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached. in GLSLLinkProgram::Activate at /build/buildd/ogre-1.7.4+dfsg1/RenderSystems/GL/src/GLSL/src/OgreGLSLExtSupport.cpp (line 65)
+22:41:28: Error linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached.
+22:41:28: OGRE EXCEPTION(7:InternalErrorException): Error linking GLSL Program Object : invalid framebuffer operationError linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached. in GLSLLinkProgram::Activate at /build/buildd/ogre-1.7.4+dfsg1/RenderSystems/GL/src/GLSL/src/OgreGLSLExtSupport.cpp (line 65)
+22:42:22: Error linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached.
+22:42:22: OGRE EXCEPTION(7:InternalErrorException): Error linking GLSL Program Object : invalid framebuffer operationError linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached. in GLSLLinkProgram::Activate at /build/buildd/ogre-1.7.4+dfsg1/RenderSystems/GL/src/GLSL/src/OgreGLSLExtSupport.cpp (line 65)
+22:42:22: Error linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached.
+22:42:22: OGRE EXCEPTION(7:InternalErrorException): Error linking GLSL Program Object : invalid framebuffer operationError linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached. in GLSLLinkProgram::Activate at /build/buildd/ogre-1.7.4+dfsg1/RenderSystems/GL/src/GLSL/src/OgreGLSLExtSupport.cpp (line 65)
+22:42:49: Error linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached.
+22:42:49: OGRE EXCEPTION(7:InternalErrorException): Error linking GLSL Program Object : invalid framebuffer operationError linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached. in GLSLLinkProgram::Activate at /build/buildd/ogre-1.7.4+dfsg1/RenderSystems/GL/src/GLSL/src/OgreGLSLExtSupport.cpp (line 65)
+22:42:49: Error linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached.
+22:42:49: OGRE EXCEPTION(7:InternalErrorException): Error linking GLSL Program Object : invalid framebuffer operationError linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached. in GLSLLinkProgram::Activate at /build/buildd/ogre-1.7.4+dfsg1/RenderSystems/GL/src/GLSL/src/OgreGLSLExtSupport.cpp (line 65)
+22:42:49: Error linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached.
+22:42:49: OGRE EXCEPTION(7:InternalErrorException): Error linking GLSL Program Object : invalid framebuffer operationError linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached. in GLSLLinkProgram::Activate at /build/buildd/ogre-1.7.4+dfsg1/RenderSystems/GL/src/GLSL/src/OgreGLSLExtSupport.cpp (line 65)
+22:43:20: Error linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached.
+22:43:20: OGRE EXCEPTION(7:InternalErrorException): Error linking GLSL Program Object : invalid framebuffer operationError linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached. in GLSLLinkProgram::Activate at /build/buildd/ogre-1.7.4+dfsg1/RenderSystems/GL/src/GLSL/src/OgreGLSLExtSupport.cpp (line 65)
+22:43:20: Error linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached.
+22:43:20: OGRE EXCEPTION(7:InternalErrorException): Error linking GLSL Program Object : invalid framebuffer operationError linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached. in GLSLLinkProgram::Activate at /build/buildd/ogre-1.7.4+dfsg1/RenderSystems/GL/src/GLSL/src/OgreGLSLExtSupport.cpp (line 65)
+22:43:20: Error linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached.
+22:43:20: OGRE EXCEPTION(7:InternalErrorException): Error linking GLSL Program Object : invalid framebuffer operationError linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached. in GLSLLinkProgram::Activate at /build/buildd/ogre-1.7.4+dfsg1/RenderSystems/GL/src/GLSL/src/OgreGLSLExtSupport.cpp (line 65)
+22:43:20: Error linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached.
+22:43:20: OGRE EXCEPTION(7:InternalErrorException): Error linking GLSL Program Object : invalid framebuffer operationError linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached. in GLSLLinkProgram::Activate at /build/buildd/ogre-1.7.4+dfsg1/RenderSystems/GL/src/GLSL/src/OgreGLSLExtSupport.cpp (line 65)
+22:43:20: Error linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached.
+22:43:20: OGRE EXCEPTION(7:InternalErrorException): Error linking GLSL Program Object : invalid framebuffer operationError linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached. in GLSLLinkProgram::Activate at /build/buildd/ogre-1.7.4+dfsg1/RenderSystems/GL/src/GLSL/src/OgreGLSLExtSupport.cpp (line 65)
+22:43:20: Error linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached.
+22:43:20: OGRE EXCEPTION(7:InternalErrorException): Error linking GLSL Program Object : invalid framebuffer operationError linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached. in GLSLLinkProgram::Activate at /build/buildd/ogre-1.7.4+dfsg1/RenderSystems/GL/src/GLSL/src/OgreGLSLExtSupport.cpp (line 65)
+22:43:20: Error linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached.
+22:43:20: OGRE EXCEPTION(7:InternalErrorException): Error linking GLSL Program Object : invalid framebuffer operationError linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached. in GLSLLinkProgram::Activate at /build/buildd/ogre-1.7.4+dfsg1/RenderSystems/GL/src/GLSL/src/OgreGLSLExtSupport.cpp (line 65)
+22:43:21: Error linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached.
+22:43:21: OGRE EXCEPTION(7:InternalErrorException): Error linking GLSL Program Object : invalid framebuffer operationError linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached. in GLSLLinkProgram::Activate at /build/buildd/ogre-1.7.4+dfsg1/RenderSystems/GL/src/GLSL/src/OgreGLSLExtSupport.cpp (line 65)
+22:43:21: Error linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached.
+22:43:21: OGRE EXCEPTION(7:InternalErrorException): Error linking GLSL Program Object : invalid framebuffer operationError linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached. in GLSLLinkProgram::Activate at /build/buildd/ogre-1.7.4+dfsg1/RenderSystems/GL/src/GLSL/src/OgreGLSLExtSupport.cpp (line 65)
+22:43:21: Error linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached.
+22:43:21: OGRE EXCEPTION(7:InternalErrorException): Error linking GLSL Program Object : invalid framebuffer operationError linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached. in GLSLLinkProgram::Activate at /build/buildd/ogre-1.7.4+dfsg1/RenderSystems/GL/src/GLSL/src/OgreGLSLExtSupport.cpp (line 65)
+22:43:21: Error linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached.
+22:43:21: OGRE EXCEPTION(7:InternalErrorException): Error linking GLSL Program Object : invalid framebuffer operationError linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached. in GLSLLinkProgram::Activate at /build/buildd/ogre-1.7.4+dfsg1/RenderSystems/GL/src/GLSL/src/OgreGLSLExtSupport.cpp (line 65)
+22:43:21: Error linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached.
+22:43:21: OGRE EXCEPTION(7:InternalErrorException): Error linking GLSL Program Object : invalid framebuffer operationError linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached. in GLSLLinkProgram::Activate at /build/buildd/ogre-1.7.4+dfsg1/RenderSystems/GL/src/GLSL/src/OgreGLSLExtSupport.cpp (line 65)
+22:43:22: Error linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached.
+22:43:22: OGRE EXCEPTION(7:InternalErrorException): Error linking GLSL Program Object : invalid framebuffer operationError linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached. in GLSLLinkProgram::Activate at /build/buildd/ogre-1.7.4+dfsg1/RenderSystems/GL/src/GLSL/src/OgreGLSLExtSupport.cpp (line 65)
+22:43:22: Error linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached.
+22:43:22: OGRE EXCEPTION(7:InternalErrorException): Error linking GLSL Program Object : invalid framebuffer operationError linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached. in GLSLLinkProgram::Activate at /build/buildd/ogre-1.7.4+dfsg1/RenderSystems/GL/src/GLSL/src/OgreGLSLExtSupport.cpp (line 65)
+22:43:22: Error linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached.
+22:43:22: OGRE EXCEPTION(7:InternalErrorException): Error linking GLSL Program Object : invalid framebuffer operationError linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached. in GLSLLinkProgram::Activate at /build/buildd/ogre-1.7.4+dfsg1/RenderSystems/GL/src/GLSL/src/OgreGLSLExtSupport.cpp (line 65)
+22:43:25: Error linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached.
+22:43:25: OGRE EXCEPTION(7:InternalErrorException): Error linking GLSL Program Object : invalid framebuffer operationError linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached. in GLSLLinkProgram::Activate at /build/buildd/ogre-1.7.4+dfsg1/RenderSystems/GL/src/GLSL/src/OgreGLSLExtSupport.cpp (line 65)
+22:43:25: Error linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached.
+22:43:25: OGRE EXCEPTION(7:InternalErrorException): Error linking GLSL Program Object : invalid framebuffer operationError linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached. in GLSLLinkProgram::Activate at /build/buildd/ogre-1.7.4+dfsg1/RenderSystems/GL/src/GLSL/src/OgreGLSLExtSupport.cpp (line 65)
+22:43:30: Error linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached.
+22:43:30: OGRE EXCEPTION(7:InternalErrorException): Error linking GLSL Program Object : invalid framebuffer operationError linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached. in GLSLLinkProgram::Activate at /build/buildd/ogre-1.7.4+dfsg1/RenderSystems/GL/src/GLSL/src/OgreGLSLExtSupport.cpp (line 65)
+22:43:30: Error linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached.
+22:43:30: OGRE EXCEPTION(7:InternalErrorException): Error linking GLSL Program Object : invalid framebuffer operationError linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached. in GLSLLinkProgram::Activate at /build/buildd/ogre-1.7.4+dfsg1/RenderSystems/GL/src/GLSL/src/OgreGLSLExtSupport.cpp (line 65)
+22:43:52: Error linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached.
+22:43:52: OGRE EXCEPTION(7:InternalErrorException): Error linking GLSL Program Object : invalid framebuffer operationError linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached. in GLSLLinkProgram::Activate at /build/buildd/ogre-1.7.4+dfsg1/RenderSystems/GL/src/GLSL/src/OgreGLSLExtSupport.cpp (line 65)
+22:46:16: Error linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached.
+22:46:16: OGRE EXCEPTION(7:InternalErrorException): Error linking GLSL Program Object : invalid framebuffer operationError linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached. in GLSLLinkProgram::Activate at /build/buildd/ogre-1.7.4+dfsg1/RenderSystems/GL/src/GLSL/src/OgreGLSLExtSupport.cpp (line 65)
+22:46:16: Error linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached.
+22:46:16: OGRE EXCEPTION(7:InternalErrorException): Error linking GLSL Program Object : invalid framebuffer operationError linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached. in GLSLLinkProgram::Activate at /build/buildd/ogre-1.7.4+dfsg1/RenderSystems/GL/src/GLSL/src/OgreGLSLExtSupport.cpp (line 65)
+22:46:16: Error linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached.
+22:46:16: OGRE EXCEPTION(7:InternalErrorException): Error linking GLSL Program Object : invalid framebuffer operationError linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached. in GLSLLinkProgram::Activate at /build/buildd/ogre-1.7.4+dfsg1/RenderSystems/GL/src/GLSL/src/OgreGLSLExtSupport.cpp (line 65)
+22:46:16: Error linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached.
+22:46:16: OGRE EXCEPTION(7:InternalErrorException): Error linking GLSL Program Object : invalid framebuffer operationError linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached. in GLSLLinkProgram::Activate at /build/buildd/ogre-1.7.4+dfsg1/RenderSystems/GL/src/GLSL/src/OgreGLSLExtSupport.cpp (line 65)
+22:46:16: Error linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached.
+22:46:16: OGRE EXCEPTION(7:InternalErrorException): Error linking GLSL Program Object : invalid framebuffer operationError linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached. in GLSLLinkProgram::Activate at /build/buildd/ogre-1.7.4+dfsg1/RenderSystems/GL/src/GLSL/src/OgreGLSLExtSupport.cpp (line 65)
+22:46:16: Error linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached.
+22:46:16: OGRE EXCEPTION(7:InternalErrorException): Error linking GLSL Program Object : invalid framebuffer operationError linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached. in GLSLLinkProgram::Activate at /build/buildd/ogre-1.7.4+dfsg1/RenderSystems/GL/src/GLSL/src/OgreGLSLExtSupport.cpp (line 65)
+22:46:16: Error linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached.
+22:46:16: OGRE EXCEPTION(7:InternalErrorException): Error linking GLSL Program Object : invalid framebuffer operationError linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached. in GLSLLinkProgram::Activate at /build/buildd/ogre-1.7.4+dfsg1/RenderSystems/GL/src/GLSL/src/OgreGLSLExtSupport.cpp (line 65)
+22:46:16: Error linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached.
+22:46:16: OGRE EXCEPTION(7:InternalErrorException): Error linking GLSL Program Object : invalid framebuffer operationError linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached. in GLSLLinkProgram::Activate at /build/buildd/ogre-1.7.4+dfsg1/RenderSystems/GL/src/GLSL/src/OgreGLSLExtSupport.cpp (line 65)
+22:46:16: Error linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached.
+22:46:16: OGRE EXCEPTION(7:InternalErrorException): Error linking GLSL Program Object : invalid framebuffer operationError linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached. in GLSLLinkProgram::Activate at /build/buildd/ogre-1.7.4+dfsg1/RenderSystems/GL/src/GLSL/src/OgreGLSLExtSupport.cpp (line 65)
+22:46:16: Error linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached.
+22:46:16: OGRE EXCEPTION(7:InternalErrorException): Error linking GLSL Program Object : invalid framebuffer operationError linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached. in GLSLLinkProgram::Activate at /build/buildd/ogre-1.7.4+dfsg1/RenderSystems/GL/src/GLSL/src/OgreGLSLExtSupport.cpp (line 65)
+22:46:17: Error linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached.
+22:46:17: OGRE EXCEPTION(7:InternalErrorException): Error linking GLSL Program Object : invalid framebuffer operationError linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached. in GLSLLinkProgram::Activate at /build/buildd/ogre-1.7.4+dfsg1/RenderSystems/GL/src/GLSL/src/OgreGLSLExtSupport.cpp (line 65)
+22:46:17: Error linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached.
+22:46:17: OGRE EXCEPTION(7:InternalErrorException): Error linking GLSL Program Object : invalid framebuffer operationError linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached. in GLSLLinkProgram::Activate at /build/buildd/ogre-1.7.4+dfsg1/RenderSystems/GL/src/GLSL/src/OgreGLSLExtSupport.cpp (line 65)
+22:46:17: Error linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached.
+22:46:17: OGRE EXCEPTION(7:InternalErrorException): Error linking GLSL Program Object : invalid framebuffer operationError linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached. in GLSLLinkProgram::Activate at /build/buildd/ogre-1.7.4+dfsg1/RenderSystems/GL/src/GLSL/src/OgreGLSLExtSupport.cpp (line 65)
+22:46:17: Error linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached.
+22:46:17: OGRE EXCEPTION(7:InternalErrorException): Error linking GLSL Program Object : invalid framebuffer operationError linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached. in GLSLLinkProgram::Activate at /build/buildd/ogre-1.7.4+dfsg1/RenderSystems/GL/src/GLSL/src/OgreGLSLExtSupport.cpp (line 65)
+22:46:17: Error linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached.
+22:46:17: OGRE EXCEPTION(7:InternalErrorException): Error linking GLSL Program Object : invalid framebuffer operationError linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached. in GLSLLinkProgram::Activate at /build/buildd/ogre-1.7.4+dfsg1/RenderSystems/GL/src/GLSL/src/OgreGLSLExtSupport.cpp (line 65)
+22:46:17: Error linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached.
+22:46:17: OGRE EXCEPTION(7:InternalErrorException): Error linking GLSL Program Object : invalid framebuffer operationError linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached. in GLSLLinkProgram::Activate at /build/buildd/ogre-1.7.4+dfsg1/RenderSystems/GL/src/GLSL/src/OgreGLSLExtSupport.cpp (line 65)
+22:46:19: Error linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached.
+22:46:19: OGRE EXCEPTION(7:InternalErrorException): Error linking GLSL Program Object : invalid framebuffer operationError linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached. in GLSLLinkProgram::Activate at /build/buildd/ogre-1.7.4+dfsg1/RenderSystems/GL/src/GLSL/src/OgreGLSLExtSupport.cpp (line 65)
+22:46:19: Error linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached.
+22:46:19: OGRE EXCEPTION(7:InternalErrorException): Error linking GLSL Program Object : invalid framebuffer operationError linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached. in GLSLLinkProgram::Activate at /build/buildd/ogre-1.7.4+dfsg1/RenderSystems/GL/src/GLSL/src/OgreGLSLExtSupport.cpp (line 65)
+22:46:19: Error linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached.
+22:46:19: OGRE EXCEPTION(7:InternalErrorException): Error linking GLSL Program Object : invalid framebuffer operationError linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached. in GLSLLinkProgram::Activate at /build/buildd/ogre-1.7.4+dfsg1/RenderSystems/GL/src/GLSL/src/OgreGLSLExtSupport.cpp (line 65)
+22:46:19: Error linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached.
+22:46:19: OGRE EXCEPTION(7:InternalErrorException): Error linking GLSL Program Object : invalid framebuffer operationError linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached. in GLSLLinkProgram::Activate at /build/buildd/ogre-1.7.4+dfsg1/RenderSystems/GL/src/GLSL/src/OgreGLSLExtSupport.cpp (line 65)
+22:46:19: Error linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached.
+22:46:19: OGRE EXCEPTION(7:InternalErrorException): Error linking GLSL Program Object : invalid framebuffer operationError linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached. in GLSLLinkProgram::Activate at /build/buildd/ogre-1.7.4+dfsg1/RenderSystems/GL/src/GLSL/src/OgreGLSLExtSupport.cpp (line 65)
+22:46:19: Error linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached.
+22:46:19: OGRE EXCEPTION(7:InternalErrorException): Error linking GLSL Program Object : invalid framebuffer operationError linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached. in GLSLLinkProgram::Activate at /build/buildd/ogre-1.7.4+dfsg1/RenderSystems/GL/src/GLSL/src/OgreGLSLExtSupport.cpp (line 65)
+22:46:19: Error linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached.
+22:46:19: OGRE EXCEPTION(7:InternalErrorException): Error linking GLSL Program Object : invalid framebuffer operationError linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached. in GLSLLinkProgram::Activate at /build/buildd/ogre-1.7.4+dfsg1/RenderSystems/GL/src/GLSL/src/OgreGLSLExtSupport.cpp (line 65)
+22:46:19: Error linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached.
+22:46:19: OGRE EXCEPTION(7:InternalErrorException): Error linking GLSL Program Object : invalid framebuffer operationError linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached. in GLSLLinkProgram::Activate at /build/buildd/ogre-1.7.4+dfsg1/RenderSystems/GL/src/GLSL/src/OgreGLSLExtSupport.cpp (line 65)
+22:46:19: Error linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached.
+22:46:19: OGRE EXCEPTION(7:InternalErrorException): Error linking GLSL Program Object : invalid framebuffer operationError linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached. in GLSLLinkProgram::Activate at /build/buildd/ogre-1.7.4+dfsg1/RenderSystems/GL/src/GLSL/src/OgreGLSLExtSupport.cpp (line 65)
+22:46:19: Error linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached.
+22:46:19: OGRE EXCEPTION(7:InternalErrorException): Error linking GLSL Program Object : invalid framebuffer operationError linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached. in GLSLLinkProgram::Activate at /build/buildd/ogre-1.7.4+dfsg1/RenderSystems/GL/src/GLSL/src/OgreGLSLExtSupport.cpp (line 65)
+22:46:19: Error linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached.
+22:46:19: OGRE EXCEPTION(7:InternalErrorException): Error linking GLSL Program Object : invalid framebuffer operationError linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached. in GLSLLinkProgram::Activate at /build/buildd/ogre-1.7.4+dfsg1/RenderSystems/GL/src/GLSL/src/OgreGLSLExtSupport.cpp (line 65)
+22:46:19: Error linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached.
+22:46:19: OGRE EXCEPTION(7:InternalErrorException): Error linking GLSL Program Object : invalid framebuffer operationError linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached. in GLSLLinkProgram::Activate at /build/buildd/ogre-1.7.4+dfsg1/RenderSystems/GL/src/GLSL/src/OgreGLSLExtSupport.cpp (line 65)
+22:46:20: Error linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached.
+22:46:20: OGRE EXCEPTION(7:InternalErrorException): Error linking GLSL Program Object : invalid framebuffer operationError linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached. in GLSLLinkProgram::Activate at /build/buildd/ogre-1.7.4+dfsg1/RenderSystems/GL/src/GLSL/src/OgreGLSLExtSupport.cpp (line 65)
+22:46:20: Error linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached.
+22:46:20: OGRE EXCEPTION(7:InternalErrorException): Error linking GLSL Program Object : invalid framebuffer operationError linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached. in GLSLLinkProgram::Activate at /build/buildd/ogre-1.7.4+dfsg1/RenderSystems/GL/src/GLSL/src/OgreGLSLExtSupport.cpp (line 65)
+22:46:20: Error linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached.
+22:46:20: OGRE EXCEPTION(7:InternalErrorException): Error linking GLSL Program Object : invalid framebuffer operationError linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached. in GLSLLinkProgram::Activate at /build/buildd/ogre-1.7.4+dfsg1/RenderSystems/GL/src/GLSL/src/OgreGLSLExtSupport.cpp (line 65)
+22:46:20: Error linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached.
+22:46:20: OGRE EXCEPTION(7:InternalErrorException): Error linking GLSL Program Object : invalid framebuffer operationError linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached. in GLSLLinkProgram::Activate at /build/buildd/ogre-1.7.4+dfsg1/RenderSystems/GL/src/GLSL/src/OgreGLSLExtSupport.cpp (line 65)
+22:46:20: Error linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached.
+22:46:20: OGRE EXCEPTION(7:InternalErrorException): Error linking GLSL Program Object : invalid framebuffer operationError linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached. in GLSLLinkProgram::Activate at /build/buildd/ogre-1.7.4+dfsg1/RenderSystems/GL/src/GLSL/src/OgreGLSLExtSupport.cpp (line 65)
+22:46:20: Error linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached.
+22:46:20: OGRE EXCEPTION(7:InternalErrorException): Error linking GLSL Program Object : invalid framebuffer operationError linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached. in GLSLLinkProgram::Activate at /build/buildd/ogre-1.7.4+dfsg1/RenderSystems/GL/src/GLSL/src/OgreGLSLExtSupport.cpp (line 65)
+22:46:20: Error linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached.
+22:46:20: OGRE EXCEPTION(7:InternalErrorException): Error linking GLSL Program Object : invalid framebuffer operationError linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached. in GLSLLinkProgram::Activate at /build/buildd/ogre-1.7.4+dfsg1/RenderSystems/GL/src/GLSL/src/OgreGLSLExtSupport.cpp (line 65)
+22:46:20: Error linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached.
+22:46:20: OGRE EXCEPTION(7:InternalErrorException): Error linking GLSL Program Object : invalid framebuffer operationError linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached. in GLSLLinkProgram::Activate at /build/buildd/ogre-1.7.4+dfsg1/RenderSystems/GL/src/GLSL/src/OgreGLSLExtSupport.cpp (line 65)
+22:46:20: Error linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached.
+22:46:20: OGRE EXCEPTION(7:InternalErrorException): Error linking GLSL Program Object : invalid framebuffer operationError linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached. in GLSLLinkProgram::Activate at /build/buildd/ogre-1.7.4+dfsg1/RenderSystems/GL/src/GLSL/src/OgreGLSLExtSupport.cpp (line 65)
+22:46:20: Error linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached.
+22:46:20: OGRE EXCEPTION(7:InternalErrorException): Error linking GLSL Program Object : invalid framebuffer operationError linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached. in GLSLLinkProgram::Activate at /build/buildd/ogre-1.7.4+dfsg1/RenderSystems/GL/src/GLSL/src/OgreGLSLExtSupport.cpp (line 65)
+22:46:20: Error linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached.
+22:46:20: OGRE EXCEPTION(7:InternalErrorException): Error linking GLSL Program Object : invalid framebuffer operationError linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached. in GLSLLinkProgram::Activate at /build/buildd/ogre-1.7.4+dfsg1/RenderSystems/GL/src/GLSL/src/OgreGLSLExtSupport.cpp (line 65)
+22:46:20: Error linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached.
+22:46:20: OGRE EXCEPTION(7:InternalErrorException): Error linking GLSL Program Object : invalid framebuffer operationError linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached. in GLSLLinkProgram::Activate at /build/buildd/ogre-1.7.4+dfsg1/RenderSystems/GL/src/GLSL/src/OgreGLSLExtSupport.cpp (line 65)
+22:46:20: Error linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached.
+22:46:20: OGRE EXCEPTION(7:InternalErrorException): Error linking GLSL Program Object : invalid framebuffer operationError linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached. in GLSLLinkProgram::Activate at /build/buildd/ogre-1.7.4+dfsg1/RenderSystems/GL/src/GLSL/src/OgreGLSLExtSupport.cpp (line 65)
+22:46:20: Error linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached.
+22:46:20: OGRE EXCEPTION(7:InternalErrorException): Error linking GLSL Program Object : invalid framebuffer operationError linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached. in GLSLLinkProgram::Activate at /build/buildd/ogre-1.7.4+dfsg1/RenderSystems/GL/src/GLSL/src/OgreGLSLExtSupport.cpp (line 65)
+22:46:20: Error linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached.
+22:46:20: OGRE EXCEPTION(7:InternalErrorException): Error linking GLSL Program Object : invalid framebuffer operationError linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached. in GLSLLinkProgram::Activate at /build/buildd/ogre-1.7.4+dfsg1/RenderSystems/GL/src/GLSL/src/OgreGLSLExtSupport.cpp (line 65)
+22:46:20: Error linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached.
+22:46:20: OGRE EXCEPTION(7:InternalErrorException): Error linking GLSL Program Object : invalid framebuffer operationError linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached. in GLSLLinkProgram::Activate at /build/buildd/ogre-1.7.4+dfsg1/RenderSystems/GL/src/GLSL/src/OgreGLSLExtSupport.cpp (line 65)
+22:46:21: Error linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached.
+22:46:21: OGRE EXCEPTION(7:InternalErrorException): Error linking GLSL Program Object : invalid framebuffer operationError linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached. in GLSLLinkProgram::Activate at /build/buildd/ogre-1.7.4+dfsg1/RenderSystems/GL/src/GLSL/src/OgreGLSLExtSupport.cpp (line 65)
+22:46:21: Error linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached.
+22:46:21: OGRE EXCEPTION(7:InternalErrorException): Error linking GLSL Program Object : invalid framebuffer operationError linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached. in GLSLLinkProgram::Activate at /build/buildd/ogre-1.7.4+dfsg1/RenderSystems/GL/src/GLSL/src/OgreGLSLExtSupport.cpp (line 65)
+22:46:21: Error linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached.
+22:46:21: OGRE EXCEPTION(7:InternalErrorException): Error linking GLSL Program Object : invalid framebuffer operationError linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached. in GLSLLinkProgram::Activate at /build/buildd/ogre-1.7.4+dfsg1/RenderSystems/GL/src/GLSL/src/OgreGLSLExtSupport.cpp (line 65)
+22:46:21: Error linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached.
+22:46:21: OGRE EXCEPTION(7:InternalErrorException): Error linking GLSL Program Object : invalid framebuffer operationError linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached. in GLSLLinkProgram::Activate at /build/buildd/ogre-1.7.4+dfsg1/RenderSystems/GL/src/GLSL/src/OgreGLSLExtSupport.cpp (line 65)
+22:46:21: Error linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached.
+22:46:21: OGRE EXCEPTION(7:InternalErrorException): Error linking GLSL Program Object : invalid framebuffer operationError linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached. in GLSLLinkProgram::Activate at /build/buildd/ogre-1.7.4+dfsg1/RenderSystems/GL/src/GLSL/src/OgreGLSLExtSupport.cpp (line 65)
+22:46:21: Error linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached.
+22:46:21: OGRE EXCEPTION(7:InternalErrorException): Error linking GLSL Program Object : invalid framebuffer operationError linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached. in GLSLLinkProgram::Activate at /build/buildd/ogre-1.7.4+dfsg1/RenderSystems/GL/src/GLSL/src/OgreGLSLExtSupport.cpp (line 65)
+22:46:21: Error linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached.
+22:46:21: OGRE EXCEPTION(7:InternalErrorException): Error linking GLSL Program Object : invalid framebuffer operationError linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached. in GLSLLinkProgram::Activate at /build/buildd/ogre-1.7.4+dfsg1/RenderSystems/GL/src/GLSL/src/OgreGLSLExtSupport.cpp (line 65)
+22:46:25: Error linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached.
+22:46:25: OGRE EXCEPTION(7:InternalErrorException): Error linking GLSL Program Object : invalid framebuffer operationError linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached. in GLSLLinkProgram::Activate at /build/buildd/ogre-1.7.4+dfsg1/RenderSystems/GL/src/GLSL/src/OgreGLSLExtSupport.cpp (line 65)
+22:46:25: Error linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached.
+22:46:25: OGRE EXCEPTION(7:InternalErrorException): Error linking GLSL Program Object : invalid framebuffer operationError linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached. in GLSLLinkProgram::Activate at /build/buildd/ogre-1.7.4+dfsg1/RenderSystems/GL/src/GLSL/src/OgreGLSLExtSupport.cpp (line 65)
+22:46:25: Error linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached.
+22:46:25: OGRE EXCEPTION(7:InternalErrorException): Error linking GLSL Program Object : invalid framebuffer operationError linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached. in GLSLLinkProgram::Activate at /build/buildd/ogre-1.7.4+dfsg1/RenderSystems/GL/src/GLSL/src/OgreGLSLExtSupport.cpp (line 65)
+22:46:25: Error linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached.
+22:46:25: OGRE EXCEPTION(7:InternalErrorException): Error linking GLSL Program Object : invalid framebuffer operationError linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached. in GLSLLinkProgram::Activate at /build/buildd/ogre-1.7.4+dfsg1/RenderSystems/GL/src/GLSL/src/OgreGLSLExtSupport.cpp (line 65)
+22:46:25: Error linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached.
+22:46:25: OGRE EXCEPTION(7:InternalErrorException): Error linking GLSL Program Object : invalid framebuffer operationError linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached. in GLSLLinkProgram::Activate at /build/buildd/ogre-1.7.4+dfsg1/RenderSystems/GL/src/GLSL/src/OgreGLSLExtSupport.cpp (line 65)
+22:46:25: Error linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached.
+22:46:25: OGRE EXCEPTION(7:InternalErrorException): Error linking GLSL Program Object : invalid framebuffer operationError linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached. in GLSLLinkProgram::Activate at /build/buildd/ogre-1.7.4+dfsg1/RenderSystems/GL/src/GLSL/src/OgreGLSLExtSupport.cpp (line 65)
+22:46:25: Error linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached.
+22:46:25: OGRE EXCEPTION(7:InternalErrorException): Error linking GLSL Program Object : invalid framebuffer operationError linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached. in GLSLLinkProgram::Activate at /build/buildd/ogre-1.7.4+dfsg1/RenderSystems/GL/src/GLSL/src/OgreGLSLExtSupport.cpp (line 65)
+22:46:25: Error linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached.
+22:46:25: OGRE EXCEPTION(7:InternalErrorException): Error linking GLSL Program Object : invalid framebuffer operationError linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached. in GLSLLinkProgram::Activate at /build/buildd/ogre-1.7.4+dfsg1/RenderSystems/GL/src/GLSL/src/OgreGLSLExtSupport.cpp (line 65)
+22:46:25: Error linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached.
+22:46:25: OGRE EXCEPTION(7:InternalErrorException): Error linking GLSL Program Object : invalid framebuffer operationError linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached. in GLSLLinkProgram::Activate at /build/buildd/ogre-1.7.4+dfsg1/RenderSystems/GL/src/GLSL/src/OgreGLSLExtSupport.cpp (line 65)
+22:46:25: Error linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached.
+22:46:25: OGRE EXCEPTION(7:InternalErrorException): Error linking GLSL Program Object : invalid framebuffer operationError linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached. in GLSLLinkProgram::Activate at /build/buildd/ogre-1.7.4+dfsg1/RenderSystems/GL/src/GLSL/src/OgreGLSLExtSupport.cpp (line 65)
+22:46:26: Error linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached.
+22:46:26: OGRE EXCEPTION(7:InternalErrorException): Error linking GLSL Program Object : invalid framebuffer operationError linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached. in GLSLLinkProgram::Activate at /build/buildd/ogre-1.7.4+dfsg1/RenderSystems/GL/src/GLSL/src/OgreGLSLExtSupport.cpp (line 65)
+22:46:26: Error linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached.
+22:46:26: OGRE EXCEPTION(7:InternalErrorException): Error linking GLSL Program Object : invalid framebuffer operationError linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached. in GLSLLinkProgram::Activate at /build/buildd/ogre-1.7.4+dfsg1/RenderSystems/GL/src/GLSL/src/OgreGLSLExtSupport.cpp (line 65)
+22:46:26: Error linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached.
+22:46:26: OGRE EXCEPTION(7:InternalErrorException): Error linking GLSL Program Object : invalid framebuffer operationError linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached. in GLSLLinkProgram::Activate at /build/buildd/ogre-1.7.4+dfsg1/RenderSystems/GL/src/GLSL/src/OgreGLSLExtSupport.cpp (line 65)
+22:46:26: Error linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached.
+22:46:26: OGRE EXCEPTION(7:InternalErrorException): Error linking GLSL Program Object : invalid framebuffer operationError linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached. in GLSLLinkProgram::Activate at /build/buildd/ogre-1.7.4+dfsg1/RenderSystems/GL/src/GLSL/src/OgreGLSLExtSupport.cpp (line 65)
+22:46:26: Error linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached.
+22:46:26: OGRE EXCEPTION(7:InternalErrorException): Error linking GLSL Program Object : invalid framebuffer operationError linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached. in GLSLLinkProgram::Activate at /build/buildd/ogre-1.7.4+dfsg1/RenderSystems/GL/src/GLSL/src/OgreGLSLExtSupport.cpp (line 65)
+22:46:26: Error linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached.
+22:46:26: OGRE EXCEPTION(7:InternalErrorException): Error linking GLSL Program Object : invalid framebuffer operationError linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached. in GLSLLinkProgram::Activate at /build/buildd/ogre-1.7.4+dfsg1/RenderSystems/GL/src/GLSL/src/OgreGLSLExtSupport.cpp (line 65)
+22:46:26: Error linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached.
+22:46:26: OGRE EXCEPTION(7:InternalErrorException): Error linking GLSL Program Object : invalid framebuffer operationError linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached. in GLSLLinkProgram::Activate at /build/buildd/ogre-1.7.4+dfsg1/RenderSystems/GL/src/GLSL/src/OgreGLSLExtSupport.cpp (line 65)
+22:46:26: Error linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached.
+22:46:26: OGRE EXCEPTION(7:InternalErrorException): Error linking GLSL Program Object : invalid framebuffer operationError linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached. in GLSLLinkProgram::Activate at /build/buildd/ogre-1.7.4+dfsg1/RenderSystems/GL/src/GLSL/src/OgreGLSLExtSupport.cpp (line 65)
+22:46:26: Error linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached.
+22:46:26: OGRE EXCEPTION(7:InternalErrorException): Error linking GLSL Program Object : invalid framebuffer operationError linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached. in GLSLLinkProgram::Activate at /build/buildd/ogre-1.7.4+dfsg1/RenderSystems/GL/src/GLSL/src/OgreGLSLExtSupport.cpp (line 65)
+22:46:41: Error linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached.
+22:46:41: OGRE EXCEPTION(7:InternalErrorException): Error linking GLSL Program Object : invalid framebuffer operationError linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached. in GLSLLinkProgram::Activate at /build/buildd/ogre-1.7.4+dfsg1/RenderSystems/GL/src/GLSL/src/OgreGLSLExtSupport.cpp (line 65)
+22:46:49: Error linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached.
+22:46:49: OGRE EXCEPTION(7:InternalErrorException): Error linking GLSL Program Object : invalid framebuffer operationError linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached. in GLSLLinkProgram::Activate at /build/buildd/ogre-1.7.4+dfsg1/RenderSystems/GL/src/GLSL/src/OgreGLSLExtSupport.cpp (line 65)
+22:46:49: Error linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached.
+22:46:49: OGRE EXCEPTION(7:InternalErrorException): Error linking GLSL Program Object : invalid framebuffer operationError linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached. in GLSLLinkProgram::Activate at /build/buildd/ogre-1.7.4+dfsg1/RenderSystems/GL/src/GLSL/src/OgreGLSLExtSupport.cpp (line 65)
+22:46:49: Error linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached.
+22:46:49: OGRE EXCEPTION(7:InternalErrorException): Error linking GLSL Program Object : invalid framebuffer operationError linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached. in GLSLLinkProgram::Activate at /build/buildd/ogre-1.7.4+dfsg1/RenderSystems/GL/src/GLSL/src/OgreGLSLExtSupport.cpp (line 65)
+22:46:49: Error linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached.
+22:46:49: OGRE EXCEPTION(7:InternalErrorException): Error linking GLSL Program Object : invalid framebuffer operationError linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached. in GLSLLinkProgram::Activate at /build/buildd/ogre-1.7.4+dfsg1/RenderSystems/GL/src/GLSL/src/OgreGLSLExtSupport.cpp (line 65)
+22:46:49: Error linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached.
+22:46:49: OGRE EXCEPTION(7:InternalErrorException): Error linking GLSL Program Object : invalid framebuffer operationError linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached. in GLSLLinkProgram::Activate at /build/buildd/ogre-1.7.4+dfsg1/RenderSystems/GL/src/GLSL/src/OgreGLSLExtSupport.cpp (line 65)
+22:46:49: Error linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached.
+22:46:49: OGRE EXCEPTION(7:InternalErrorException): Error linking GLSL Program Object : invalid framebuffer operationError linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached. in GLSLLinkProgram::Activate at /build/buildd/ogre-1.7.4+dfsg1/RenderSystems/GL/src/GLSL/src/OgreGLSLExtSupport.cpp (line 65)
+22:46:49: Error linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached.
+22:46:49: OGRE EXCEPTION(7:InternalErrorException): Error linking GLSL Program Object : invalid framebuffer operationError linking GLSL Program Object : invalid framebuffer operationLink info
+---------
+No shader objects attached. in GLSLLinkProgram::Activate at /build/buildd/ogre-1.7.4+dfsg1/RenderSystems/GL/src/GLSL/src/OgreGLSLExtSupport.cpp (line 65)
