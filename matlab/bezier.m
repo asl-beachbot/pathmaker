@@ -8,9 +8,7 @@
 
 function Q = bezier(P, t)
     Q(:,1) = [0, 0]';
-    clf
-    hold on
-    plot(P(1,:), P(2,:), 'ro')
+    %plot(P(1,:), P(2,:), 'ro')
     % P(:, size(P, 2)) = P(:, 1);
     parfor k = 1:length(t)
         Q(:, k) = [0,0]';
@@ -19,7 +17,6 @@ function Q = bezier(P, t)
         end
     end
     plot(Q(1,:), Q(2, :));
-    hold off
 end
 
 function B = bernstein(n, i, t)
