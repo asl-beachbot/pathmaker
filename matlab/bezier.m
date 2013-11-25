@@ -6,7 +6,7 @@
 % Output: Plots and Q (2xR) 
 
 
-function Q = bezier(P, t)
+function Q = bezier(P, t, v=false)
     Q(:,1) = [0, 0]';
     %plot(P(1,:), P(2,:), 'ro')
     % P(:, size(P, 2)) = P(:, 1);
@@ -16,7 +16,24 @@ function Q = bezier(P, t)
             Q(:,k) = Q(:,k) + P(:,j) * bernstein( size(P,2) - 1, j - 1, t(k) );
         end
     end
+    %% Plotting the vehicle path
+    vehiclepath = [0, 0]';
+    v = [0, 0]';
+    for i = 1:(length(t) - 1)
+        v = Q(:, i+1) - Q(:, i) 
+        v = (v / norm(v)) * 1
+        vehiclepath(:, i) = (Q(:, i) + v)
+        vehiclepath(1, i) = vehiclepath(1, i)
+    end
+    
+    vct_path = [0,0]';
+    for i = 1:2:2 * (length(t) - 2)
+        vct_path(:, i) = Q(:, ceil(i / 2));
+        vct_path(:, i + 1) = vehiclepath(:, ceil(i / 2));
+    end
     plot(Q(1,:), Q(2, :));
+    plot(vct_path(1, :), vct_path(2, :), 'c');
+    plot(vehiclepath(1, :), vehiclepath(2, :), 'k');
 end
 
 function B = bernstein(n, i, t)
