@@ -11,6 +11,8 @@ r = re.compile(r"([a-z])([^a-z]*)", flags=re.IGNORECASE)
 # [map(float,l.split(',')) for l in d.split()]
 
 svg_element_list = []
+complete_path = None
+
 class SVGElement():
     def __init__(self, t, c, prev_el = None, relative_to = None):
         self.element_type = t
@@ -84,9 +86,21 @@ def bernstein(n, i, t):
     return factorial(n) / (factorial(i) * factorial(n - i)) \
        * t**i * (1-t)**(n-i)
 
-def get_path_dif():
+
+def get_vehicle_path():
+    # spiegeln am pfad
     pass
 
+def get_path_dif(simple=True):
+    res = np.array([[0,0]])
+    if simple:
+        dif = complete_path[:-1] - complete_path[1:]
+
+        #for i in range(0, len(complete_path)):
+            #dif = [complete_path[i] - complete_path[i+1]]
+            #print(dif, res)
+            #res = np.concatenate((res, dif), axis=0)
+    return dif
 
 def get_path_result():
     parse_svg("assets/test_curve.svg")
@@ -98,9 +112,13 @@ def get_path_result():
         bez = bezier(el.coords, t)
         res = np.concatenate((res, bez), axis=0)
     res = np.delete(res, 0, 0)
+    global complete_path
+    complete_path = res
     return res
 
 if __name__ == "__main__":
     parse_svg("assets/test_curve.svg")
+    get_path_result()
+    get_path_dif()
     plot()
 

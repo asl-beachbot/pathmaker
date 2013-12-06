@@ -4,3 +4,6 @@ Makefile
 cmake_install.cmake
 install_manifest.txt
 *.swp
+*.log
+*.a
+*.out
