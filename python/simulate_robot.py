@@ -2,7 +2,7 @@ from math import *
 import copy
 import numpy as np
 import matplotlib
-#matplotlib.use('cairo')
+#matplotlib.use('TkAgg')
 from matplotlib.patches import Circle, Rectangle
 import matplotlib.pyplot as plt
 from matplotlib.transforms import Affine2D
@@ -32,6 +32,8 @@ front_wheel = Rectangle(init_pos, 5, 4, fill=False, linestyle="solid", color="bl
 path = np.zeros((1,2))
 rake_trace = []
 rake_trace_line, = ax.plot([0,0])
+rake_trace_patch_collection = None
+
 def center_from_rectangle(rect):
     return np.array([rect.get_x() + rect.get_width() / 2,
                      rect.get_y() + rect.get_height() / 2])
@@ -51,17 +53,23 @@ def animate(i):
     trans = ax.transData
     t = Affine2D().rotate_deg_around(robot_center[0],
                                      robot_center[1], theta / pi * 180)
-    robot.set_transform(t + trans)
-    rake.set_transform(t + trans)
-    front_wheel.set_transform(t + trans)
+    tt = t + trans
+    robot.set_transform(tt)
+    rake.set_transform(tt)
+    rake_rect = Rectangle(rake.get_xy(), rake.get_width(), rake.get_height())
+    front_wheel.set_transform(tt)
+    rake_rect.set_transform(t)
+    rake_trace.append(rake_rect)
+    rake_trace_patch_collection.set_paths(rake_trace)
 
-    rake_trace.append([center_from_rectangle(rake)[0], center_from_rectangle(rake)[1]])
-    print(rake_trace)
-    #rake_trace_line.set_data(rake_trace[0], rake_trace[1])
 def init_robot():
     ax.add_patch(robot)
     ax.add_patch(rake)
     ax.add_patch(front_wheel)
+    rake_trace.append(Rectangle(rake.get_xy(), rake.get_width(), rake.get_height()))
+    global rake_trace_patch_collection
+    rake_trace_patch_collection = PatchCollection(rake_trace)
+    ax.add_collection(rake_trace_patch_collection)
     plt.plot(path[:,0], path[:,1], 'k')
 
 def run():

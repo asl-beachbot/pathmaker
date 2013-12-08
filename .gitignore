@@ -4,5 +4,6 @@ Makefile
 cmake_install.cmake
 install_manifest.txt
 *.swp
-*.pyc
-*/__pycache__
+*.log
+*.a
+*.out
