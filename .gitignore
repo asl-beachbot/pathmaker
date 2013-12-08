@@ -7,3 +7,5 @@ install_manifest.txt
 *.log
 *.a
 *.out
+bin/*
+*.pyc
