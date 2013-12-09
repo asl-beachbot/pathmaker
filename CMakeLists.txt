@@ -16,20 +16,20 @@ configure_file(
 include_directories("${PROJECT_BINARY_DIR}")
 
 # Add C++11 flags for foreach and regexp
-ADD_DEFINITIONS(
-    -std=c++11
-)
+#ADD_DEFINITIONS(
+    #-std=c++11
+#)
 
 ## 
 #	BOOST
 ##
 
-#set(Boost_USE_STATIC_LIBS OFF)
-#set(Boost_USE_MULTITHREADED ON)
-#set(Boost_USE_STATIC_RUNTIME OFF)
+set(Boost_USE_STATIC_LIBS OFF)
+set(Boost_USE_MULTITHREADED ON)
+set(Boost_USE_STATIC_RUNTIME OFF)
 
-#find_package(Boost 1.53.0 COMPONENTS)
-#include_directories({$Boost_INCLUDE_DIRS})
+find_package(Boost 1.53.0 COMPONENTS)
+include_directories({$Boost_INCLUDE_DIRS})
 
 ## 
 #	CGAL

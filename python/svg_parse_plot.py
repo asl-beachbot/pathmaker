@@ -117,7 +117,7 @@ def get_path_result():
     return res
 
 if __name__ == "__main__":
-    parse_svg("assets/test_curve.svg")
+    parse_svg("assets/test_curve_2.svg")
     get_path_result()
     get_path_dif()
     plot()
