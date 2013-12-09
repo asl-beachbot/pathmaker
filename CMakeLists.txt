@@ -15,41 +15,45 @@ configure_file(
 
 include_directories("${PROJECT_BINARY_DIR}")
 
+# Add C++11 flags for foreach and regexp
+ADD_DEFINITIONS(
+    -std=c++11
+)
+
 ## 
 #	BOOST
 ##
 
-set(Boost_USE_STATIC_LIBS OFF)
-set(Boost_USE_MULTITHREADED ON)
-set(Boost_USE_STATIC_RUNTIME OFF)
+#set(Boost_USE_STATIC_LIBS OFF)
+#set(Boost_USE_MULTITHREADED ON)
+#set(Boost_USE_STATIC_RUNTIME OFF)
 
-find_package(Boost 1.53.0 COMPONENTS)
-include_directories({$Boost_INCLUDE_DIRS})
+#find_package(Boost 1.53.0 COMPONENTS)
+#include_directories({$Boost_INCLUDE_DIRS})
 
 ## 
 #	CGAL
 ##
 
-find_package(CGAL QUIET COMPONENTS Core Qt4)
+find_package(CGAL COMPONENTS Core Qt4)
 include( ${CGAL_USE_FILE} )
 
 ## 
 #	QT
 ##
-set( QT_USE_QTXML    TRUE )
-set( QT_USE_QTMAIN   TRUE )
+set( QT_USE_QTXML     TRUE )
+set( QT_USE_QTMAIN    TRUE )
 set( QT_USE_QTSCRIPT  TRUE )
 set( QT_USE_QTOPENGL  TRUE )
 
-find_package(Qt4 )
 include(${QT_USE_FILE})
 
-add_library(Boost src/svg_calculate.cpp)
-add_library(CGAL src/main.cpp)
-add_library(Qt4 src/main.cpp)
+if( CGAL_Core_FOUND)
+    add_definitions(-DCGAL_USE_CORE)
+endif()
 
 add_executable(bin/Pathfinder src/main.cpp)
-target_link_libraries(bin/Pathfinder ${Boost_LIBRARIES})
+add_to_cached_list(CGAL_EXECUTABLE_TARGETS bin/Pathfinder)
 target_link_libraries(bin/Pathfinder ${QT_LIBRARIES})
 target_link_libraries(bin/Pathfinder ${CGAL_LIBRARIES} ${CGAL_3RD_PARTY_LIBRARIES})
 

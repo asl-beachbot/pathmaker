@@ -2,6 +2,9 @@
  *
  *     Released under GPLv3
  *     Developed by Wolf Vollprecht
+ *
+ *     Usage:
+ *      ./bin/Pathfinder ./assets/sample_1.dat 
  */
 
 #include <iostream>
@@ -19,15 +22,13 @@
 #include <CGAL/Polygon_with_holes_2.h>
 #include <CGAL/create_offset_polygons_2.h>
 #include <CGAL/create_offset_polygons_from_polygon_with_holes_2.h>
+#include<CGAL/create_straight_skeleton_from_polygon_with_holes_2.h>
 #include <CGAL/Qt/PolygonGraphicsItem.h>
 #include <CGAL/Qt/PolygonWithHolesGraphicsItem.h>
 
 #include <QtGui>
-#include <QPen>
-#include <CGAL/Qt/GraphicsViewNavigation.h>
-#include <QLineF>
-#include <QRectF>
 
+#include <CGAL/Qt/GraphicsViewNavigation.h>
 // #include <GL/gl.h>
 // #include <GLU/glu.h>
 // #include <GLUT/glut.h>
@@ -36,7 +37,6 @@
 // #include "svg_calculate.cpp"
 
 // Defining Types
-
 typedef CGAL::Exact_predicates_inexact_constructions_kernel K ;
 
 typedef K::Point_2                    Point;
@@ -77,28 +77,30 @@ void iterate_polygon(Polygon_2 *p) {
   }
 }
 
+void iterate_over_polygon_with_holes(PolygonWithHolesPtrVector *p) {
+  /*
+   *for(std::vector<PolygonWithHolesPtr>::iterator i = p->begin(); i != p->end(); ++i) {
+   *  Polygon_2 outer = (**i).outer_boundary();
+   *  iterate_polygon(&outer);
+   *}
+   */
+  
+}
+
 int main(int argc, char **argv) {
   cout << "Welcome to the Pathfinder. Finding a path through the dark since 1999." << endl << "  (c) BeachBot Productions LLC. ";
-  // ptree pt;
-
-
-  Point points[] = { Point(0,0), Point(10,0), Point(20,20), Point(0,10)};
-  Polygon_2* p = new Polygon_2(points, points + 4);
-
-
-
 
   QApplication app(argc, argv);
   QGraphicsScene scene;
   QGraphicsView* view = new QGraphicsView(&scene);
+  // flip view
+  view->scale(1, -1);
   CGAL::Qt::GraphicsViewNavigation navigation;
   view->installEventFilter(&navigation);
   view->viewport()->installEventFilter(&navigation);
   view->setRenderHint(QPainter::Antialiasing);
-  
-  CGAL::Qt::PolygonGraphicsItem<Polygon_2> *pgi = new CGAL::Qt::PolygonGraphicsItem<Polygon_2>(p);
-  scene.addItem(pgi);
-  
+  view->show();
+
   Polygon_with_holes_2 polygon_wh;
   CGAL::Qt::PolygonWithHolesGraphicsItem<Polygon_with_holes_2> *phgi;
   if( argc > 1 ) {
@@ -111,68 +113,35 @@ int main(int argc, char **argv) {
     }
   }
 
-
-  // SsPtr ss = CGAL::create_interior_straight_skeleton_2(*p);
-
-  // double lOffset = 1;
-  // PolygonPtrVectorVector offset_polys;
-  // offset_polys.push_back(CGAL::create_offset_polygons_2<Polygon_2>(lOffset,*ss));
-
-  // int i = 0;
-  // while(offset_polys[i].size() != 0) {
-  //   for(PolygonPtrVector::iterator poly = offset_polys[i].begin(); poly != offset_polys[i].end(); ++poly) {
-  //     CGAL::Qt::PolygonGraphicsItem<Polygon_2> *pgi = new CGAL::Qt::PolygonGraphicsItem<Polygon_2>((*poly).get());
-  //     scene.addItem(pgi);
-  //     cout << "sadsa" << endl;
-  //   }
-  //   lOffset += 1;
-  //   ++i;
-  //   offset_polys.push_back(CGAL::create_offset_polygons_2<Polygon_2>(lOffset,*ss));
-  // }
-
-  // SsPtr ss_compl = CGAL::create_interior_straight_skeleton_2(polygon_wh);
-
-  double lOffset = 3;
-  PolygonWithHolesPtrVectorVector offset_polys_wh;
-  PolygonWithHolesPtrVector offset_poly_wh = CGAL::create_interior_skeleton_and_offset_polygons_with_holes_2(lOffset, polygon_wh);
-  // offset_polys_wh.push_back(offset_poly_wh);
+  double lOffset = 1;
+  // TODO
+  // Investigate usage of straight skeleton calculation
+  SSPtr straight_skel = CGAL::create_interior_straight_skeleton_2(polygon_wh);
+  
+  PolygonWithHolesPtrVectorVector offset_polys;
+  PolygonWithHolesPtrVector offset_poly_wh = 
+    CGAL::create_offset_polygons_2<Polygon_with_holes_2>(lOffset, *straight_skel);
+  //PolygonWithHolesPtrVector offset_poly_wh = 
+    //CGAL::create_interior_skeleton_and_offset_polygons_with_holes_2(lOffset, polygon_wh);
+  offset_polys.push_back(offset_poly_wh);
+  
+  iterate_over_polygon_with_holes(&offset_poly_wh);
 
   int i = 0;
-    QColor pen_color(10, 250, 250);
-    QPen pen(pen_color);
-
-  for(PolygonWithHolesPtrVector::iterator poly = offset_poly_wh.begin(); poly != offset_poly_wh.end(); ++poly) {
-    CGAL::Qt::PolygonWithHolesGraphicsItem<Polygon_with_holes_2> *pgi = new CGAL::Qt::PolygonWithHolesGraphicsItem<Polygon_with_holes_2>((*poly).get());
-    pgi->setEdgesPen(pen);
-    scene.addItem(pgi);
+  QColor pen_color(10, 250, 250);
+  QPen pen(pen_color);
+  for(;i<=3; ++i) {
+    lOffset += i;
+    PolygonWithHolesPtrVector offset_poly_wh = 
+      CGAL::create_interior_skeleton_and_offset_polygons_with_holes_2(lOffset, polygon_wh);
+    offset_polys.push_back(offset_poly_wh);
+    for(PolygonWithHolesPtrVector::iterator poly = offset_polys[i].begin(); poly != offset_polys[i].end(); ++poly) {
+      CGAL::Qt::PolygonWithHolesGraphicsItem<Polygon_with_holes_2> *pgi = 
+        new CGAL::Qt::PolygonWithHolesGraphicsItem<Polygon_with_holes_2>((**poly));
+      pgi->setEdgesPen(pen);
+      scene.addItem(pgi);
+    }
   }
-
-  // double lOffset = 3;
-  // PolygonWithHolesPtrVectorVector offset_polys_wh2;
-  // PolygonWithHolesPtrVector offset_polys_wh2 = CGAL::create_interior_skeleton_and_offset_polygons_with_holes_2(lOffset, polygon_wh);
-  // offset_polys_wh.push_back(offset_poly_wh);
-
-  // int i = 0;
-  // QColor pen_color(248, 0, 250);
-  // QPen pen(pen_color);
-
-  // for(PolygonWithHolesPtrVector::iterator poly = offset_polys_wh2.begin(); poly != offset_polys_wh2.end(); ++poly) {
-  //   CGAL::Qt::PolygonWithHolesGraphicsItem<Polygon_with_holes_2> *pgi = new CGAL::Qt::PolygonWithHolesGraphicsItem<Polygon_with_holes_2>((*poly).get());
-  //   pgi->setEdgesPen(pen);
-  //   scene.addItem(pgi);
-  // }
-
-  // while(offset_polys_wh[i].size() != 0) {
-  //   for(Polygon_with_holes_ptr_vector::iterator poly = offset_polys_wh[i].begin(); poly != offset_polys_wh[i].end(); ++poly) {
-  //     CGAL::Qt::PolygonWithHolesGraphicsItem<Polygon_with_holes_2> *pgi = new CGAL::Qt::PolygonWithHolesGraphicsItem<Polygon_with_holes_2>((*poly).get());
-  //     scene.addItem(pgi);
-  //     // cout << "sadsa" << endl;
-  //   }
-  //   lOffset += 1;
-  //   ++i;
-  //   offset_polys_wh.push_back(CGAL::create_offset_polygons_2<Polygon_with_holes_2>(lOffset,*ss_compl));
-  // }
-
 
   // just for fun and profit
   // iterate_polygon(p);
