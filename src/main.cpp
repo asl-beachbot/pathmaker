@@ -69,7 +69,6 @@ std::vector<Segment_2> connector_lines;
 
 CGAL::Qt::SegmentsGraphicsItem<std::vector<Segment_2> > * sgi;
 
-
 void iterate_polygon(Polygon_2 *p) {
   for(typename Polygon_2::Vertex_const_iterator i = p->vertices_begin(); i != p->vertices_end(); ++i) {
     cout << (*i).x() << " " << i->x() << endl;
@@ -148,7 +147,7 @@ int main(int argc, char **argv) {
   double lOffset = 2;
   // TODO
   // Investigate usage of straight skeleton calculation
-  // SSPtr straight_skel = CGAL::create_interior_straight_skeleton_2(polygon_wh);
+  SSPtr straight_skel = CGAL::create_interior_straight_skeleton_2(polygon_wh);
   // PolygonWithHolesPtrVector offset_poly_wh = 
   //   CGAL::create_offset_polygons_2<Polygon_with_holes_2>(lOffset, *straight_skel);
   
@@ -167,7 +166,7 @@ int main(int argc, char **argv) {
   int i = 0;
   QColor pen_color(10, 250, 250);
   QPen pen(pen_color);
-  for(;i<=3; ++i) {
+  for(;i<=30; ++i) {
     lOffset += 2;
     PolygonWithHolesPtrVector offset_poly_wh = 
       CGAL::create_interior_skeleton_and_offset_polygons_with_holes_2(lOffset, polygon_wh);
@@ -195,7 +194,9 @@ int main(int argc, char **argv) {
   //   scene.addItem(lgi);
   //   lgi->show();
   // }
-
+  QColor segments_color(40, 50, 10);
+  QPen segments_pen(segments_color);
+  sgi->setVerticesPen(segments_pen);
   scene.addItem(sgi);
   sgi->show();
 
