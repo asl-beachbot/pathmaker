@@ -23,7 +23,10 @@
 
 #include <CGAL/Qt/GraphicsViewNavigation.h>
 
-#include "view.h"
+#include "polygon_calculate.h"
+//#include "view.h"
+
+
 // defining types
 
 typedef CGAL::Exact_predicates_inexact_constructions_kernel K ;
@@ -46,11 +49,10 @@ typedef std::vector<PolygonWithHolesPtr>          PolygonWithHolesPtrVector;
 typedef std::vector<PolygonWithHolesPtrVector>    PolygonWithHolesPtrVectorVector;
 
 using std::endl; using std::cout;
-class PolygonCalculate{
-public:
-  PolygonCalculate() { }
 
-  void run_program(int argc, char** argv, PolygonWindow* window) {
+PolygonCalculate::PolygonCalculate() { }
+
+void PolygonCalculate::run_program(int argc, char** argv, PolygonWindow* window) {
 
   this->window = window;
   cout << endl << "Welcome to the Pathfinder. Finding a path through the dark since 1999." << 
@@ -114,59 +116,50 @@ public:
   window->addItem(sgi);
   sgi->show();
 }
-private:
-  PolygonWindow* window;
-  std::vector<Segment_2> connector_lines;
-  CGAL::Qt::SegmentsGraphicsItem<std::vector<Segment_2> > * sgi;
-  CGAL::Qt::PolygonWithHolesGraphicsItem<Polygon_with_holes_2> *phgi;
-  Polygon_with_holes_2 polygon_wh;
-  PolygonWithHolesPtrVectorVector offset_polys;
-  PolygonWithHolesPtrVector outer_poly_wrapper;
-  void iterate_polygon(Polygon_2 *p) {
-    for(typename Polygon_2::Vertex_const_iterator i = p->vertices_begin(); i != p->vertices_end(); ++i) {
-      cout << (*i).x() << " " << i->x() << endl;
-    }
+void PolygonCalculate::iterate_polygon(Polygon_2 *p) {
+  for(typename Polygon_2::Vertex_const_iterator i = p->vertices_begin(); i != p->vertices_end(); ++i) {
+    cout << (*i).x() << " " << i->x() << endl;
   }
+}
   
   // Iterate over outer boundary (w/o holes)
-  void iterate_over_polygon_with_holes(PolygonWithHolesPtrVector *p) {  
-    for(std::vector<PolygonWithHolesPtr>::iterator i = p->begin(); i != p->end(); ++i) {
-      Polygon_2 outer = (**i).outer_boundary();
-      iterate_polygon(&outer);
-    }
+void PolygonCalculate::iterate_over_polygon_with_holes(PolygonWithHolesPtrVector *p) {  
+for(std::vector<PolygonWithHolesPtr>::iterator i = p->begin(); i != p->end(); ++i) {
+    Polygon_2 outer = (**i).outer_boundary();
+    iterate_polygon(&outer);
   }
+}
   
-  void simple_connect(PolygonWithHolesPtrVector inner_poly, PolygonWithHolesPtrVector outer_poly) {
-    cout << "connecting" << endl;
-    for(std::vector<PolygonWithHolesPtr>::iterator i = inner_poly.begin(); i != inner_poly.end(); ++i) {
-      Polygon_2 inner_poly_boundary = (**i).outer_boundary();
-      for(std::vector<PolygonWithHolesPtr>::iterator j = outer_poly.begin(); j != outer_poly.end(); ++j) {
-        Polygon_2 outer_poly_boundary = (**j).outer_boundary();
-  
-        Point_2 p_target = inner_poly_boundary[0];
-        if(outer_poly_boundary.bounded_side(p_target) != CGAL::ON_BOUNDED_SIDE) {
-          continue;
+void PolygonCalculate::simple_connect(PolygonWithHolesPtrVector inner_poly, PolygonWithHolesPtrVector outer_poly) {
+  cout << "connecting" << endl;
+  for(std::vector<PolygonWithHolesPtr>::iterator i = inner_poly.begin(); i != inner_poly.end(); ++i) {
+    Polygon_2 inner_poly_boundary = (**i).outer_boundary();
+    for(std::vector<PolygonWithHolesPtr>::iterator j = outer_poly.begin(); j != outer_poly.end(); ++j) {
+      Polygon_2 outer_poly_boundary = (**j).outer_boundary();
+
+      Point_2 p_target = inner_poly_boundary[0];
+      if(outer_poly_boundary.bounded_side(p_target) != CGAL::ON_BOUNDED_SIDE) {
+        continue;
+      }
+      cout << "Target Point: " << p_target.x() << " " << p_target.y() << endl << endl;
+      float dist = 0;
+      Point_2 p_found;
+      for(typename Polygon_2::Vertex_const_iterator i = outer_poly_boundary.vertices_begin(); i != outer_poly_boundary.vertices_end(); ++i) {
+        // cout << i->x() << " " << i->y() << endl;
+        float temp_dist = CGAL::squared_distance(*i, p_target);
+        cout << temp_dist << endl;
+        if(dist == 0 || temp_dist < dist) {
+          dist = temp_dist;
+          p_found = *i;
+          cout << "Found something!" << endl;
+          cout << "New Line: " << i->x() << "," << i->y() << "  " << p_target.x() << "," << p_target.y() << endl;
         }
-        cout << "Target Point: " << p_target.x() << " " << p_target.y() << endl << endl;
-        float dist = 0;
-        Point_2 p_found;
-        for(typename Polygon_2::Vertex_const_iterator i = outer_poly_boundary.vertices_begin(); i != outer_poly_boundary.vertices_end(); ++i) {
-          // cout << i->x() << " " << i->y() << endl;
-          float temp_dist = CGAL::squared_distance(*i, p_target);
-          cout << temp_dist << endl;
-          if(dist == 0 || temp_dist < dist) {
-            dist = temp_dist;
-            p_found = *i;
-            cout << "Found something!" << endl;
-            cout << "New Line: " << i->x() << "," << i->y() << "  " << p_target.x() << "," << p_target.y() << endl;
-          }
-        }
-        if(dist != 0) {
-          Segment_2 segment(p_found, p_target);
-          window->addLine(p_found, p_target);
-          //connector_lines.push_back(segment);
-        }
+      }
+      if(dist != 0) {
+        Segment_2 segment(p_found, p_target);
+        window->addLine(p_found, p_target);
+        //connector_lines.push_back(segment);
       }
     }
   }
-};
+}

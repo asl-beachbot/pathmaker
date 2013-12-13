@@ -14,6 +14,7 @@ configure_file(
 )
 
 include_directories("${PROJECT_BINARY_DIR}")
+include_directories("${PROJECT_SRC_DIR}")
 
 # Add C++11 flags for foreach and regexp
 #ADD_DEFINITIONS(
@@ -52,8 +53,12 @@ if( CGAL_Core_FOUND)
     add_definitions(-DCGAL_USE_CORE)
 endif()
 
-add_executable(bin/Pathfinder src/main.cpp)
-add_to_cached_list(CGAL_EXECUTABLE_TARGETS bin/Pathfinder)
+add_executable(bin/Pathfinder src/main)
+
+add_library(BeachbotLibrary src/polygon_calculate src/view)
+
 target_link_libraries(bin/Pathfinder ${QT_LIBRARIES})
 target_link_libraries(bin/Pathfinder ${CGAL_LIBRARIES} ${CGAL_3RD_PARTY_LIBRARIES})
 
+target_link_libraries(bin/Pathfinder BeachbotLibrary)
+#target_link_libraries(bin/viewtest ${QT_LIBRARIES} ${CGAL_LIBRARIES} ${CGAL_3RD_PARTY_LIBRARIES})

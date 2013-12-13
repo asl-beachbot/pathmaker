@@ -1,4 +1,5 @@
 // view.h
+#pragma once
 #include <QMainWindow>
 #include <QtGui>
 #include <CGAL/Qt/GraphicsViewNavigation.h>

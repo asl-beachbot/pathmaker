@@ -1,6 +1,5 @@
 // view.cpp
 #include "view.h"
-#include "polygon_calculate.h"
 
 #include <iostream>
 #include <vector>
@@ -14,6 +13,10 @@
 #include <CGAL/Qt/GraphicsViewNavigation.h>
 
 // defining types
+typedef CGAL::Exact_predicates_inexact_constructions_kernel K ;
+
+typedef K::Point_2                    Point_2;
+
 
 using std::endl; using std::cout;
 
@@ -58,17 +61,4 @@ void PolygonWindow::addItem(QGraphicsItem* item) {
 PolygonWindow::PolygonWindow(QWidget* parent) : QMainWindow(parent){
   setWindowTitle("This is a skeletal test.");
   mouse_xycoord = new QLabel("0.00, 0.00", this);
-}
-
-
-
-int main(int argc, char** argv) {
-  QApplication app(argc, argv);
-  PolygonWindow window;
-  window.setupStatusBar();
-  window.initWindow(argc, argv);
-  window.show();
-  PolygonCalculate polycalc;
-  polycalc.run_program(argc, argv, &window);
-  return app.exec();
 }

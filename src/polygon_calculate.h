@@ -1,5 +1,5 @@
 // polygon_calculate.h
-
+#pragma once
 #include <vector>
 
 #include <CGAL/Exact_predicates_inexact_constructions_kernel.h>
@@ -20,6 +20,7 @@
 
 #include <CGAL/Qt/GraphicsViewNavigation.h>
 
+#include "view.h"
 // defining types
 
 typedef CGAL::Exact_predicates_inexact_constructions_kernel K ;
@@ -41,8 +42,7 @@ typedef boost::shared_ptr<Polygon_with_holes_2>   PolygonWithHolesPtr;
 typedef std::vector<PolygonWithHolesPtr>          PolygonWithHolesPtrVector;
 typedef std::vector<PolygonWithHolesPtrVector>    PolygonWithHolesPtrVectorVector;
 
-
-class PolygonCalculate {
+class PolygonCalculate{
 public:
   PolygonCalculate();
   void run_program(int argc, char** argv, PolygonWindow* window);
