@@ -57,4 +57,5 @@ private:
   void iterate_polygon(Polygon_2 *p); 
   void iterate_over_polygon_with_holes(PolygonWithHolesPtrVector *p);
   void simple_connect(PolygonWithHolesPtrVector inner_poly, PolygonWithHolesPtrVector outer_poly); 
+  void simple_connect_singular_polys(const PolygonWithHolesPtrVector * poly) const; 
 };

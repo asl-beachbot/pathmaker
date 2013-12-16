@@ -61,4 +61,3 @@ target_link_libraries(bin/Pathfinder ${QT_LIBRARIES})
 target_link_libraries(bin/Pathfinder ${CGAL_LIBRARIES} ${CGAL_3RD_PARTY_LIBRARIES})
 
 target_link_libraries(bin/Pathfinder BeachbotLibrary)
-#target_link_libraries(bin/viewtest ${QT_LIBRARIES} ${CGAL_LIBRARIES} ${CGAL_3RD_PARTY_LIBRARIES})

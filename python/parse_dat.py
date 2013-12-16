@@ -13,11 +13,15 @@
 
 import sys
 import argparse 
+from pprint import pprint
 
 from bs4 import BeautifulSoup
 import re
 
 from math import *
+
+from svg_parse_plot import bezier
+from numpy import linspace
 
 r = re.compile(r"([a-z])([^a-z]*)", flags=re.IGNORECASE)
 
@@ -28,16 +32,20 @@ parser.add_argument('-t', '--to', type=str,
 parser.add_argument('filename', type=str, help="Filename to convert")
 parser.add_argument('-m', '--mode', type=str,
         help="The mode you want to convert: equal spaced or approximated")
+parser.add_argument('-r', '--resolution', type=int, help="resolution for approximation")
+ns = parser.parse_args()
+
+t = linspace(0, 1, 10) if not ns.resolution else linspace(0, 1, ns.resolution)
 
 class SVGElement():
     def __init__(self, t, c, prev_el = None, relative_to = None):
         self.element_type = t
         self.coords = list();
         if not relative_to: relative_to = prev_el
-        if t == "c" or t == "C" and prev_el:
+        if t == "C" or t == "c":
             self.coords.append(prev_el.coords[-1])
         if t.islower():
-            if relative_to:
+            if relative_to or t == "C":
                 rel_coords = relative_to.coords[-1]
             else: relative_to = [0,0]
             for x in range(0, len(c), 2):
@@ -57,12 +65,15 @@ class SVGElement():
         return "%s | %r" % (self.element_type, self.coords)
 
     def to_poly(self):
+        if self.element_type == "c" or self.element_type == "C":
+            return bezier(self.coords, t) 
         return self.coords
 
     @staticmethod
     def parse_path(path, container = list()):
         d = path['d']
         m = re.findall(r, d)
+        element = list()
         if m:
             for match in m:
                 coords = match[1]
@@ -71,14 +82,15 @@ class SVGElement():
                 coords_list = re.split("[^\d\-.]*", coords)
                 if(coords_list[0] == ''): continue
                 for x in range(0, int(len(coords_list)), 6):
-                    prev_el = container[-1] if container else None
+                    prev_el = element[-1] if element else None
                     inst_coords = coords_list[x:x+6]
                     inst = SVGElement(match[0], inst_coords, prev_el)
-                container.append(inst)
+                    
+                element.append(inst)
+        container.append(element);
         return container
 
 def run():
-    ns = parser.parse_args()
     if not ns.filename:
         print("No Filename supplied")
         return False
@@ -112,11 +124,18 @@ def run():
         base['w'] = soup.svg.width
         base['h'] = soup.svg.height
         
-        path = soup.path
-        SVGElement.parse_path(path, svg_element_list)
+        path = soup.find_all("path")
 
+        for p in path:
+            SVGElement.parse_path(p, svg_element_list)
+        
+        polys = list()
         for el in svg_element_list:
-            poly.extend(el.to_poly())
+            poly = list()
+            for e in el:
+                poly.extend(e.to_poly())
+
+            polys.append(poly)
 
     if ns.to == "mat":
         text = "poly = [";
@@ -129,10 +148,14 @@ def run():
         fw.write(text)
    
     if ns.to == "dat":
-        text = "%s\n" % len(poly);
-        for p2 in poly:
-            text += "%s %s\n" % (p2[0], p2[1])
-        text = text[:   -1]
+        text = ""
+        for idx, poly in enumerate(polys):
+            if(idx == 1):
+                text += "%s\n" % (len(polys) - 1)
+            text += "%s\n" % len(poly);
+            for p2 in poly:
+                text += "%s %s\n" % (p2[0], p2[1])
+        text = text[:-1]
         print(text)
         name = ns.filename.split(".")[0]
         name += ".dat"

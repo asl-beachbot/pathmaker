@@ -48,6 +48,8 @@ typedef boost::shared_ptr<Polygon_with_holes_2>   PolygonWithHolesPtr;
 typedef std::vector<PolygonWithHolesPtr>          PolygonWithHolesPtrVector;
 typedef std::vector<PolygonWithHolesPtrVector>    PolygonWithHolesPtrVectorVector;
 
+typedef CGAL::Qt::PolygonWithHolesGraphicsItem<Polygon_with_holes_2> PolygonWithHolesGraphicsI;
+
 using std::endl; using std::cout;
 
 PolygonCalculate::PolygonCalculate() { }
@@ -55,6 +57,7 @@ PolygonCalculate::PolygonCalculate() { }
 void PolygonCalculate::run_program(int argc, char** argv, PolygonWindow* window) {
 
   this->window = window;
+
   cout << endl << "Welcome to the Pathfinder. Finding a path through the dark since 1999." << 
     endl << "  (c) BeachBot Productions LLC. ";
 
@@ -65,7 +68,7 @@ void PolygonCalculate::run_program(int argc, char** argv, PolygonWindow* window)
     std::ifstream input_stream(filename.c_str());
     if(input_stream) {
       input_stream >> polygon_wh;
-      phgi = new CGAL::Qt::PolygonWithHolesGraphicsItem<Polygon_with_holes_2>(&polygon_wh);
+      phgi = new PolygonWithHolesGraphicsI(&polygon_wh);
       phgi->show();
       window->addItem(phgi);
     }
@@ -95,14 +98,13 @@ void PolygonCalculate::run_program(int argc, char** argv, PolygonWindow* window)
       CGAL::create_interior_skeleton_and_offset_polygons_with_holes_2(lOffset, polygon_wh);
     offset_polys.push_back(offset_poly_wh);
     for(PolygonWithHolesPtrVector::iterator poly = offset_polys[i].begin(); poly != offset_polys[i].end(); ++poly) {
-      CGAL::Qt::PolygonWithHolesGraphicsItem<Polygon_with_holes_2> *pgi = 
-        new CGAL::Qt::PolygonWithHolesGraphicsItem<Polygon_with_holes_2>((*poly).get());
+       PolygonWithHolesGraphicsI *pgi = new PolygonWithHolesGraphicsI((*poly).get());
       pgi->setEdgesPen(pen);
       window->addItem(pgi);
     }
 
     simple_connect(offset_poly_wh, offset_polys[i]);
-
+    simple_connect_singular_polys(&offset_poly_wh);
   }
 
   // display lines
@@ -116,6 +118,7 @@ void PolygonCalculate::run_program(int argc, char** argv, PolygonWindow* window)
   window->addItem(sgi);
   sgi->show();
 }
+
 void PolygonCalculate::iterate_polygon(Polygon_2 *p) {
   for(typename Polygon_2::Vertex_const_iterator i = p->vertices_begin(); i != p->vertices_end(); ++i) {
     cout << (*i).x() << " " << i->x() << endl;
@@ -129,7 +132,20 @@ for(std::vector<PolygonWithHolesPtr>::iterator i = p->begin(); i != p->end(); ++
     iterate_polygon(&outer);
   }
 }
+
+void PolygonCalculate::simple_connect_singular_polys(const PolygonWithHolesPtrVector * poly) const {
+  cout << "connecting polys" << endl;
   
+  // check if more than one poly exists in vector
+  if(poly->size() == 1) { return; }
+  
+  for(std::vector<PolygonWithHolesPtr>::const_iterator i = poly->begin(); i != poly->end() - 1; ++i) {
+    Polygon_2 bound1 = (**i).outer_boundary();
+    Polygon_2 bound2 = (**(i+1)).outer_boundary();
+    window->addLine(bound1[0].x(), bound1[0].y(), bound2[0].x(), bound2[0].y());
+  }
+}
+
 void PolygonCalculate::simple_connect(PolygonWithHolesPtrVector inner_poly, PolygonWithHolesPtrVector outer_poly) {
   cout << "connecting" << endl;
   for(std::vector<PolygonWithHolesPtr>::iterator i = inner_poly.begin(); i != inner_poly.end(); ++i) {
