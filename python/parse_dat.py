@@ -35,14 +35,15 @@ parser.add_argument('-m', '--mode', type=str,
 parser.add_argument('-r', '--resolution', type=int, help="resolution for approximation")
 ns = parser.parse_args()
 
-t = linspace(0, 1, 10) if not ns.resolution else linspace(0, 1, ns.resolution)
+t = linspace(1/10, 1, 10-1) if not ns.resolution else linspace(1/ns.resolution, 1, ns.resolution - 1)
 
 class SVGElement():
     def __init__(self, t, c, prev_el = None, relative_to = None):
         self.element_type = t
         self.coords = list();
-        if not relative_to: relative_to = prev_el
-        if t == "C" or t == "c":
+        if t == "z":
+            return
+        if prev_el:
             self.coords.append(prev_el.coords[-1])
         if t.islower():
             if relative_to or t == "C":
@@ -65,8 +66,13 @@ class SVGElement():
         return "%s | %r" % (self.element_type, self.coords)
 
     def to_poly(self):
+        if self.element_type == "z":
+            return []
         if self.element_type == "c" or self.element_type == "C":
             return bezier(self.coords, t) 
+        if self.element_type in ["l", "L"]:
+            print (self.coords[-1])
+            return [self.coords[-1]]
         return self.coords
 
     @staticmethod
@@ -80,7 +86,7 @@ class SVGElement():
                 coords = coords.lstrip()
                 coords = coords.rstrip()
                 coords_list = re.split("[^\d\-.]*", coords)
-                if(coords_list[0] == ''): continue
+                #if(coords_list[0] == ''): continue
                 for x in range(0, int(len(coords_list)), 6):
                     prev_el = element[-1] if element else None
                     inst_coords = coords_list[x:x+6]
@@ -128,15 +134,24 @@ def run():
 
         for p in path:
             SVGElement.parse_path(p, svg_element_list)
-        
+
         polys = list()
         for el in svg_element_list:
             poly = list()
             for e in el:
                 poly.extend(e.to_poly())
 
-            polys.append(poly)
+                print(e.element_type.__repr__() + e.to_poly().__str__())
 
+                if e.element_type == "z":
+                    if len(e.coords) == 0:
+                        pass
+                    else:
+                        del poly[0]
+
+            poly.reverse()
+            polys.append(poly)
+        print(polys)
     if ns.to == "mat":
         text = "poly = [";
         for p2 in poly:

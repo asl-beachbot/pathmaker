@@ -1,9 +1,9 @@
 cmake_minimum_required(VERSION 2.6)
-project(Pathfinder)
+project(pathfinder)
 
 # The version number
-set (Pathfinder_VERSION_MAJOR 1)
-set (Pathfinder_VERSION_MINOR 0)
+set (pathfinder_VERSION_MAJOR 1)
+set (pathfinder_VERSION_MINOR 0)
 
 set(PROJECT_BINARY_DIR ./bin)
 set(PROJECT_SRC_DIR ./src)
@@ -53,11 +53,17 @@ if( CGAL_Core_FOUND)
     add_definitions(-DCGAL_USE_CORE)
 endif()
 
-add_executable(bin/Pathfinder src/main)
+set(pathfinder_ui ui/pathfinder.ui)
+set(pathfinder_qt_src src/view.h)
+
+QT4_WRAP_CPP(pathfinder_HEADERS_MOC ${pathfinder_qt_src})
+QT4_WRAP_UI(pathfinder_UI_HEADERS ${pathfinder_ui})
+
+add_executable(bin/pathfinder src/main ${pathfinder_UI_HEADERS} ${pathfinder_HEADERS_MOC})
 
 add_library(BeachbotLibrary src/polygon_calculate src/view)
 
-target_link_libraries(bin/Pathfinder ${QT_LIBRARIES})
-target_link_libraries(bin/Pathfinder ${CGAL_LIBRARIES} ${CGAL_3RD_PARTY_LIBRARIES})
+target_link_libraries(bin/pathfinder ${QT_LIBRARIES})
+target_link_libraries(bin/pathfinder ${CGAL_LIBRARIES} ${CGAL_3RD_PARTY_LIBRARIES})
 
-target_link_libraries(bin/Pathfinder BeachbotLibrary)
+target_link_libraries(bin/pathfinder BeachbotLibrary)

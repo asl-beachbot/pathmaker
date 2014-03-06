@@ -1,5 +1,5 @@
 /* Config ... 
  *
  * 
- *     Version: 1.0
+ *     Version: .
  */

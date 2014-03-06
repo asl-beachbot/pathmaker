@@ -1,4 +1,20 @@
+// Copyright (C) 2014  Wolf Vollprecht
+
+// This program is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+// GNU General Public License for more details.
+
+// You should have received a copy of the GNU General Public License
+// along with this program. If not, see <http://www.gnu.org/licenses/>.
+
 // polygon_calculate.h
+
 #pragma once
 #include <vector>
 
@@ -21,6 +37,8 @@
 #include <CGAL/Qt/GraphicsViewNavigation.h>
 
 #include "view.h"
+#include "tree.h"
+
 // defining types
 
 typedef CGAL::Exact_predicates_inexact_constructions_kernel K ;
@@ -42,6 +60,14 @@ typedef boost::shared_ptr<Polygon_with_holes_2>   PolygonWithHolesPtr;
 typedef std::vector<PolygonWithHolesPtr>          PolygonWithHolesPtrVector;
 typedef std::vector<PolygonWithHolesPtrVector>    PolygonWithHolesPtrVectorVector;
 
+class ExtendedPolygonPtr{
+public:
+  PolygonPtr poly;
+  int visited_polys[];
+  bool visited;
+  ExtendedPolygonPtr(PolygonPtr poly) : poly(poly) {}
+};
+
 class PolygonCalculate{
 public:
   PolygonCalculate();
@@ -54,6 +80,7 @@ private:
   Polygon_with_holes_2 polygon_wh;
   PolygonWithHolesPtrVectorVector offset_polys;
   PolygonWithHolesPtrVector outer_poly_wrapper;
+  tree<ExtendedPolygonPtr> PolygonTree;
   void iterate_polygon(Polygon_2 *p); 
   void iterate_over_polygon_with_holes(PolygonWithHolesPtrVector *p);
   void simple_connect(PolygonWithHolesPtrVector inner_poly, PolygonWithHolesPtrVector outer_poly); 
