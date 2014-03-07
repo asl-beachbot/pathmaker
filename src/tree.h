@@ -146,7 +146,7 @@ class tree {
 				bool    operator==(const post_order_iterator&) const;
 				bool    operator!=(const post_order_iterator&) const;
 				post_order_iterator&  operator++();
-			   post_order_iterator&  operator--();
+			  post_order_iterator&  operator--();
 				post_order_iterator   operator++(int);
 				post_order_iterator   operator--(int);
 				post_order_iterator&  operator+=(unsigned int);

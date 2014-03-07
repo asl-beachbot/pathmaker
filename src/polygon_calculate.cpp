@@ -73,9 +73,57 @@ typedef std::vector<PolygonWithHolesPtrVector>    PolygonWithHolesPtrVectorVecto
 
 typedef CGAL::Qt::PolygonWithHolesGraphicsItem<Polygon_with_holes_2> PolygonWithHolesGraphicsI;
 
+typedef CGAL::Qt::PolygonGraphicsItem<Polygon_2> PolygonGraphicsI;
+
+
+typedef tree<ExtendedPolygonPtr> PolyTree;
+
 using std::endl; using std::cout;
 
 PolygonCalculate::PolygonCalculate() { }
+
+void print_tree(PolyTree * tree) {
+  PolyTree::iterator sib2 = tree->begin();
+  PolyTree::iterator end2 = tree->end();
+  while(sib2!=end2) {
+    for(int i=0; i < tree->depth(sib2)-2; ++i) 
+      cout << " ";
+    cout << "was?" << endl;
+    ++sib2;
+  }
+}
+
+
+int PolygonCalculate::find_and_add(PolyTree * tree, PolyTree::iterator curr_node, 
+  PolygonWithHolesPtr p, int depth) {
+
+  int limDepth = 25;
+  int lOffset = 3;
+  // depth reached
+  if(depth > limDepth) return 0;
+
+  cout << "Searching Depth: " << depth << endl;
+
+  PolygonWithHolesPtrVector offset_poly_wh = 
+    CGAL::create_interior_skeleton_and_offset_polygons_with_holes_2(lOffset, *p);
+
+  // no more polys
+  if(offset_poly_wh.size() <= 0) return 0;
+  int next_depth = ++depth;
+  int leaf = 0;
+  for(std::vector<PolygonWithHolesPtr>::iterator i = offset_poly_wh.begin(); i != offset_poly_wh.end(); ++i) {
+    Polygon_2 outer = (**i).outer_boundary();
+    ExtendedPolygonPtr poly_element = ExtendedPolygonPtr(outer);
+    PolyTree::iterator next_node = tree->append_child(curr_node, poly_element);
+    //recursive iteration to next node
+    leaf++;
+    cout << "Leaf: " << leaf << " Depth: " << depth << endl;
+    this->find_and_add(tree, next_node, *i, next_depth);
+  }
+  // print_tree(tree);
+  return 1;
+}
+
 
 void PolygonCalculate::run_program(int argc, char** argv, PolygonWindow* window) {
 
@@ -89,7 +137,7 @@ void PolygonCalculate::run_program(int argc, char** argv, PolygonWindow* window)
   if( argc > 1 ) {
     std::string filename = argv[1];
     std::ifstream input_stream(filename.c_str());
-    if(input_stream) {
+    if(input_stream) {  
       input_stream >> polygon_wh;
       phgi = new PolygonWithHolesGraphicsI(&polygon_wh);
       phgi->show();
@@ -136,12 +184,21 @@ void PolygonCalculate::run_program(int argc, char** argv, PolygonWindow* window)
   //   CGAL::create_offset_polygons_2<Polygon_with_holes_2>(lOffset, *straight_skel);
   
 
+
   PolygonWithHolesPtrVector offset_poly_wh = 
     CGAL::create_interior_skeleton_and_offset_polygons_with_holes_2(lOffset, polygon_wh);
   offset_polys.push_back(offset_poly_wh);
   
   PolygonWithHolesPtr outer_poly_ptr(&polygon_wh);
-  
+
+  // new code for recursive tree
+  PolyTree tree = PolyTree(polygon_wh.outer_boundary());
+  find_and_add(&tree, tree.begin(), outer_poly_ptr, 0);
+
+  connect(&tree);
+
+
+
   outer_poly_wrapper.push_back(outer_poly_ptr);
 
   simple_connect(offset_poly_wh, outer_poly_wrapper);
@@ -151,10 +208,10 @@ void PolygonCalculate::run_program(int argc, char** argv, PolygonWindow* window)
   QColor pen_color(10, 250, 250);
   QPen pen(pen_color);
 
-  ext_poly = ExtendedPolygonPtr(polygon_wh);
+  // ExtendedPolygonPtr ext_poly = ExtendedPolygonPtr(polygon_wh.outer_boundary());
   
-  tree = Tree(ext_poly);
-  tree::<ExtendedPolygonPtr>::iterator node = tree.begin();
+  // tree = Tree(ext_poly);
+  // tree::<ExtendedPolygonPtr>::iterator node = tree.begin();
 
   for(;i<=insets; ++i) {
     lOffset += inset_width;
@@ -170,25 +227,25 @@ void PolygonCalculate::run_program(int argc, char** argv, PolygonWindow* window)
     // push back in ordinary list
     offset_polys.push_back(offset_poly_wh);
 
-    tree::<ExtendedPolygonPtr>::iterator curr_lvl = node;
+    // tree::<ExtendedPolygonPtr>::iterator curr_lvl = node;
 
-    Point_2 p_check;
-    tree::<ExtendedPolygonPtr>::iterator next_lvl;
+    // Point_2 p_check;
+    // tree::<ExtendedPolygonPtr>::iterator next_lvl;
     for(PolygonWithHolesPtrVector::iterator poly = offset_polys[i].begin(); poly != offset_polys[i].end(); ++poly) {
-      node = curr_lvl;
-      outer_poly_boundary = node.poly.outer_boundary();
-      p_check = poly.outer_boundary()[0]
-      while(outer_poly_boundary.bounded_side(p_check) != CGAL::ON_BOUNDED_SIDE) {
-        try{
-          node = node.next_at_same_depth();
-          outer_poly_boundary = node.poly.outer_boundary();
-        }
-        catch(int e) {
-          cout << "No next sibling " << e << endl;
-        }
-      } 
-      cout << "Found next parent" << endl;
-      next_lvl = tree.insert(node, ExtendedPolygonPtr(poly));
+      // node = curr_lvl;
+      // outer_poly_boundary = node.poly.outer_boundary();
+      // p_check = poly.outer_boundary()[0];
+      // while(outer_poly_boundary.bounded_side(p_check) != CGAL::ON_BOUNDED_SIDE) {
+      //   try{
+      //     node = node.next_at_same_depth();
+      //     outer_poly_boundary = node.poly.outer_boundary();
+      //   }
+      //   catch(int e) {
+      //     cout << "No next sibling " << e << endl;
+      //   }
+      // } 
+      // cout << "Found next parent" << endl;
+      // next_lvl = tree.insert(node, ExtendedPolygonPtr(poly.outer_boundary()));
 
       // Gradient and Paint
       PolygonWithHolesGraphicsI *pgi = new PolygonWithHolesGraphicsI((*poly).get());
@@ -231,7 +288,7 @@ void PolygonCalculate::simple_connect_singular_polys(const PolygonWithHolesPtrVe
   }
 }
 
-void PolygonCalculate::connect(PolygonWithHolesPtrVector inner_poly, PolygonWithHolesPtrVector outer_poly) {
+void PolygonCalculate::connect(PolyTree * tree) {
   // Steps:
   // 1. Find a "kernel" from where the BeachBot ideally should start
   // 2. Drive kernel, then move on one stage further out
@@ -244,15 +301,34 @@ void PolygonCalculate::connect(PolygonWithHolesPtrVector inner_poly, PolygonWith
 
   cout << "Running the connection sub-routine\n" << endl;
 
-  // var to save driven points
+  // // var to save driven points
 
-  std::list<Point_2> reached_points;
+  int translateX = 300;
+  int translateY = 300;
 
-  while(outer_poly_boundary.bounded_side(p_check) != CGAL::ON_BOUNDED_SIDE) {
+  // Find kernel
 
+  PolyTree::post_order_iterator end_node = tree->begin();
+  end_node.descend_all();
+
+  //(*end_node).poly      
+  //cout << "Target Point: " << p_target.x() << " " << p_target.y() << endl << endl;
+
+  {
+    PolygonGraphicsI *pgi = new PolygonGraphicsI((*end_node)->poly);
+    QColor pen_color(250, 0, 0);
+    QPen pen(pen_color, 5);
+    pgi->setEdgesPen(pen);
+    pgi->setVerticesPen(QPen(QColor(0,0,0,0)));
+    window->addItem(pgi);
   }
 
 
+  // std::list<Point_2> reached_points;
+
+  // while(outer_poly_boundary.bounded_side(p_check) != CGAL::ON_BOUNDED_SIDE) {
+
+  // }
 }
 
 void PolygonCalculate::simple_connect(PolygonWithHolesPtrVector inner_poly, PolygonWithHolesPtrVector outer_poly) {

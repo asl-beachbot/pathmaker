@@ -62,11 +62,14 @@ typedef std::vector<PolygonWithHolesPtrVector>    PolygonWithHolesPtrVectorVecto
 
 class ExtendedPolygonPtr{
 public:
-  PolygonPtr poly;
+  Polygon_2 poly;
   int visited_polys[];
   bool visited;
-  ExtendedPolygonPtr(PolygonPtr poly) : poly(poly) {}
+  ExtendedPolygonPtr(Polygon_2 poly) : poly(poly) {};
+  ExtendedPolygonPtr() {};
 };
+
+typedef tree<ExtendedPolygonPtr> PolyTree;
 
 class PolygonCalculate{
 public:
@@ -83,6 +86,9 @@ private:
   tree<ExtendedPolygonPtr> PolygonTree;
   void iterate_polygon(Polygon_2 *p); 
   void iterate_over_polygon_with_holes(PolygonWithHolesPtrVector *p);
+  void connect(PolyTree*);
   void simple_connect(PolygonWithHolesPtrVector inner_poly, PolygonWithHolesPtrVector outer_poly); 
-  void simple_connect_singular_polys(const PolygonWithHolesPtrVector * poly) const; 
+  void simple_connect_singular_polys(const PolygonWithHolesPtrVector * poly) const;
+  int find_and_add(PolyTree * tree, PolyTree::iterator curr_node, 
+  PolygonWithHolesPtr p, int depth);
 };
