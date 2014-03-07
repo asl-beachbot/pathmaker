@@ -74,7 +74,7 @@ typedef std::vector<PolygonWithHolesPtrVector>    PolygonWithHolesPtrVectorVecto
 typedef CGAL::Qt::PolygonWithHolesGraphicsItem<Polygon_with_holes_2> PolygonWithHolesGraphicsI;
 
 typedef CGAL::Qt::PolygonGraphicsItem<Polygon_2> PolygonGraphicsI;
-
+  
 
 typedef tree<ExtendedPolygonPtr> PolyTree;
 
@@ -192,46 +192,47 @@ void PolygonCalculate::run_program(int argc, char** argv, PolygonWindow* window)
   PolygonWithHolesPtr outer_poly_ptr(&polygon_wh);
 
   // new code for recursive tree
-  PolyTree tree = PolyTree(polygon_wh.outer_boundary());
-  find_and_add(&tree, tree.begin(), outer_poly_ptr, 0);
+  ExtendedPolygonPtr top_ptr = ExtendedPolygonPtr(polygon_wh.outer_boundary())
+  this->p_tree = PolyTree(top_ptr);
+  // find_and_add(&p_tree, p_tree.begin(), outer_poly_ptr, 0);
 
-  connect(&tree);
+  // connect();
 
 
 
-  outer_poly_wrapper.push_back(outer_poly_ptr);
+  // outer_poly_wrapper.push_back(outer_poly_ptr);
 
-  simple_connect(offset_poly_wh, outer_poly_wrapper);
+  // simple_connect(offset_poly_wh, outer_poly_wrapper);
 
-  int i = 0;
+  // int i = 0;
   
-  QColor pen_color(10, 250, 250);
-  QPen pen(pen_color);
+  // QColor pen_color(10, 250, 250);
+  // QPen pen(pen_color);
 
   // ExtendedPolygonPtr ext_poly = ExtendedPolygonPtr(polygon_wh.outer_boundary());
   
   // tree = Tree(ext_poly);
   // tree::<ExtendedPolygonPtr>::iterator node = tree.begin();
 
-  for(;i<=insets; ++i) {
-    lOffset += inset_width;
+  // for(;i<=insets; ++i) {
+  //   lOffset += inset_width;
 
-    PolygonWithHolesPtrVector offset_poly_wh = 
-      CGAL::create_interior_skeleton_and_offset_polygons_with_holes_2(lOffset, polygon_wh);
+  //   PolygonWithHolesPtrVector offset_poly_wh = 
+  //     CGAL::create_interior_skeleton_and_offset_polygons_with_holes_2(lOffset, polygon_wh);
 
-    if(offset_poly_wh.size() == 0) {
-      // Break condition (no more polygons!)
-      break;
-    }
+  //   if(offset_poly_wh.size() == 0) {
+  //     // Break condition (no more polygons!)
+  //     break;
+  //   }
 
-    // push back in ordinary list
-    offset_polys.push_back(offset_poly_wh);
+  //   // push back in ordinary list
+  //   offset_polys.push_back(offset_poly_wh);
 
     // tree::<ExtendedPolygonPtr>::iterator curr_lvl = node;
 
     // Point_2 p_check;
     // tree::<ExtendedPolygonPtr>::iterator next_lvl;
-    for(PolygonWithHolesPtrVector::iterator poly = offset_polys[i].begin(); poly != offset_polys[i].end(); ++poly) {
+    // for(PolygonWithHolesPtrVector::iterator poly = offset_polys[i].begin(); poly != offset_polys[i].end(); ++poly) {
       // node = curr_lvl;
       // outer_poly_boundary = node.poly.outer_boundary();
       // p_check = poly.outer_boundary()[0];
@@ -248,47 +249,47 @@ void PolygonCalculate::run_program(int argc, char** argv, PolygonWindow* window)
       // next_lvl = tree.insert(node, ExtendedPolygonPtr(poly.outer_boundary()));
 
       // Gradient and Paint
-      PolygonWithHolesGraphicsI *pgi = new PolygonWithHolesGraphicsI((*poly).get());
-      QColor pen_color(10, 250 - i * 5, 250 - i * 3);
-      QPen pen(pen_color, pen_width);
-      pen.setCosmetic(pen_cosmetic);
-      pgi->setEdgesPen(pen);
-      pgi->setVerticesPen(QPen(QColor(0,0,0,0)));
-      window->addItem(pgi);
-    }
+      // PolygonWithHolesGraphicsI *pgi = new PolygonWithHolesGraphicsI((*poly).get());
+      // QColor pen_color(10, 250 - i * 5, 250 - i * 3);
+      // QPen pen(pen_color, pen_width);
+      // pen.setCosmetic(pen_cosmetic);
+      // pgi->setEdgesPen(pen);
+      // pgi->setVerticesPen(QPen(QColor(0,0,0,0)));
+      // window->addItem(pgi);
+    // }
     // tree::<ExtendedPolygonPointer>::node = tree.fixed_depth_iterator(next_lvl);
     //simple_connect(offset_poly_wh, offset_polys[i]);
     //simple_connect_singular_polys(&offset_poly_wh);
-  }
+  // }
 }
 
-void PolygonCalculate::iterate_polygon(Polygon_2 *p) {
-  for(typename Polygon_2::Vertex_const_iterator i = p->vertices_begin(); i != p->vertices_end(); ++i) {
-    cout << (*i).x() << " " << i->x() << endl;
-  }
-}
+// void PolygonCalculate::iterate_polygon(Polygon_2 *p) {
+//   for(typename Polygon_2::Vertex_const_iterator i = p->vertices_begin(); i != p->vertices_end(); ++i) {
+//     cout << (*i).x() << " " << i->x() << endl;
+//   }
+// }
   
   // Iterate over outer boundary (w/o holes)
-void PolygonCalculate::iterate_over_polygon_with_holes(PolygonWithHolesPtrVector *p) {  
-for(std::vector<PolygonWithHolesPtr>::iterator i = p->begin(); i != p->end(); ++i) {
-    Polygon_2 outer = (**i).outer_boundary();
-    iterate_polygon(&outer);
-  }
-}
-void PolygonCalculate::simple_connect_singular_polys(const PolygonWithHolesPtrVector * poly) const {
-  cout << "connecting <po></po>lys" << endl;
+// void PolygonCalculate::iterate_over_polygon_with_holes(PolygonWithHolesPtrVector *p) {  
+// for(std::vector<PolygonWithHolesPtr>::iterator i = p->begin(); i != p->end(); ++i) {
+//     Polygon_2 outer = (**i).outer_boundary();
+//     iterate_polygon(&outer);
+//   }
+// }
+// void PolygonCalculate::simple_connect_singular_polys(const PolygonWithHolesPtrVector * poly) const {
+//   cout << "connecting polys" << endl;
   
-  // check if more than one poly exists in vector
-  if(poly->size() == 1) { return; }
+//   // check if more than one poly exists in vector
+//   if(poly->size() == 1) { return; }
   
-  for(std::vector<PolygonWithHolesPtr>::const_iterator i = poly->begin(); i != poly->end() - 1; ++i) {
-    Polygon_2 bound1 = (**i).outer_boundary();
-    Polygon_2 bound2 = (**(i+1)).outer_boundary();
-    //window->addLine(bound1[0].x(), bound1[0].y(), bound2[0].x(), bound2[0].y());
-  }
-}
+//   for(std::vector<PolygonWithHolesPtr>::const_iterator i = poly->begin(); i != poly->end() - 1; ++i) {
+//     Polygon_2 bound1 = (**i).outer_boundary();
+//     Polygon_2 bound2 = (**(i+1)).outer_boundary();
+//     //window->addLine(bound1[0].x(), bound1[0].y(), bound2[0].x(), bound2[0].y());
+//   }
+// }
 
-void PolygonCalculate::connect(PolyTree * tree) {
+void PolygonCalculate::connect() {
   // Steps:
   // 1. Find a "kernel" from where the BeachBot ideally should start
   // 2. Drive kernel, then move on one stage further out
@@ -307,21 +308,36 @@ void PolygonCalculate::connect(PolyTree * tree) {
   int translateY = 300;
 
   // Find kernel
+  PolyTree::iterator test_node = this->p_tree.begin();
+  test_node->print_poly();
+  // PolyTree::post_order_iterator end_node = this->p_tree.begin();
+  // end_node->print_poly();
+  // end_node.descend_all();
 
-  PolyTree::post_order_iterator end_node = tree->begin();
-  end_node.descend_all();
+  //PolygonPtr ptr = PolygonPtr(test_node->poly);
+  //this->render_polys.push_back(ptr);
 
   //(*end_node).poly      
   //cout << "Target Point: " << p_target.x() << " " << p_target.y() << endl << endl;
+  int pen_width = 2;
+  bool pen_cosmetic = false;
 
-  {
-    PolygonGraphicsI *pgi = new PolygonGraphicsI((*end_node)->poly);
-    QColor pen_color(250, 0, 0);
-    QPen pen(pen_color, 5);
-    pgi->setEdgesPen(pen);
-    pgi->setVerticesPen(QPen(QColor(0,0,0,0)));
-    window->addItem(pgi);
-  }
+  // this->pgi = new PolygonGraphicsI(&(test_node->poly));
+  // QColor pen_color(250, 0, 0);
+  // QPen pen(pen_color, pen_width);
+  // pen.setCosmetic(pen_cosmetic);
+  // pgi->setEdgesPen(pen);
+  // pgi->setVerticesPen(QPen(QColor(0,0,0,0)));
+  // window->addItem(this->pgi);
+
+  // {
+  //   PolygonGraphicsI *pgi = new PolygonGraphicsI(&(*end_node).poly);
+  //   QColor pen_color(250, 0, 0);
+  //   QPen pen(pen_color, 5);
+  //   pgi->setEdgesPen(pen);
+  //   pgi->setVerticesPen(QPen(QColor(0,0,0,0)));
+  //   window->addItem(pgi);
+  // }
 
 
   // std::list<Point_2> reached_points;
@@ -331,37 +347,37 @@ void PolygonCalculate::connect(PolyTree * tree) {
   // }
 }
 
-void PolygonCalculate::simple_connect(PolygonWithHolesPtrVector inner_poly, PolygonWithHolesPtrVector outer_poly) {
-  cout << "connecting" << endl;
+// void PolygonCalculate::simple_connect(PolygonWithHolesPtrVector inner_poly, PolygonWithHolesPtrVector outer_poly) {
+//   cout << "connecting" << endl;
 
-  for(std::vector<PolygonWithHolesPtr>::iterator i = inner_poly.begin(); i != inner_poly.end(); ++i) {
-    Polygon_2 inner_poly_boundary = (**i).outer_boundary();
-    for(std::vector<PolygonWithHolesPtr>::iterator j = outer_poly.begin(); j != outer_poly.end(); ++j) {
-      Polygon_2 outer_poly_boundary = (**j).outer_boundary();
+//   for(std::vector<PolygonWithHolesPtr>::iterator i = inner_poly.begin(); i != inner_poly.end(); ++i) {
+//     Polygon_2 inner_poly_boundary = (**i).outer_boundary();
+//     for(std::vector<PolygonWithHolesPtr>::iterator j = outer_poly.begin(); j != outer_poly.end(); ++j) {
+//       Polygon_2 outer_poly_boundary = (**j).outer_boundary();
 
-      Point_2 p_target = inner_poly_boundary[0];
-      if(outer_poly_boundary.bounded_side(p_target) != CGAL::ON_BOUNDED_SIDE) {
-        continue;
-      }
-      cout << "Target Point: " << p_target.x() << " " << p_target.y() << endl << endl;
-      float dist = 0;
-      Point_2 p_found;
-      for(typename Polygon_2::Vertex_const_iterator i = outer_poly_boundary.vertices_begin(); i != outer_poly_boundary.vertices_end(); ++i) {
-        // cout << i->x() << " " << i->y() << endl;
-        float temp_dist = CGAL::squared_distance(*i, p_target);
-        cout << temp_dist << endl;
-        if(dist == 0 || temp_dist < dist) {
-          dist = temp_dist;
-          p_found = *i;
-          cout << "Found something!" << endl;
-          cout << "New Line: " << i->x() << "," << i->y() << "  " << p_target.x() << "," << p_target.y() << endl;
-        }
-      }
-      if(dist != 0) {
-        Segment_2 segment(p_found, p_target);
-        //window->addLine(p_found, p_target);
-        //connector_lines.push_back(segment);
-      }
-    }
-  }
-}
+//       Point_2 p_target = inner_poly_boundary[0];
+//       if(outer_poly_boundary.bounded_side(p_target) != CGAL::ON_BOUNDED_SIDE) {
+//         continue;
+//       }
+//       cout << "Target Point: " << p_target.x() << " " << p_target.y() << endl << endl;
+//       float dist = 0;
+//       Point_2 p_found;
+//       for(typename Polygon_2::Vertex_const_iterator i = outer_poly_boundary.vertices_begin(); i != outer_poly_boundary.vertices_end(); ++i) {
+//         // cout << i->x() << " " << i->y() << endl;
+//         float temp_dist = CGAL::squared_distance(*i, p_target);
+//         cout << temp_dist << endl;
+//         if(dist == 0 || temp_dist < dist) {
+//           dist = temp_dist;
+//           p_found = *i;
+//           cout << "Found something!" << endl;
+//           cout << "New Line: " << i->x() << "," << i->y() << "  " << p_target.x() << "," << p_target.y() << endl;
+//         }
+//       }
+//       if(dist != 0) {
+//         Segment_2 segment(p_found, p_target);
+//         //window->addLine(p_found, p_target);
+//         //connector_lines.push_back(segment);
+//       }
+//     }
+//   }
+// }

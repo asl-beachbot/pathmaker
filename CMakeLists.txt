@@ -17,9 +17,10 @@ include_directories("${PROJECT_BINARY_DIR}")
 include_directories("${PROJECT_SRC_DIR}")
 
 # Add C++11 flags for foreach and regexp
-#ADD_DEFINITIONS(
+ADD_DEFINITIONS(
     #-std=c++11
-#)
+    -frounding-math
+)
 
 ## 
 #	BOOST

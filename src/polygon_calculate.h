@@ -17,6 +17,7 @@
 
 #pragma once
 #include <vector>
+#include <iostream>
 
 #include <CGAL/Exact_predicates_inexact_constructions_kernel.h>
 #include <CGAL/Polygon_2.h>
@@ -60,6 +61,9 @@ typedef boost::shared_ptr<Polygon_with_holes_2>   PolygonWithHolesPtr;
 typedef std::vector<PolygonWithHolesPtr>          PolygonWithHolesPtrVector;
 typedef std::vector<PolygonWithHolesPtrVector>    PolygonWithHolesPtrVectorVector;
 
+typedef CGAL::Qt::PolygonGraphicsItem<Polygon_2> PolygonGraphicsI;
+
+
 class ExtendedPolygonPtr{
 public:
   Polygon_2 poly;
@@ -67,6 +71,10 @@ public:
   bool visited;
   ExtendedPolygonPtr(Polygon_2 poly) : poly(poly) {};
   ExtendedPolygonPtr() {};
+  
+  void print_poly() {
+    std::cout << "Polygon " << this << " " << poly << std::endl;
+  }
 };
 
 typedef tree<ExtendedPolygonPtr> PolyTree;
@@ -83,10 +91,16 @@ private:
   Polygon_with_holes_2 polygon_wh;
   PolygonWithHolesPtrVectorVector offset_polys;
   PolygonWithHolesPtrVector outer_poly_wrapper;
-  tree<ExtendedPolygonPtr> PolygonTree;
-  void iterate_polygon(Polygon_2 *p); 
+  PolyTree p_tree;
+  
+  PolygonGraphicsI * pgi;
+
+  PolygonPtrVector render_polys;
+
+  void iterate_polygon(Polygon_2 *p);
+
   void iterate_over_polygon_with_holes(PolygonWithHolesPtrVector *p);
-  void connect(PolyTree*);
+  void connect();
   void simple_connect(PolygonWithHolesPtrVector inner_poly, PolygonWithHolesPtrVector outer_poly); 
   void simple_connect_singular_polys(const PolygonWithHolesPtrVector * poly) const;
   int find_and_add(PolyTree * tree, PolyTree::iterator curr_node, 
