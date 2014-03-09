@@ -71,7 +71,11 @@ public:
   bool visited;
   ExtendedPolygonPtr(Polygon_2 poly) : poly(poly) {};
   ExtendedPolygonPtr() {};
-  
+  PolygonGraphicsI * graphx;
+  void set_graphx() {
+	this->graphx = new PolygonGraphicsI(&poly);
+	return;
+  }
   void print_poly() {
     std::cout << "Polygon " << this << " " << poly << std::endl;
   }
@@ -92,13 +96,13 @@ private:
   PolygonWithHolesPtrVectorVector offset_polys;
   PolygonWithHolesPtrVector outer_poly_wrapper;
   PolyTree p_tree;
-  
+  PolygonWithHolesPtrVector offset_poly_wh;
   PolygonGraphicsI * pgi;
 
   PolygonPtrVector render_polys;
+  PolygonWithHolesPtr outer_poly_ptr;
 
   void iterate_polygon(Polygon_2 *p);
-
   void iterate_over_polygon_with_holes(PolygonWithHolesPtrVector *p);
   void connect();
   void simple_connect(PolygonWithHolesPtrVector inner_poly, PolygonWithHolesPtrVector outer_poly); 

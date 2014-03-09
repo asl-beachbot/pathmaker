@@ -88,7 +88,7 @@ void print_tree(PolyTree * tree) {
   while(sib2!=end2) {
     for(int i=0; i < tree->depth(sib2)-2; ++i) 
       cout << " ";
-    cout << "was?" << endl;
+    sib2->print_poly();
     ++sib2;
   }
 }
@@ -132,15 +132,15 @@ void PolygonCalculate::run_program(int argc, char** argv, PolygonWindow* window)
   cout << endl << "Welcome to the Pathfinder. Finding a path through the dark since 1999." << 
     endl << "  (c) BeachBot Productions LLC. ";
 
-  sgi = new CGAL::Qt::SegmentsGraphicsItem<std::vector<Segment_2> >(&connector_lines);
+  //sgi = new CGAL::Qt::SegmentsGraphicsItem<std::vector<Segment_2> >(&connector_lines);
 
   if( argc > 1 ) {
     std::string filename = argv[1];
     std::ifstream input_stream(filename.c_str());
-    if(input_stream) {  
+    if(input_stream) {
       input_stream >> polygon_wh;
-      phgi = new PolygonWithHolesGraphicsI(&polygon_wh);
-      phgi->show();
+      this->phgi = new PolygonWithHolesGraphicsI(&polygon_wh);
+      this->phgi->show();
       window->addItem(phgi);
     }
   }
@@ -187,16 +187,16 @@ void PolygonCalculate::run_program(int argc, char** argv, PolygonWindow* window)
 
   PolygonWithHolesPtrVector offset_poly_wh = 
     CGAL::create_interior_skeleton_and_offset_polygons_with_holes_2(lOffset, polygon_wh);
-  offset_polys.push_back(offset_poly_wh);
+  this->offset_polys.push_back(offset_poly_wh);
   
-  PolygonWithHolesPtr outer_poly_ptr(&polygon_wh);
+  this->outer_poly_ptr = PolygonWithHolesPtr(&(this->polygon_wh));
 
   // new code for recursive tree
-  ExtendedPolygonPtr top_ptr = ExtendedPolygonPtr(polygon_wh.outer_boundary())
+  ExtendedPolygonPtr top_ptr = ExtendedPolygonPtr(polygon_wh.outer_boundary());
   this->p_tree = PolyTree(top_ptr);
-  // find_and_add(&p_tree, p_tree.begin(), outer_poly_ptr, 0);
-
-  // connect();
+  find_and_add(&this->p_tree, p_tree.begin(), outer_poly_ptr, 0);
+  print_tree(&this->p_tree);
+  connect();
 
 
 
@@ -308,27 +308,40 @@ void PolygonCalculate::connect() {
   int translateY = 300;
 
   // Find kernel
-  PolyTree::iterator test_node = this->p_tree.begin();
-  test_node->print_poly();
-  // PolyTree::post_order_iterator end_node = this->p_tree.begin();
-  // end_node->print_poly();
-  // end_node.descend_all();
+  PolyTree::post_order_iterator test_node = this->p_tree.begin_post();
 
-  //PolygonPtr ptr = PolygonPtr(test_node->poly);
-  //this->render_polys.push_back(ptr);
+  PolygonPtr ptr = PolygonPtr(&test_node->poly);
+  this->render_polys.push_back(ptr);
 
   //(*end_node).poly      
   //cout << "Target Point: " << p_target.x() << " " << p_target.y() << endl << endl;
-  int pen_width = 2;
-  bool pen_cosmetic = false;
+  int pen_width = 1;
+  bool pen_cosmetic = true;
 
-  // this->pgi = new PolygonGraphicsI(&(test_node->poly));
-  // QColor pen_color(250, 0, 0);
-  // QPen pen(pen_color, pen_width);
-  // pen.setCosmetic(pen_cosmetic);
-  // pgi->setEdgesPen(pen);
-  // pgi->setVerticesPen(QPen(QColor(0,0,0,0)));
-  // window->addItem(this->pgi);
+  this->pgi = new PolygonGraphicsI(&(test_node->poly));
+  QColor pen_color(250, 0, 0);
+  QPen pen(pen_color, pen_width);
+  pen.setCosmetic(pen_cosmetic);
+  pgi->setEdgesPen(pen);
+  pgi->setVerticesPen(QPen(QColor(0,0,0,0)));
+  window->addItem(this->pgi);
+
+  int idx = 0;
+  while(test_node != p_tree.begin()) {
+    // // this->pgi = new PolygonGraphicsI(&(elem->poly));
+    int c = 250 - idx * 5 > 0 ? 250 - idx * 5 : 0;
+    QColor pen_color(c, 0, 0);
+    QPen pen(pen_color, pen_width);
+    pen.setCosmetic(pen_cosmetic);
+    pgi->setEdgesPen(pen);
+    pgi->setVerticesPen(QPen(QColor(0,0,0,0)));
+    test_node->set_graphx();
+    window->addItem(test_node->graphx);
+    test_node->print_poly();
+    test_node = this->p_tree.parent(test_node);
+    ++idx;
+
+  }
 
   // {
   //   PolygonGraphicsI *pgi = new PolygonGraphicsI(&(*end_node).poly);
