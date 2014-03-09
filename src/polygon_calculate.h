@@ -72,9 +72,13 @@ public:
   ExtendedPolygonPtr(Polygon_2 poly) : poly(poly) {};
   ExtendedPolygonPtr() {};
   PolygonGraphicsI * graphx;
+  tree<ExtendedPolygonPtr>::iterator_base to;
   void set_graphx() {
 	this->graphx = new PolygonGraphicsI(&poly);
 	return;
+  }
+  bool unvisited() {
+	  return !this->visited;
   }
   void print_poly() {
     std::cout << "Polygon " << this << " " << poly << std::endl;
@@ -82,6 +86,7 @@ public:
 };
 
 typedef tree<ExtendedPolygonPtr> PolyTree;
+
 
 class PolygonCalculate{
 public:
@@ -105,6 +110,8 @@ private:
   void iterate_polygon(Polygon_2 *p);
   void iterate_over_polygon_with_holes(PolygonWithHolesPtrVector *p);
   void connect();
+  int connect(PolyTree::iterator node, PolyTree::iterator connect_from);
+
   void simple_connect(PolygonWithHolesPtrVector inner_poly, PolygonWithHolesPtrVector outer_poly); 
   void simple_connect_singular_polys(const PolygonWithHolesPtrVector * poly) const;
   int find_and_add(PolyTree * tree, PolyTree::iterator curr_node, 

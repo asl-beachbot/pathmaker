@@ -196,7 +196,9 @@ void PolygonCalculate::run_program(int argc, char** argv, PolygonWindow* window)
   this->p_tree = PolyTree(top_ptr);
   find_and_add(&this->p_tree, p_tree.begin(), outer_poly_ptr, 0);
   print_tree(&this->p_tree);
-  connect();
+  PolyTree::post_order_iterator test_node = this->p_tree.begin_post();
+
+  connect(test_node, NULL);
 
 
 
@@ -289,6 +291,36 @@ void PolygonCalculate::run_program(int argc, char** argv, PolygonWindow* window)
 //   }
 // }
 
+
+int PolygonCalculate::connect(PolyTree::iterator node, PolyTree::iterator connect_from) {
+	bool unvisited_children = true;
+	PolyTree::sibling_iterator child_it = this->p_tree.child(node, 0);
+	if(child_it == this->p_tree.end()) { // invalid pointer == no children
+		connect_from->to = node;
+		node->visited = true;
+		this->connect(this->p_tree.parent(node), node);
+		return 1;
+	}
+	for(;child_it != child_it.end();++child_it) {
+		if(child_it->unvisited()) {
+			this->connect(child_it, connect_from);
+			return 1;
+		}
+	}
+	// Always starting at a kernel
+	// first one is NULL
+	if(connect_from != NULL) {
+		connect_from->to = node;
+	}
+	node->visited = true;
+	if(node == this->p_tree.begin()) {
+		return 1;
+	} else {
+		return this->connect(this->p_tree.parent(node), node);
+	}
+	
+}
+
 void PolygonCalculate::connect() {
   // Steps:
   // 1. Find a "kernel" from where the BeachBot ideally should start
@@ -316,20 +348,15 @@ void PolygonCalculate::connect() {
   //(*end_node).poly      
   //cout << "Target Point: " << p_target.x() << " " << p_target.y() << endl << endl;
   int pen_width = 1;
-  bool pen_cosmetic = true;
-
-  this->pgi = new PolygonGraphicsI(&(test_node->poly));
-  QColor pen_color(250, 0, 0);
-  QPen pen(pen_color, pen_width);
-  pen.setCosmetic(pen_cosmetic);
-  pgi->setEdgesPen(pen);
-  pgi->setVerticesPen(QPen(QColor(0,0,0,0)));
-  window->addItem(this->pgi);
+  bool pen_cosmetic = false;
 
   int idx = 0;
   while(test_node != p_tree.begin()) {
     // // this->pgi = new PolygonGraphicsI(&(elem->poly));
-    int c = 250 - idx * 5 > 0 ? 250 - idx * 5 : 0;
+	//if(has_unvisited_children(test_node)
+    
+    int c = 250 - idx * 5;
+    if(c < 0) c = 0;
     QColor pen_color(c, 0, 0);
     QPen pen(pen_color, pen_width);
     pen.setCosmetic(pen_cosmetic);
@@ -337,8 +364,11 @@ void PolygonCalculate::connect() {
     pgi->setVerticesPen(QPen(QColor(0,0,0,0)));
     test_node->set_graphx();
     window->addItem(test_node->graphx);
+    cout << idx;
     test_node->print_poly();
     test_node = this->p_tree.parent(test_node);
+    test_node->visited = true;
+    
     ++idx;
 
   }
