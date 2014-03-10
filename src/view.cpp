@@ -30,12 +30,15 @@
 // defining types
 typedef CGAL::Exact_predicates_inexact_constructions_kernel K ;
 
-typedef K::Point_2                    Point_2;
+typedef K::Point_2  Point_2;
 
 
 using std::endl; using std::cout;
 
 int PolygonWindow::initWindow(int argc, char** argv) {
+
+  setWindowTitle("This is a skeletal test.");
+  // mouse_xycoord = new QLabel("0.00, 0.00", this);
 
   QApplication::setGraphicsSystem("opengl");
   //view->show();
@@ -48,13 +51,17 @@ int PolygonWindow::initWindow(int argc, char** argv) {
   ui.view->viewport()->installEventFilter(navigation);
 
   QObject::connect(navigation, SIGNAL(mouseCoordinates(QString)),
-                   mouse_xycoord, SLOT(setText(QString)));
+                   ui.mouse_xy, SLOT(setText(QString)));
 
   QObject::connect(
       ui.checkBox, SIGNAL(stateChanged(int)),
       this, SLOT(acceptValueFromCheckbox(int))
       );
-  ui.view->setRenderHint(QPainter::Antialiasing);
+  // ui.view->setRenderHint(QPainter::Antialiasing);
+  ui.view->setAcceptDrops(false);
+ 
+  scene.setItemIndexMethod(QGraphicsScene::NoIndex);
+
   ui.view->setScene(&scene);
   ui.view->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOn);
   //this->setCentralWidget(this->view);
@@ -62,15 +69,8 @@ int PolygonWindow::initWindow(int argc, char** argv) {
 }
 
 void PolygonWindow::setupStatusBar() {
-  this->statusBar()->addWidget(new QLabel(this), 1);
-  this->statusBar()->addWidget(mouse_xycoord, 0);
-}
-
-void PolygonWindow::addLine(float x1, float y1, float x2, float y2) {
-  scene.addLine(QLineF(x1, y1, x2, y2), QPen(Qt::green));
-}
-void PolygonWindow::addLine(Point_2 p1, Point_2 p2) {
-  scene.addLine(QLineF(p1.x(), p1.y(), p2.x(), p2.y()), QPen(Qt::green));
+  // this->statusBar()->addWidget(new QLabel(this), 1);
+  // this->statusBar()->addWidget(mouse_xycoord, 0);
 }
 
 void PolygonWindow::addItem(QGraphicsItem* item) {
@@ -78,10 +78,8 @@ void PolygonWindow::addItem(QGraphicsItem* item) {
   ui.view->show();
 }
 void PolygonWindow::acceptValueFromCheckbox(int value) {
-  cout << "the fucking valuellll" << value << endl;
+  // cout << "the fucking valuellll" << value << endl;
 }
 // constructor
 PolygonWindow::PolygonWindow(QWidget* parent) : QMainWindow(parent){
-  setWindowTitle("This is a skeletal test.");
-  mouse_xycoord = new QLabel("0.00, 0.00", this);
 }

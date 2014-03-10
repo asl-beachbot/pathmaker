@@ -74,7 +74,9 @@ typedef std::vector<PolygonWithHolesPtrVector>    PolygonWithHolesPtrVectorVecto
 typedef CGAL::Qt::PolygonWithHolesGraphicsItem<Polygon_with_holes_2> PolygonWithHolesGraphicsI;
 
 typedef CGAL::Qt::PolygonGraphicsItem<Polygon_2> PolygonGraphicsI;
-  
+
+typedef CGAL::Qt::CustomPolylinesGraphicsItem<std::list<std::list<Point_2> > > PolylinesGraphicsI;
+
 
 typedef tree<ExtendedPolygonPtr> PolyTree;
 
@@ -132,7 +134,22 @@ void PolygonCalculate::run_program(int argc, char** argv, PolygonWindow* window)
   cout << endl << "Welcome to the Pathfinder. Finding a path through the dark since 1999." << 
     endl << "  (c) BeachBot Productions LLC. ";
 
-  //sgi = new CGAL::Qt::SegmentsGraphicsItem<std::vector<Segment_2> >(&connector_lines);
+  
+  this->plgi = new PolylinesGraphicsI(&poly_connector_lines);
+  
+  QObject::connect(window, SIGNAL(changed()),
+                   this->plgi, SLOT(modelChanged()));
+
+
+  QColor pen_color(255, 0, 0);
+  QPen pen(pen_color, 3);
+  pen.setCosmetic(false);
+  // sgi->setEdgesPen(pen);
+  // sgi->setVerticesPen(pen);
+  // sgi = new CGAL::Qt::SegmentsGraphicsItem<std::list<Segment_2> >(&connector_lines);
+  plgi->setEdgesPen(QPen(Qt::blue, 2, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin));
+
+  window->addItem(this->plgi);
 
   if( argc > 1 ) {
     std::string filename = argv[1];
@@ -199,6 +216,17 @@ void PolygonCalculate::run_program(int argc, char** argv, PolygonWindow* window)
   PolyTree::post_order_iterator test_node = this->p_tree.begin_post();
 
   connect(test_node, NULL);
+
+  // Call model changed to update the bounding box! IMPORTANT!
+  this->plgi->modelChanged();
+
+  PolyTree::iterator node = p_tree.begin();
+  PolyTree::iterator end = p_tree.end();
+  while(node != end) {
+    node->set_graphx();
+    this->window->addItem(node->graphx);
+    ++node;
+  }
 
 
 
@@ -292,25 +320,71 @@ void PolygonCalculate::run_program(int argc, char** argv, PolygonWindow* window)
 // }
 
 
+int PolygonCalculate::addLine(Point_2 from, Point_2 to) {
+  // this->connector_lines.push_back(Segment_2(from, to));
+  std::list<Point_2> list;// = std::list<Point_2>();
+  list.push_back(from);
+  list.push_back(to);
+  this->poly_connector_lines.push_back(list);
+}
+
+
+
+void PolygonCalculate::find_closest_points_on_polys(Polygon_2 p1, Polygon_2 p2) {
+  Point_2 * res = new Point_2[2];
+  Polygon_2::Vertex_const_iterator p1_begin = p1.vertices_begin();
+  Polygon_2::Vertex_const_iterator p1_end = p1.vertices_end();
+  Polygon_2::Vertex_const_iterator p2_begin = p2.vertices_begin();
+  Polygon_2::Vertex_const_iterator p2_end = p2.vertices_begin();
+  float distance, temp_dist;
+  cout << endl << "Distances: ";
+  res[0] = *p1_begin;
+  res[1] = *p2_begin;
+  distance = CGAL::squared_distance(p1[0], p2[0]);
+  for(;p1_begin != p1_end; ++p1_begin) {
+    for(;p2_begin != p2_end; ++p2_begin) {
+      temp_dist = CGAL::squared_distance(*p1_begin, *p2_begin);
+      cout << " " << temp_dist;
+      if(temp_dist < distance) {
+        distance = temp_dist;
+        res[0] = *p1_begin;
+        res[1] = *p2_begin;
+      }
+    }
+  }
+  cout << endl;
+  this->addLine(res[0], res[1]);
+  // return res;
+}
+
 int PolygonCalculate::connect(PolyTree::iterator node, PolyTree::iterator connect_from) {
+  cout << "Looking at " << node->poly << endl;
 	bool unvisited_children = true;
 	PolyTree::sibling_iterator child_it = this->p_tree.child(node, 0);
 	if(child_it == this->p_tree.end()) { // invalid pointer == no children
 		connect_from->to = node;
+    cout << "Connecting " << &connect_from << " to " << &node << endl;
 		node->visited = true;
+
 		this->connect(this->p_tree.parent(node), node);
+    this->find_closest_points_on_polys(node->poly, connect_from->poly);
+
+    // this->addLine(node->poly[0], connect_from->poly[0]);
 		return 1;
 	}
 	for(;child_it != child_it.end();++child_it) {
 		if(child_it->unvisited()) {
 			this->connect(child_it, connect_from);
-			return 1;
+      return 1;
 		}
 	}
 	// Always starting at a kernel
 	// first one is NULL
 	if(connect_from != NULL) {
 		connect_from->to = node;
+    cout << "Connecting " << &connect_from << " to " << &node << endl;
+    this->find_closest_points_on_polys(node->poly, connect_from->poly);
+    // this->addLine(node->poly[0], connect_from->poly[0]);
 	}
 	node->visited = true;
 	if(node == this->p_tree.begin()) {
@@ -318,7 +392,6 @@ int PolygonCalculate::connect(PolyTree::iterator node, PolyTree::iterator connec
 	} else {
 		return this->connect(this->p_tree.parent(node), node);
 	}
-	
 }
 
 void PolygonCalculate::connect() {

@@ -32,6 +32,8 @@
 
 #include <CGAL/Segment_2.h>
 #include <CGAL/Qt/SegmentsGraphicsItem.h>
+#include <CustomPolylinesGraphicsItem.h>
+// #include <CGAL/Qt/PolylinesGraphicsItem.h>
 
 #include <QtGui>
 
@@ -63,6 +65,9 @@ typedef std::vector<PolygonWithHolesPtrVector>    PolygonWithHolesPtrVectorVecto
 
 typedef CGAL::Qt::PolygonGraphicsItem<Polygon_2> PolygonGraphicsI;
 
+// typedef CGAL::Qt::PolylinesGraphicsItem<std::list<std::list<Point_2> > > PolylinesGraphicsI;
+typedef CGAL::Qt::CustomPolylinesGraphicsItem<std::list<std::list<Point_2> > > PolylinesGraphicsI;
+// typedef CustomPolylinesGraphicsItem PolylinesGraphicsI;
 
 class ExtendedPolygonPtr{
 public:
@@ -74,8 +79,8 @@ public:
   PolygonGraphicsI * graphx;
   tree<ExtendedPolygonPtr>::iterator_base to;
   void set_graphx() {
-	this->graphx = new PolygonGraphicsI(&poly);
-	return;
+	  this->graphx = new PolygonGraphicsI(&poly);
+	  return;
   }
   bool unvisited() {
 	  return !this->visited;
@@ -94,8 +99,11 @@ public:
   void run_program(int argc, char** argv, PolygonWindow* window);
 private:
   PolygonWindow* window;
-  std::vector<Segment_2> connector_lines;
-  CGAL::Qt::SegmentsGraphicsItem<std::vector<Segment_2> > * sgi;
+
+  std::list<std::list<Point_2> > poly_connector_lines;
+
+  std::list<Segment_2> connector_lines;
+  CGAL::Qt::SegmentsGraphicsItem<std::list<Segment_2> > * sgi;
   CGAL::Qt::PolygonWithHolesGraphicsItem<Polygon_with_holes_2> *phgi;
   Polygon_with_holes_2 polygon_wh;
   PolygonWithHolesPtrVectorVector offset_polys;
@@ -104,14 +112,16 @@ private:
   PolygonWithHolesPtrVector offset_poly_wh;
   PolygonGraphicsI * pgi;
 
+  PolylinesGraphicsI * plgi;
+
   PolygonPtrVector render_polys;
   PolygonWithHolesPtr outer_poly_ptr;
-
+  void find_closest_points_on_polys(Polygon_2 p1, Polygon_2 p2);
   void iterate_polygon(Polygon_2 *p);
   void iterate_over_polygon_with_holes(PolygonWithHolesPtrVector *p);
   void connect();
   int connect(PolyTree::iterator node, PolyTree::iterator connect_from);
-
+  int addLine(Point_2 from, Point_2 to);
   void simple_connect(PolygonWithHolesPtrVector inner_poly, PolygonWithHolesPtrVector outer_poly); 
   void simple_connect_singular_polys(const PolygonWithHolesPtrVector * poly) const;
   int find_and_add(PolyTree * tree, PolyTree::iterator curr_node, 

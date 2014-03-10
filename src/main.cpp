@@ -38,11 +38,11 @@ using std::endl; using std::cout;
 
 int main(int argc, char** argv) {
   QApplication app(argc, argv);
-  PolygonWindow window;
-  window.setupStatusBar();
-  window.initWindow(argc, argv);
-  window.show();
+  PolygonWindow * window = new PolygonWindow();
+  window->setupStatusBar();
+  window->initWindow(argc, argv);
+  window->show();
   PolygonCalculate polycalc;
-  polycalc.run_program(argc, argv, &window);
+  polycalc.run_program(argc, argv, window);
   return app.exec();
 }

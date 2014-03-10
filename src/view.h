@@ -36,12 +36,10 @@ public:
   PolygonWindow(QWidget* parent = 0);
   void setupStatusBar();
   void addItem(QGraphicsItem* item);
-  void addLine(Point_2 p1, Point_2 p2);
-  void addLine(float x1, float y1, float x2, float y2);
 private:
+  Ui::MainWindow ui;
   QGraphicsScene scene;
   CGAL::Qt::GraphicsViewNavigation* navigation;
-  Ui::MainWindow ui;
   QLabel* mouse_xycoord;
 public slots:
   void acceptValueFromCheckbox(int value);
