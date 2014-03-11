@@ -36,6 +36,8 @@
 #include <CGAL/Qt/PolygonWithHolesGraphicsItem.h>
 #include <CGAL/squared_distance_2.h>
 
+#include <CGAL/Aff_transformation_2.h>
+
 #include <CGAL/Segment_2.h>
 #include <CGAL/Qt/SegmentsGraphicsItem.h>
 
@@ -56,6 +58,7 @@ typedef CGAL::Exact_predicates_inexact_constructions_kernel K ;
 
 typedef K::Point_2                    Point_2;
 typedef K::Segment_2                  Segment_2;
+typedef K::Vector_2                   Vector_2;
 typedef K::Line_2                     Line_2;
 typedef CGAL::Polygon_2<K>            Polygon_2;
 typedef CGAL::Polygon_with_holes_2<K> Polygon_with_holes_2;
@@ -77,12 +80,14 @@ typedef CGAL::Qt::PolygonGraphicsItem<Polygon_2> PolygonGraphicsI;
 
 typedef CGAL::Qt::CustomPolylinesGraphicsItem<std::list<std::list<Point_2> > > PolylinesGraphicsI;
 
+typedef CGAL::Aff_transformation_2<K> Transformation;
+
 
 typedef tree<ExtendedPolygonPtr> PolyTree;
 
 using std::endl; using std::cout;
 
-PolygonCalculate::PolygonCalculate() { }
+// Helper functions
 
 void print_tree(PolyTree * tree) {
   PolyTree::iterator sib2 = tree->begin();
@@ -94,6 +99,11 @@ void print_tree(PolyTree * tree) {
     ++sib2;
   }
 }
+
+// End Helper Functions
+
+
+PolygonCalculate::PolygonCalculate() { }
 
 
 int PolygonCalculate::find_and_add(PolyTree * tree, PolyTree::iterator curr_node, 
@@ -135,10 +145,12 @@ void PolygonCalculate::run_program(int argc, char** argv, PolygonWindow* window)
     endl << "  (c) BeachBot Productions LLC. ";
 
   
-  this->plgi = new PolylinesGraphicsI(&poly_connector_lines);
+  this->plgi = new PolylinesGraphicsI(&this->poly_connector_lines);
   
-  QObject::connect(window, SIGNAL(changed()),
-                   this->plgi, SLOT(modelChanged()));
+  this->round_corners_gi = new PolylinesGraphicsI(&this->round_corners_lines);
+
+  // QObject::connect(window, SIGNAL(changed()),
+  //                  this->plgi, SLOT(modelChanged()));
 
 
   QColor pen_color(255, 0, 0);
@@ -147,9 +159,11 @@ void PolygonCalculate::run_program(int argc, char** argv, PolygonWindow* window)
   // sgi->setEdgesPen(pen);
   // sgi->setVerticesPen(pen);
   // sgi = new CGAL::Qt::SegmentsGraphicsItem<std::list<Segment_2> >(&connector_lines);
-  plgi->setEdgesPen(QPen(Qt::blue, 2, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin));
+  this->plgi->setEdgesPen(QPen(Qt::blue, 2, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin));
+  this->round_corners_gi->setEdgesPen(QPen(Qt::red, 0, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin));
 
   window->addItem(this->plgi);
+  window->addItem(this->round_corners_gi);
 
   if( argc > 1 ) {
     std::string filename = argv[1];
@@ -200,12 +214,9 @@ void PolygonCalculate::run_program(int argc, char** argv, PolygonWindow* window)
   // PolygonWithHolesPtrVector offset_poly_wh = 
   //   CGAL::create_offset_polygons_2<Polygon_with_holes_2>(lOffset, *straight_skel);
   
-
-
   PolygonWithHolesPtrVector offset_poly_wh = 
     CGAL::create_interior_skeleton_and_offset_polygons_with_holes_2(lOffset, polygon_wh);
-  this->offset_polys.push_back(offset_poly_wh);
-  
+
   this->outer_poly_ptr = PolygonWithHolesPtr(&(this->polygon_wh));
 
   // new code for recursive tree
@@ -229,107 +240,14 @@ void PolygonCalculate::run_program(int argc, char** argv, PolygonWindow* window)
     this->window->addItem(node->graphx);
     ++node;
   }
-
-
-
-  // outer_poly_wrapper.push_back(outer_poly_ptr);
-
-  // simple_connect(offset_poly_wh, outer_poly_wrapper);
-
-  // int i = 0;
-  
-  // QColor pen_color(10, 250, 250);
-  // QPen pen(pen_color);
-
-  // ExtendedPolygonPtr ext_poly = ExtendedPolygonPtr(polygon_wh.outer_boundary());
-  
-  // tree = Tree(ext_poly);
-  // tree::<ExtendedPolygonPtr>::iterator node = tree.begin();
-
-  // for(;i<=insets; ++i) {
-  //   lOffset += inset_width;
-
-  //   PolygonWithHolesPtrVector offset_poly_wh = 
-  //     CGAL::create_interior_skeleton_and_offset_polygons_with_holes_2(lOffset, polygon_wh);
-
-  //   if(offset_poly_wh.size() == 0) {
-  //     // Break condition (no more polygons!)
-  //     break;
-  //   }
-
-  //   // push back in ordinary list
-  //   offset_polys.push_back(offset_poly_wh);
-
-    // tree::<ExtendedPolygonPtr>::iterator curr_lvl = node;
-
-    // Point_2 p_check;
-    // tree::<ExtendedPolygonPtr>::iterator next_lvl;
-    // for(PolygonWithHolesPtrVector::iterator poly = offset_polys[i].begin(); poly != offset_polys[i].end(); ++poly) {
-      // node = curr_lvl;
-      // outer_poly_boundary = node.poly.outer_boundary();
-      // p_check = poly.outer_boundary()[0];
-      // while(outer_poly_boundary.bounded_side(p_check) != CGAL::ON_BOUNDED_SIDE) {
-      //   try{
-      //     node = node.next_at_same_depth();
-      //     outer_poly_boundary = node.poly.outer_boundary();
-      //   }
-      //   catch(int e) {
-      //     cout << "No next sibling " << e << endl;
-      //   }
-      // } 
-      // cout << "Found next parent" << endl;
-      // next_lvl = tree.insert(node, ExtendedPolygonPtr(poly.outer_boundary()));
-
-      // Gradient and Paint
-      // PolygonWithHolesGraphicsI *pgi = new PolygonWithHolesGraphicsI((*poly).get());
-      // QColor pen_color(10, 250 - i * 5, 250 - i * 3);
-      // QPen pen(pen_color, pen_width);
-      // pen.setCosmetic(pen_cosmetic);
-      // pgi->setEdgesPen(pen);
-      // pgi->setVerticesPen(QPen(QColor(0,0,0,0)));
-      // window->addItem(pgi);
-    // }
-    // tree::<ExtendedPolygonPointer>::node = tree.fixed_depth_iterator(next_lvl);
-    //simple_connect(offset_poly_wh, offset_polys[i]);
-    //simple_connect_singular_polys(&offset_poly_wh);
-  // }
 }
 
-// void PolygonCalculate::iterate_polygon(Polygon_2 *p) {
-//   for(typename Polygon_2::Vertex_const_iterator i = p->vertices_begin(); i != p->vertices_end(); ++i) {
-//     cout << (*i).x() << " " << i->x() << endl;
-//   }
-// }
-  
-  // Iterate over outer boundary (w/o holes)
-// void PolygonCalculate::iterate_over_polygon_with_holes(PolygonWithHolesPtrVector *p) {  
-// for(std::vector<PolygonWithHolesPtr>::iterator i = p->begin(); i != p->end(); ++i) {
-//     Polygon_2 outer = (**i).outer_boundary();
-//     iterate_polygon(&outer);
-//   }
-// }
-// void PolygonCalculate::simple_connect_singular_polys(const PolygonWithHolesPtrVector * poly) const {
-//   cout << "connecting polys" << endl;
-  
-//   // check if more than one poly exists in vector
-//   if(poly->size() == 1) { return; }
-  
-//   for(std::vector<PolygonWithHolesPtr>::const_iterator i = poly->begin(); i != poly->end() - 1; ++i) {
-//     Polygon_2 bound1 = (**i).outer_boundary();
-//     Polygon_2 bound2 = (**(i+1)).outer_boundary();
-//     //window->addLine(bound1[0].x(), bound1[0].y(), bound2[0].x(), bound2[0].y());
-//   }
-// }
-
-
 int PolygonCalculate::addLine(Point_2 from, Point_2 to) {
-  // this->connector_lines.push_back(Segment_2(from, to));
   std::list<Point_2> list;// = std::list<Point_2>();
   list.push_back(from);
   list.push_back(to);
   this->poly_connector_lines.push_back(list);
 }
-
 
 
 Point_2 PolygonCalculate::find_closest_point_on_poly(Point_2 exit_point, Polygon_2 p2) {
@@ -348,7 +266,20 @@ Point_2 PolygonCalculate::find_closest_point_on_poly(Point_2 exit_point, Polygon
   return point2;
 }
 
+
 int PolygonCalculate::connect(PolyTree::iterator node, PolyTree::iterator connect_from) {
+  // Recursive algorithm to connect all Polygons
+  // Steps:
+  // 1. Find a "kernel" from where the BeachBot ideally should start
+  // 2. Drive kernel, then move on one stage further out
+  // 3. Check number of "undriven" polygons inside the one we're at
+  // 4. If more than 0 find the closest point to enter (from where we are)
+  //    Entering should happen while driving on the polygon where at
+  // 5. Drive inside again and repeat step 1 - 5
+ 
+  // There are no "half-driven" Polygons at the moment
+  // No state keeping etcs
+
 	PolyTree::sibling_iterator child_it = this->p_tree.child(node, 0);
 	if(child_it == this->p_tree.end()) { // invalid pointer == no children
 		connect_from->to = node;
@@ -396,106 +327,65 @@ int PolygonCalculate::connect(PolyTree::iterator node, PolyTree::iterator connec
 	}
 }
 
-void PolygonCalculate::connect() {
-  // Steps:
-  // 1. Find a "kernel" from where the BeachBot ideally should start
-  // 2. Drive kernel, then move on one stage further out
-  // 3. Check number of "undriven" polygons inside the one we're at
-  // 4. If more than 0 find the closest point to enter (from where we are)
-  //    Entering should happen while driving on the polygon where at
-  // 5. Drive inside again and repeat step 1 - 5
 
-  // Step 1: Find kernel
-
-  cout << "Running the connection sub-routine\n" << endl;
-
-  // // var to save driven points
-
-  int translateX = 300;
-  int translateY = 300;
-
-  // Find kernel
-  PolyTree::post_order_iterator test_node = this->p_tree.begin_post();
-
-  PolygonPtr ptr = PolygonPtr(&test_node->poly);
-  this->render_polys.push_back(ptr);
-
-  //(*end_node).poly      
-  //cout << "Target Point: " << p_target.x() << " " << p_target.y() << endl << endl;
-  int pen_width = 1;
-  bool pen_cosmetic = false;
-
-  int idx = 0;
-  while(test_node != p_tree.begin()) {
-    // // this->pgi = new PolygonGraphicsI(&(elem->poly));
-	//if(has_unvisited_children(test_node)
-    
-    int c = 250 - idx * 5;
-    if(c < 0) c = 0;
-    QColor pen_color(c, 0, 0);
-    QPen pen(pen_color, pen_width);
-    pen.setCosmetic(pen_cosmetic);
-    pgi->setEdgesPen(pen);
-    pgi->setVerticesPen(QPen(QColor(0,0,0,0)));
-    test_node->set_graphx();
-    window->addItem(test_node->graphx);
-    cout << idx;
-    test_node->print_poly();
-    test_node = this->p_tree.parent(test_node);
-    test_node->visited = true;
-    
-    ++idx;
-
-  }
-
-  // {
-  //   PolygonGraphicsI *pgi = new PolygonGraphicsI(&(*end_node).poly);
-  //   QColor pen_color(250, 0, 0);
-  //   QPen pen(pen_color, 5);
-  //   pgi->setEdgesPen(pen);
-  //   pgi->setVerticesPen(QPen(QColor(0,0,0,0)));
-  //   window->addItem(pgi);
-  // }
-
-
-  // std::list<Point_2> reached_points;
-
-  // while(outer_poly_boundary.bounded_side(p_check) != CGAL::ON_BOUNDED_SIDE) {
-
-  // }
+float PolygonCalculate::calc_angle(Vector_2 v1, Vector_2 v2) {
+  float angle = acos(v1 * v2);
 }
 
-// void PolygonCalculate::simple_connect(PolygonWithHolesPtrVector inner_poly, PolygonWithHolesPtrVector outer_poly) {
-//   cout << "connecting" << endl;
 
-//   for(std::vector<PolygonWithHolesPtr>::iterator i = inner_poly.begin(); i != inner_poly.end(); ++i) {
-//     Polygon_2 inner_poly_boundary = (**i).outer_boundary();
-//     for(std::vector<PolygonWithHolesPtr>::iterator j = outer_poly.begin(); j != outer_poly.end(); ++j) {
-//       Polygon_2 outer_poly_boundary = (**j).outer_boundary();
+void PolygonCalculate::round_corners(float r) {
+  // Algorithm to round corners of polygons
+  // Two possible solution possibiliteis:
+  // 1.  Circle with radius at corner (at the moment implemented)
+  // 2.  Interprete corner as spline control point
+  //     And use 2 other points on edge as origin points
 
-//       Point_2 p_target = inner_poly_boundary[0];
-//       if(outer_poly_boundary.bounded_side(p_target) != CGAL::ON_BOUNDED_SIDE) {
-//         continue;
-//       }
-//       cout << "Target Point: " << p_target.x() << " " << p_target.y() << endl << endl;
-//       float dist = 0;
-//       Point_2 p_found;
-//       for(typename Polygon_2::Vertex_const_iterator i = outer_poly_boundary.vertices_begin(); i != outer_poly_boundary.vertices_end(); ++i) {
-//         // cout << i->x() << " " << i->y() << endl;
-//         float temp_dist = CGAL::squared_distance(*i, p_target);
-//         cout << temp_dist << endl;
-//         if(dist == 0 || temp_dist < dist) {
-//           dist = temp_dist;
-//           p_found = *i;
-//           cout << "Found something!" << endl;
-//           cout << "New Line: " << i->x() << "," << i->y() << "  " << p_target.x() << "," << p_target.y() << endl;
-//         }
-//       }
-//       if(dist != 0) {
-//         Segment_2 segment(p_found, p_target);
-//         //window->addLine(p_found, p_target);
-//         //connector_lines.push_back(segment);
-//       }
-//     }
-//   }
-// }
+  PolyTree::iterator it_node = this->p_tree.begin();
+  Polygon_2::Vertex_const_iterator p_begin = it_node->poly.vertices_begin();
+  Polygon_2::Vertex_const_iterator p_end = it_node->poly.vertices_end();
+  
+  r = 15;
+
+  int len = it_node->poly.size();
+
+
+  Transformation rotate_90(CGAL::ROTATION, sin(M_PI/2), cos(M_PI/2)); 
+
+
+  for(int i = 1; i <= len - 1; ++i ) {
+
+    Vector_2 v1 = Vector_2(it_node->poly[i-1], it_node->poly[i]);
+    Vector_2 v1_n = v1 / sqrt(v1.squared_length());
+
+    Vector_2 v2 = Vector_2(it_node->poly[i], it_node->poly[i + 1]);
+    Vector_2 v2_n = v2 / sqrt(v2.squared_length());
+
+    float angle = this->calc_angle(v1, v2);
+    
+    std::list<Point_2> list;// = std::list<Point_2>();
+    
+    float dist_on_v = r / tan(angle/2);
+
+    Vector_2 v1_s = - v1_n * 3;
+    Vector_2 v2_s = v2_n * 3;
+
+    // Point_2 center = 
+    Vector_2 midpoint = (v1_s - v1_s.transform(rotate_90));
+
+    Point_2 p1 = it_node->poly[i] + v1_s;
+    Point_2 pm = it_node->poly[i] + midpoint;
+    Point_2 p2 = it_node->poly[i] + v2_s;
+
+    list.push_back(it_node->poly[i] + v1_s);
+    list.push_back(it_node->poly[i] + v2_s);
+    list.push_back(pm);
+    this->round_corners_lines.push_back(list);
+
+  }
+  this->round_corners_gi->modelChanged();
+
+  // this->calc_angle(it_node[len], it_node[i], it_node[i + 1]);
+
+}
+
+

@@ -48,6 +48,8 @@ typedef CGAL::Exact_predicates_inexact_constructions_kernel K ;
 
 typedef K::Point_2                    Point_2;
 typedef K::Segment_2                  Segment_2;
+typedef K::Vector_2                   Vector_2;
+
 typedef K::Line_2                     Line_2;
 typedef CGAL::Polygon_2<K>            Polygon_2;
 typedef CGAL::Polygon_with_holes_2<K> Polygon_with_holes_2;
@@ -96,14 +98,19 @@ public:
 typedef tree<ExtendedPolygonPtr> PolyTree;
 
 
-class PolygonCalculate{
+class PolygonCalculate {
 public:
   PolygonCalculate();
   void run_program(int argc, char** argv, PolygonWindow* window);
+  void round_corners(float r);
 private:
   PolygonWindow* window;
 
   std::list<std::list<Point_2> > poly_connector_lines;
+  PolylinesGraphicsI * plgi;
+
+  std::list<std::list<Point_2> > round_corners_lines;
+  PolylinesGraphicsI * round_corners_gi;
 
   std::list<Segment_2> connector_lines;
   CGAL::Qt::SegmentsGraphicsItem<std::list<Segment_2> > * sgi;
@@ -115,7 +122,6 @@ private:
   PolygonWithHolesPtrVector offset_poly_wh;
   PolygonGraphicsI * pgi;
 
-  PolylinesGraphicsI * plgi;
 
   PolygonPtrVector render_polys;
   PolygonWithHolesPtr outer_poly_ptr;
@@ -125,8 +131,9 @@ private:
   void connect();
   int connect(PolyTree::iterator node, PolyTree::iterator connect_from);
   int addLine(Point_2 from, Point_2 to);
-  void simple_connect(PolygonWithHolesPtrVector inner_poly, PolygonWithHolesPtrVector outer_poly);
-  void simple_connect_singular_polys(const PolygonWithHolesPtrVector * poly) const;
+ 
+  float calc_angle(Vector_2 v1, Vector_2 v2);
+
   int find_and_add(PolyTree * tree, PolyTree::iterator curr_node, 
   PolygonWithHolesPtr p, int depth);
 };

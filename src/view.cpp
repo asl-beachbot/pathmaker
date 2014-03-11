@@ -14,7 +14,6 @@
 // along with this program. If not, see <http://www.gnu.org/licenses/>.
 
 // view.cpp
-#include "view.h"
 
 #include <iostream>
 #include <vector>
@@ -26,6 +25,9 @@
 #include <QtGui>
 
 #include <CGAL/Qt/GraphicsViewNavigation.h>
+
+#include "polygon_calculate.h"
+#include "view.h"
 
 // defining types
 typedef CGAL::Exact_predicates_inexact_constructions_kernel K ;
@@ -53,11 +55,15 @@ int PolygonWindow::initWindow(int argc, char** argv) {
   QObject::connect(navigation, SIGNAL(mouseCoordinates(QString)),
                    ui.mouse_xy, SLOT(setText(QString)));
 
+  // QObject::connect(
+  //     ui.checkBox, SIGNAL(stateChanged(int)),
+  //     this, SLOT(acceptValueFromCheckbox(int))
+  // );
   QObject::connect(
-      ui.checkBox, SIGNAL(stateChanged(int)),
-      this, SLOT(acceptValueFromCheckbox(int))
-      );
-  // ui.view->setRenderHint(QPainter::Antialiasing);
+      ui.pushButton, SIGNAL(released()),
+      this, SLOT(buttonRoundCorners())
+  );
+  ui.view->setRenderHint(QPainter::Antialiasing);
   ui.view->setAcceptDrops(false);
  
   scene.setItemIndexMethod(QGraphicsScene::NoIndex);
@@ -66,19 +72,22 @@ int PolygonWindow::initWindow(int argc, char** argv) {
   ui.view->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOn);
   //this->setCentralWidget(this->view);
   ui.view->show();
-}
+  // this->polycalc = PolygonCalculate();
+  // this->polycalc.run_program(argc, argv, this);
 
-void PolygonWindow::setupStatusBar() {
-  // this->statusBar()->addWidget(new QLabel(this), 1);
-  // this->statusBar()->addWidget(mouse_xycoord, 0);
 }
 
 void PolygonWindow::addItem(QGraphicsItem* item) {
   scene.addItem(item);
   ui.view->show();
 }
+
 void PolygonWindow::acceptValueFromCheckbox(int value) {
-  // cout << "the fucking valuellll" << value << endl;
+}
+
+void PolygonWindow::buttonRoundCorners() {
+  cout << "Calculating corners" << endl;
+  this->polycalc->round_corners(0.5f);
 }
 // constructor
 PolygonWindow::PolygonWindow(QWidget* parent) : QMainWindow(parent){

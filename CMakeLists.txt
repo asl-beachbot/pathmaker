@@ -29,10 +29,11 @@ ADD_DEFINITIONS(
 set(Boost_USE_STATIC_LIBS OFF)
 set(Boost_USE_MULTITHREADED ON)
 set(Boost_USE_STATIC_RUNTIME OFF)
+set(BOOST_ALL_DYN_LINK ON)
 
 find_package(Boost 1.53.0 COMPONENTS)
 include_directories({$Boost_INCLUDE_DIRS})
-
+link_directories(${Boost_LIBRARY_DIRS})
 ## 
 #	CGAL
 ##
@@ -58,12 +59,15 @@ set(pathfinder_ui ui/pathfinder.ui)
 set(pathfinder_qt_src src/view.h)
 
 QT4_WRAP_CPP(pathfinder_HEADERS_MOC ${pathfinder_qt_src})
-QT4_WRAP_UI(pathfinder_UI_HEADERS ${pathfinder_ui})
+QT4_WRAP_UI(ui/pathfinder_UI_HEADERS ${pathfinder_ui})
 
-add_executable(bin/pathfinder src/main ${pathfinder_UI_HEADERS} ${pathfinder_HEADERS_MOC})
+add_executable(bin/pathfinder src/main ui/${pathfinder_UI_HEADERS} ${pathfinder_HEADERS_MOC})
 
 add_library(BeachbotLibrary src/polygon_calculate src/view)
 
+link_directories(${QT_LIBRARIES})
+link_directories(${CGAL_LIBRARIES})
+link_directories(${CGAL_3RD_PARTY_LIBRARIES})
 target_link_libraries(bin/pathfinder ${QT_LIBRARIES})
 target_link_libraries(bin/pathfinder ${CGAL_LIBRARIES} ${CGAL_3RD_PARTY_LIBRARIES})
 

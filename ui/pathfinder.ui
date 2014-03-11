@@ -50,11 +50,7 @@
          </widget>
         </item>
         <item>
-         <widget class="QCheckBox" name="checkBox_3">
-          <property name="text">
-           <string>Check!</string>
-          </property>
-         </widget>
+         <widget class="QDoubleSpinBox" name="doubleSpinBox"/>
         </item>
         <item>
          <widget class="QPushButton" name="pushButton">

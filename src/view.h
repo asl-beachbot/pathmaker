@@ -22,7 +22,10 @@
 #include <vector>
 
 #include <CGAL/Exact_predicates_inexact_constructions_kernel.h>
-#include <ui_pathfinder.h>
+#include <ui/ui_pathfinder.h>
+
+class PolygonCalculate;
+
 typedef CGAL::Exact_predicates_inexact_constructions_kernel K ;
 typedef K::Point_2 Point_2;
 
@@ -36,11 +39,16 @@ public:
   PolygonWindow(QWidget* parent = 0);
   void setupStatusBar();
   void addItem(QGraphicsItem* item);
+  void addPolycalc(PolygonCalculate * polycalc_) {
+    this->polycalc = polycalc_;
+  }
 private:
+  PolygonCalculate * polycalc;
   Ui::MainWindow ui;
   QGraphicsScene scene;
   CGAL::Qt::GraphicsViewNavigation* navigation;
   QLabel* mouse_xycoord;
 public slots:
   void acceptValueFromCheckbox(int value);
+  void buttonRoundCorners();
 };

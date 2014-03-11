@@ -39,10 +39,10 @@ using std::endl; using std::cout;
 int main(int argc, char** argv) {
   QApplication app(argc, argv);
   PolygonWindow * window = new PolygonWindow();
-  window->setupStatusBar();
   window->initWindow(argc, argv);
-  window->show();
   PolygonCalculate polycalc;
+  window->addPolycalc(&polycalc);
+  window->show();
   polycalc.run_program(argc, argv, window);
   return app.exec();
 }
