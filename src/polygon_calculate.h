@@ -74,8 +74,11 @@ public:
   Polygon_2 poly;
   int visited_polys[];
   bool visited;
-  ExtendedPolygonPtr(Polygon_2 poly) : poly(poly) {};
-  ExtendedPolygonPtr() {};
+
+  Point_2 entry_point;
+
+  ExtendedPolygonPtr(Polygon_2 poly) : poly(poly), visited(false) {};
+  ExtendedPolygonPtr() :  visited(false) {};
   PolygonGraphicsI * graphx;
   tree<ExtendedPolygonPtr>::iterator_base to;
   void set_graphx() {
@@ -116,13 +119,13 @@ private:
 
   PolygonPtrVector render_polys;
   PolygonWithHolesPtr outer_poly_ptr;
-  void find_closest_points_on_polys(Polygon_2 p1, Polygon_2 p2);
+  Point_2 find_closest_point_on_poly(Point_2 exit_point, Polygon_2 p2);
   void iterate_polygon(Polygon_2 *p);
   void iterate_over_polygon_with_holes(PolygonWithHolesPtrVector *p);
   void connect();
   int connect(PolyTree::iterator node, PolyTree::iterator connect_from);
   int addLine(Point_2 from, Point_2 to);
-  void simple_connect(PolygonWithHolesPtrVector inner_poly, PolygonWithHolesPtrVector outer_poly); 
+  void simple_connect(PolygonWithHolesPtrVector inner_poly, PolygonWithHolesPtrVector outer_poly);
   void simple_connect_singular_polys(const PolygonWithHolesPtrVector * poly) const;
   int find_and_add(PolyTree * tree, PolyTree::iterator curr_node, 
   PolygonWithHolesPtr p, int depth);

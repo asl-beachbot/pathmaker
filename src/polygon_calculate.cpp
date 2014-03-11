@@ -220,6 +220,8 @@ void PolygonCalculate::run_program(int argc, char** argv, PolygonWindow* window)
   // Call model changed to update the bounding box! IMPORTANT!
   this->plgi->modelChanged();
 
+  // this->plgi->boundingRect()->top();
+
   PolyTree::iterator node = p_tree.begin();
   PolyTree::iterator end = p_tree.end();
   while(node != end) {
@@ -330,50 +332,44 @@ int PolygonCalculate::addLine(Point_2 from, Point_2 to) {
 
 
 
-void PolygonCalculate::find_closest_points_on_polys(Polygon_2 p1, Polygon_2 p2) {
-  Point_2 * res = new Point_2[2];
-  Polygon_2::Vertex_const_iterator p1_begin = p1.vertices_begin();
-  Polygon_2::Vertex_const_iterator p1_end = p1.vertices_end();
+Point_2 PolygonCalculate::find_closest_point_on_poly(Point_2 exit_point, Polygon_2 p2) {
   Polygon_2::Vertex_const_iterator p2_begin = p2.vertices_begin();
-  Polygon_2::Vertex_const_iterator p2_end = p2.vertices_begin();
+  Polygon_2::Vertex_const_iterator p2_end = p2.vertices_end();
   float distance, temp_dist;
-  cout << endl << "Distances: ";
-  res[0] = *p1_begin;
-  res[1] = *p2_begin;
-  distance = CGAL::squared_distance(p1[0], p2[0]);
-  for(;p1_begin != p1_end; ++p1_begin) {
-    for(;p2_begin != p2_end; ++p2_begin) {
-      temp_dist = CGAL::squared_distance(*p1_begin, *p2_begin);
-      cout << " " << temp_dist;
-      if(temp_dist < distance) {
-        distance = temp_dist;
-        res[0] = *p1_begin;
-        res[1] = *p2_begin;
-      }
+  Point_2 point2 = *p2_begin;
+  distance = CGAL::squared_distance(exit_point, *p2_begin);
+  for(;p2_begin != p2_end; ++p2_begin) {
+    temp_dist = CGAL::squared_distance(exit_point, *p2_begin);
+    if(temp_dist < distance) {
+      distance = temp_dist;
+      point2 = *p2_begin;
     }
   }
-  cout << endl;
-  this->addLine(res[0], res[1]);
-  // return res;
+  return point2;
 }
 
 int PolygonCalculate::connect(PolyTree::iterator node, PolyTree::iterator connect_from) {
-  cout << "Looking at " << node->poly << endl;
-	bool unvisited_children = true;
 	PolyTree::sibling_iterator child_it = this->p_tree.child(node, 0);
 	if(child_it == this->p_tree.end()) { // invalid pointer == no children
 		connect_from->to = node;
     cout << "Connecting " << &connect_from << " to " << &node << endl;
 		node->visited = true;
 
-		this->connect(this->p_tree.parent(node), node);
-    this->find_closest_points_on_polys(node->poly, connect_from->poly);
 
     // this->addLine(node->poly[0], connect_from->poly[0]);
+    this->connect(this->p_tree.parent(node), node);
+
+    Point_2 next_entry = this->find_closest_point_on_poly(connect_from->entry_point, node->poly);
+    node->entry_point = next_entry;
+    cout << next_entry;
+    this->addLine(next_entry, connect_from->entry_point);
+
 		return 1;
 	}
 	for(;child_it != child_it.end();++child_it) {
-		if(child_it->unvisited()) {
+    cout << "child visited?" << endl;
+    if(child_it->unvisited()) {
+      cout << "unvisited child !" << endl;
 			this->connect(child_it, connect_from);
       return 1;
 		}
@@ -383,9 +379,15 @@ int PolygonCalculate::connect(PolyTree::iterator node, PolyTree::iterator connec
 	if(connect_from != NULL) {
 		connect_from->to = node;
     cout << "Connecting " << &connect_from << " to " << &node << endl;
-    this->find_closest_points_on_polys(node->poly, connect_from->poly);
+    Point_2 next_entry = this->find_closest_point_on_poly(connect_from->entry_point, node->poly);
+    node->entry_point = next_entry;
+    this->addLine(next_entry, connect_from->entry_point);
+
     // this->addLine(node->poly[0], connect_from->poly[0]);
-	}
+	} else {
+    // first entry point randomly on polygon
+    node->entry_point = node->poly[0];
+  }
 	node->visited = true;
 	if(node == this->p_tree.begin()) {
 		return 1;
