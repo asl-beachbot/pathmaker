@@ -45,6 +45,9 @@
 
 #include <CGAL/Qt/GraphicsViewNavigation.h>
 
+#include <Eigen/Dense>
+using namespace Eigen;
+
 #include "polygon_calculate.h"
 
 // #include "tree.h"
@@ -99,6 +102,8 @@ void print_tree(PolyTree * tree) {
     ++sib2;
   }
 }
+
+// enum PolyOrientation { CONVEX, CONCAVE, FLAT };
 
 // End Helper Functions
 
@@ -160,7 +165,7 @@ void PolygonCalculate::run_program(int argc, char** argv, PolygonWindow* window)
   // sgi->setVerticesPen(pen);
   // sgi = new CGAL::Qt::SegmentsGraphicsItem<std::list<Segment_2> >(&connector_lines);
   this->plgi->setEdgesPen(QPen(Qt::blue, 2, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin));
-  this->round_corners_gi->setEdgesPen(QPen(Qt::red, 0, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin));
+  this->round_corners_gi->setEdgesPen(QPen(Qt::red, 2, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin));
 
   window->addItem(this->plgi);
   window->addItem(this->round_corners_gi);
@@ -329,9 +334,36 @@ int PolygonCalculate::connect(PolyTree::iterator node, PolyTree::iterator connec
 
 
 float PolygonCalculate::calc_angle(Vector_2 v1, Vector_2 v2) {
-  float angle = acos(v1 * v2);
+  cout << "Angle " << v1*v2 << " deg " << acos(v1 * v2) << endl;
+  return acos(v1 * v2);
 }
 
+int PolygonCalculate::find_orientation(Point_2 p1, Point_2 p2, Point_2 p3) {
+  // https://en.wikipedia.org/wiki/Curve_orientation
+  // Afaik polygons = all anti-clockwise
+  Matrix3f m;
+  m(0, 0) = 1;
+  m(1, 0) = 1;
+  m(2, 0) = 1;
+
+  m(0, 1) = p1.x();
+  m(0, 2) = p1.y();
+  m(1, 1) = p2.x();
+  m(1, 2) = p2.y();
+  m(2, 1) = p3.x();
+  m(2, 2) = p3.y();
+
+  float det = m.determinant();
+  cout << "Determinante = " << det << endl;
+  if(det < 0) {
+    // concave
+    return -1;
+  } else if(det > 0) {
+    // convex
+    return 1;
+  }
+  return 0;
+}
 
 void PolygonCalculate::round_corners(float r) {
   // Algorithm to round corners of polygons
@@ -350,37 +382,48 @@ void PolygonCalculate::round_corners(float r) {
 
 
   Transformation rotate_90(CGAL::ROTATION, sin(M_PI/2), cos(M_PI/2)); 
+  Transformation rotate_m90(CGAL::ROTATION, sin(-M_PI/2), cos(-M_PI/2)); 
 
 
   for(int i = 1; i <= len - 1; ++i ) {
 
-    Vector_2 v1 = Vector_2(it_node->poly[i-1], it_node->poly[i]);
+    Point_2 p1 = it_node->poly[i-1];
+    Point_2 p2 = it_node->poly[i];
+    Point_2 p3 = it_node->poly[i+1];
+
+    Vector_2 v1 = Vector_2(p1, p2);
     Vector_2 v1_n = v1 / sqrt(v1.squared_length());
 
-    Vector_2 v2 = Vector_2(it_node->poly[i], it_node->poly[i + 1]);
+    Vector_2 v2 = Vector_2(p3, p2);
     Vector_2 v2_n = v2 / sqrt(v2.squared_length());
 
-    float angle = this->calc_angle(v1, v2);
+    float angle = this->calc_angle(v1_n, v2_n);
     
     std::list<Point_2> list;// = std::list<Point_2>();
     
     float dist_on_v = r / tan(angle/2);
 
     Vector_2 v1_s = - v1_n * 3;
-    Vector_2 v2_s = v2_n * 3;
-
+    Vector_2 v2_s = - v2_n * 3;
+    Vector_2 midpoint;
     // Point_2 center = 
-    Vector_2 midpoint = (v1_s - v1_s.transform(rotate_90));
+    Point_2 pm;
+    cout << "Angle: " << angle << " deg: " << (angle/M_PI * 180) << endl;
+    if(this->find_orientation(p1, p2, p3) > 0) {
+      midpoint = (v1_s - v1_s.transform(rotate_90));
+      pm = it_node->poly[i] + midpoint;
+    } else {
+      midpoint = (v1_s - v1_s.transform(rotate_m90));      
+      pm = it_node->poly[i] - midpoint;
+    }
 
-    Point_2 p1 = it_node->poly[i] + v1_s;
-    Point_2 pm = it_node->poly[i] + midpoint;
-    Point_2 p2 = it_node->poly[i] + v2_s;
+    Point_2 pn1 = it_node->poly[i] + v1_s;
+    Point_2 pn2 = it_node->poly[i] + v2_s;
 
     list.push_back(it_node->poly[i] + v1_s);
     list.push_back(it_node->poly[i] + v2_s);
     list.push_back(pm);
     this->round_corners_lines.push_back(list);
-
   }
   this->round_corners_gi->modelChanged();
 

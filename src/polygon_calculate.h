@@ -133,7 +133,7 @@ private:
   int addLine(Point_2 from, Point_2 to);
  
   float calc_angle(Vector_2 v1, Vector_2 v2);
-
+  int find_orientation(Point_2 p1, Point_2 p2, Point_2 p3);
   int find_and_add(PolyTree * tree, PolyTree::iterator curr_node, 
   PolygonWithHolesPtr p, int depth);
 };
