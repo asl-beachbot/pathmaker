@@ -49,6 +49,7 @@ private:
   CGAL::Qt::GraphicsViewNavigation* navigation;
   QLabel* mouse_xycoord;
 public slots:
-  void acceptValueFromCheckbox(int value);
   void buttonRoundCorners();
+  void toggleStraightSkeleton(int i);
+  void spinBoxValueChanged(double i);
 };

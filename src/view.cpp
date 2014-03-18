@@ -60,8 +60,16 @@ int PolygonWindow::initWindow(int argc, char** argv) {
   //     this, SLOT(acceptValueFromCheckbox(int))
   // );
   QObject::connect(
+      ui.ssCheckBox, SIGNAL(stateChanged(int)),
+      this, SLOT(toggleStraightSkeleton(int))
+  );
+  QObject::connect(
       ui.pushButton, SIGNAL(released()),
       this, SLOT(buttonRoundCorners())
+  );
+  QObject::connect(
+      ui.doubleSpinBox, SIGNAL(valueChanged(double)),
+      this, SLOT(spinBoxValueChanged(double))
   );
   ui.view->setRenderHint(QPainter::Antialiasing);
   ui.view->setAcceptDrops(false);
@@ -82,8 +90,18 @@ void PolygonWindow::addItem(QGraphicsItem* item) {
   ui.view->show();
 }
 
-void PolygonWindow::acceptValueFromCheckbox(int value) {
+void PolygonWindow::spinBoxValueChanged(double i) {
+  cout << " asasd " << i << endl; 
 }
+
+void PolygonWindow::toggleStraightSkeleton(int value) {
+  cout << " Hide the skeleton " << value << endl;
+  this->polycalc->toggle_sgi(value);
+}
+
+// void PolygonWindow::acceptValueFromCheckbox(int value) {
+//   cout << " test2 " << endl;
+// }
 
 void PolygonWindow::buttonRoundCorners() {
   cout << "Calculating corners" << endl;

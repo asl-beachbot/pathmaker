@@ -35,6 +35,7 @@
 #include <CGAL/Qt/PolygonGraphicsItem.h>
 #include <CGAL/Qt/PolygonWithHolesGraphicsItem.h>
 #include <CGAL/squared_distance_2.h>
+#include <CGAL/intersections.h>
 
 #include <CGAL/Aff_transformation_2.h>
 
@@ -154,6 +155,8 @@ void PolygonCalculate::run_program(int argc, char** argv, PolygonWindow* window)
   
   this->round_corners_gi = new PolylinesGraphicsI(&this->round_corners_lines);
 
+  this->straight_skel_gi = new PolylinesGraphicsI(&this->straight_skel_lines);
+
   // QObject::connect(window, SIGNAL(changed()),
   //                  this->plgi, SLOT(modelChanged()));
 
@@ -167,8 +170,13 @@ void PolygonCalculate::run_program(int argc, char** argv, PolygonWindow* window)
   this->plgi->setEdgesPen(QPen(Qt::blue, 2, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin));
   this->round_corners_gi->setEdgesPen(QPen(Qt::red, 2, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin));
 
+  this->straight_skel_gi->setEdgesPen(QPen(Qt::green, 0, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin));
+
   window->addItem(this->plgi);
+  window->addItem(this->straight_skel_gi);
   window->addItem(this->round_corners_gi);
+  this->straight_skel_gi->show();
+  this->round_corners_gi->show();
 
   if( argc > 1 ) {
     std::string filename = argv[1];
@@ -222,6 +230,29 @@ void PolygonCalculate::run_program(int argc, char** argv, PolygonWindow* window)
   PolygonWithHolesPtrVector offset_poly_wh = 
     CGAL::create_interior_skeleton_and_offset_polygons_with_holes_2(lOffset, polygon_wh);
 
+  SSPtr straight_skel = CGAL::create_interior_straight_skeleton_2(polygon_wh);
+  
+  typedef typename SS::Halfedge_const_iterator Halfedge_const_iterator ;
+  typedef typename SS::Halfedge_const_handle   Halfedge_const_handle ;
+  
+  for(Halfedge_const_iterator hit = straight_skel->halfedges_begin(); hit != straight_skel->halfedges_end(); ++hit)
+  {
+    Halfedge_const_handle h = hit ;
+
+    if( h->is_bisector() && 
+        ((h->id()%2)==0) && 
+        !h->has_infinite_time() && 
+        !h->opposite()->has_infinite_time() )
+    {
+      this->addLine(h->vertex()->point(), 
+                    h->opposite()->vertex()->point(), 
+                    &this->straight_skel_lines);
+    }
+  }
+  this->straight_skel_gi->modelChanged();
+
+  // iterate and draw straight skeleton
+
   this->outer_poly_ptr = PolygonWithHolesPtr(&(this->polygon_wh));
 
   // new code for recursive tree
@@ -247,11 +278,11 @@ void PolygonCalculate::run_program(int argc, char** argv, PolygonWindow* window)
   }
 }
 
-int PolygonCalculate::addLine(Point_2 from, Point_2 to) {
+int PolygonCalculate::addLine(Point_2 from, Point_2 to, std::list<std::list<Point_2> > * lines_list) {
   std::list<Point_2> list;// = std::list<Point_2>();
   list.push_back(from);
   list.push_back(to);
-  this->poly_connector_lines.push_back(list);
+  lines_list->push_back(list);
 }
 
 
@@ -298,7 +329,7 @@ int PolygonCalculate::connect(PolyTree::iterator node, PolyTree::iterator connec
     Point_2 next_entry = this->find_closest_point_on_poly(connect_from->entry_point, node->poly);
     node->entry_point = next_entry;
     cout << next_entry;
-    this->addLine(next_entry, connect_from->entry_point);
+    this->addLine(next_entry, connect_from->entry_point, &this->poly_connector_lines);
 
 		return 1;
 	}
@@ -317,7 +348,11 @@ int PolygonCalculate::connect(PolyTree::iterator node, PolyTree::iterator connec
     cout << "Connecting " << &connect_from << " to " << &node << endl;
     Point_2 next_entry = this->find_closest_point_on_poly(connect_from->entry_point, node->poly);
     node->entry_point = next_entry;
-    this->addLine(next_entry, connect_from->entry_point);
+
+    Line_2 line = Line_2(connect_from->entry_point, next_entry);
+    this->checkPolyIntersection(line);
+
+    this->addLine(next_entry, connect_from->entry_point, &this->poly_connector_lines);
 
     // this->addLine(node->poly[0], connect_from->poly[0]);
 	} else {
@@ -365,6 +400,17 @@ int PolygonCalculate::find_orientation(Point_2 p1, Point_2 p2, Point_2 p3) {
   return 0;
 }
 
+void PolygonCalculate::checkPolyIntersection(Line_2 line) {
+  for(ExtendedPolygonPtr p: this->p_tree) {
+    Polygon_2::Edge_const_iterator begin = p.poly.edges_begin();
+    Polygon_2::Edge_const_iterator end = p.poly.edges_end();
+    for(;begin != end; ++begin) {
+      auto result = intersection(line, *begin);
+      cout << "Intersection: " << endl;
+    }
+  }
+}
+
 void PolygonCalculate::round_corners(float r) {
   // Algorithm to round corners of polygons
   // Two possible solution possibiliteis:
@@ -380,10 +426,8 @@ void PolygonCalculate::round_corners(float r) {
 
   int len = it_node->poly.size();
 
-
   Transformation rotate_90(CGAL::ROTATION, sin(M_PI/2), cos(M_PI/2)); 
   Transformation rotate_m90(CGAL::ROTATION, sin(-M_PI/2), cos(-M_PI/2)); 
-
 
   for(int i = 1; i <= len - 1; ++i ) {
 
@@ -431,4 +475,10 @@ void PolygonCalculate::round_corners(float r) {
 
 }
 
-
+void PolygonCalculate::toggle_sgi(int value) {
+  cout << "Toggling SGI: " << value << endl;
+  if(value)
+    this->straight_skel_gi->show();
+  else
+    this->straight_skel_gi->hide();
+}

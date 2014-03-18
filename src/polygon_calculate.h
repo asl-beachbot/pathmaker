@@ -103,11 +103,15 @@ public:
   PolygonCalculate();
   void run_program(int argc, char** argv, PolygonWindow* window);
   void round_corners(float r);
+  void toggle_sgi(int value);
 private:
   PolygonWindow* window;
 
   std::list<std::list<Point_2> > poly_connector_lines;
   PolylinesGraphicsI * plgi;
+
+  std::list<std::list<Point_2> > straight_skel_lines;
+  PolylinesGraphicsI * straight_skel_gi;
 
   std::list<std::list<Point_2> > round_corners_lines;
   PolylinesGraphicsI * round_corners_gi;
@@ -121,7 +125,7 @@ private:
   PolyTree p_tree;
   PolygonWithHolesPtrVector offset_poly_wh;
   PolygonGraphicsI * pgi;
-
+  SSPtr * straight_skel;
 
   PolygonPtrVector render_polys;
   PolygonWithHolesPtr outer_poly_ptr;
@@ -130,8 +134,8 @@ private:
   void iterate_over_polygon_with_holes(PolygonWithHolesPtrVector *p);
   void connect();
   int connect(PolyTree::iterator node, PolyTree::iterator connect_from);
-  int addLine(Point_2 from, Point_2 to);
- 
+  int addLine(Point_2 from, Point_2 to, std::list<std::list<Point_2> > * lines_list);
+  void checkPolyIntersection(Line_2 line);
   float calc_angle(Vector_2 v1, Vector_2 v2);
   int find_orientation(Point_2 p1, Point_2 p2, Point_2 p3);
   int find_and_add(PolyTree * tree, PolyTree::iterator curr_node, 
