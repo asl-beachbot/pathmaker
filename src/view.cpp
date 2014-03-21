@@ -105,7 +105,7 @@ void PolygonWindow::toggleStraightSkeleton(int value) {
 
 void PolygonWindow::buttonRoundCorners() {
   cout << "Calculating corners" << endl;
-  this->polycalc->round_corners(0.5f);
+  this->polycalc->round_corners((float)this->ui.doubleSpinBox->value());
 }
 // constructor
 PolygonWindow::PolygonWindow(QWidget* parent) : QMainWindow(parent){
