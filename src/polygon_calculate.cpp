@@ -422,11 +422,11 @@ void PolygonCalculate::round_corners(float r) {
   Polygon_2::Vertex_const_iterator p_begin = it_node->poly.vertices_begin();
   Polygon_2::Vertex_const_iterator p_end = it_node->poly.vertices_end();
   
-  int len = it_node->poly.size();
 
   Transformation rotate_90(CGAL::ROTATION, sin(M_PI/2), cos(M_PI/2)); 
   Transformation rotate_m90(CGAL::ROTATION, sin(-M_PI/2), cos(-M_PI/2)); 
-  // fix loop!
+  
+  int len = it_node->poly.size();
   for(int i = 0; i <= len; ++i ) {
 
     Point_2 p1 = it_node->poly[i ? i-1 : len - 1];
