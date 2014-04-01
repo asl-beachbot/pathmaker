@@ -163,9 +163,8 @@ CustomPolylinesGraphicsItem<P>::updateBoundingBox()
   for(typename P::iterator it = polylines->begin();
       it != polylines->end();
       ++it){
-    bb = bb + CGAL::bounding_box(polylines->begin()->begin(), polylines->begin()->end()).bbox();;
+    bb = bb + CGAL::bounding_box(it->begin(), it->end()).bbox();
   }
-
   bounding_rect = convert(bb);
 }
 
