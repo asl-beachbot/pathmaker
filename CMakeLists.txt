@@ -62,8 +62,8 @@ if( CGAL_Core_FOUND)
     add_definitions(-DCGAL_USE_CORE)
 endif()
 
-set(pathfinder_ui ui/pathfinder.ui)
-set(pathfinder_qt_src src/view.h)
+SET(pathfinder_ui ui/pathfinder.ui)
+SET(pathfinder_qt_src src/view.h)
 
 QT4_WRAP_CPP(pathfinder_HEADERS_MOC ${pathfinder_qt_src})
 QT4_WRAP_UI(ui/pathfinder_UI_HEADERS ${pathfinder_ui})

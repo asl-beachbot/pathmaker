@@ -64,8 +64,12 @@ int PolygonWindow::initWindow(int argc, char** argv) {
       this, SLOT(toggleStraightSkeleton(int))
   );
   QObject::connect(
-      ui.pushButton, SIGNAL(released()),
+      ui.roundCornersButton, SIGNAL(released()),
       this, SLOT(buttonRoundCorners())
+  );
+  QObject::connect(
+      ui.exportButton, SIGNAL(released()),
+      this, SLOT(exportButton())
   );
   QObject::connect(
       ui.doubleSpinBox, SIGNAL(valueChanged(double)),
@@ -92,6 +96,11 @@ void PolygonWindow::addItem(QGraphicsItem* item) {
 
 void PolygonWindow::spinBoxValueChanged(double i) {
   cout << " asasd " << i << endl; 
+}
+
+void exportButton() {
+  cout << "Displaying Export Text" << endl;
+  this->polycalc->exportToString();
 }
 
 void PolygonWindow::toggleStraightSkeleton(int value) {

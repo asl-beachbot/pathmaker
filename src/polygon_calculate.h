@@ -107,6 +107,7 @@ public:
   void round_outer_corners(float r);
   int check_tight_stripes();
   void toggle_sgi(int value);
+  const char * exportToString();
 private:
   PolygonWindow* window;
 
