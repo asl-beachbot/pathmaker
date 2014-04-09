@@ -104,6 +104,8 @@ public:
   PolygonCalculate();
   void run_program(int argc, char** argv, PolygonWindow* window);
   void round_corners(float r);
+  void round_outer_corners(float r);
+  int check_tight_stripes();
   void toggle_sgi(int value);
 private:
   PolygonWindow* window;
@@ -126,7 +128,7 @@ private:
   PolyTree p_tree;
   PolygonWithHolesPtrVector offset_poly_wh;
   PolygonGraphicsI * pgi;
-  SSPtr * straight_skel;
+  SSPtr straight_skel;
 
   PolygonPtrVector render_polys;
   PolygonWithHolesPtr outer_poly_ptr;

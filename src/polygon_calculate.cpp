@@ -86,6 +86,8 @@ typedef CGAL::Qt::CustomPolylinesGraphicsItem<std::list<std::list<Point_2> > > P
 
 typedef CGAL::Aff_transformation_2<K> Transformation;
 
+typedef typename SS::Halfedge_const_iterator Halfedge_const_iterator ;
+typedef typename SS::Halfedge_const_handle   Halfedge_const_handle ;
 
 typedef tree<ExtendedPolygonPtr> PolyTree;
 
@@ -230,10 +232,7 @@ void PolygonCalculate::run_program(int argc, char** argv, PolygonWindow* window)
   PolygonWithHolesPtrVector offset_poly_wh = 
     CGAL::create_interior_skeleton_and_offset_polygons_with_holes_2(lOffset, polygon_wh);
 
-  SSPtr straight_skel = CGAL::create_interior_straight_skeleton_2(polygon_wh);
-  
-  typedef typename SS::Halfedge_const_iterator Halfedge_const_iterator ;
-  typedef typename SS::Halfedge_const_handle   Halfedge_const_handle ;
+  this->straight_skel = CGAL::create_interior_straight_skeleton_2(polygon_wh);
   
   for(Halfedge_const_iterator hit = straight_skel->halfedges_begin(); hit != straight_skel->halfedges_end(); ++hit)
   {
@@ -302,6 +301,47 @@ Point_2 PolygonCalculate::find_closest_point_on_poly(Point_2 exit_point, Polygon
   return point2;
 }
 
+int PolygonCalculate::check_tight_stripes() {
+  // SSPtr straight_skel = this->straight_skel;
+  
+  for(Halfedge_const_iterator hit = straight_skel->halfedges_begin(); hit != straight_skel->halfedges_end(); ++hit)
+  {
+    Halfedge_const_handle h = hit;
+    if( h->is_bisector() && 
+        ((h->id()%2)==0) && 
+        !h->has_infinite_time() && 
+        !h->opposite()->has_infinite_time() )
+      continue;
+    
+    bool bounded = false;
+    cout << "Traversing halfedges" << endl;
+    
+    // Point_2 p = h->vertex()->point();
+    PolyTree::iterator it_node = this->p_tree.begin();
+    for(std::advance(it_node, 1); it_node != this->p_tree.end(); ++it_node) {
+      // if(!it_node) {break;}
+      if(CGAL::bounded_side_2(it_node->poly.vertices_begin(), 
+         it_node->poly.vertices_end(), 
+         h->vertex()->point(), K()) == CGAL::ON_BOUNDED_SIDE)
+      {
+        bounded = true;
+        continue;
+      }
+    }
+    if( !bounded && h->is_bisector() && 
+        ((h->id()%2)==0) && 
+        !h->has_infinite_time() && 
+        !h->opposite()->has_infinite_time() )
+    {
+
+      cout << "Adding Line" << endl;
+      this->addLine(h->vertex()->point(), 
+                    h->opposite()->vertex()->point(), 
+                    &this->round_corners_lines);
+    }
+  }
+  this->round_corners_gi->modelChanged();
+}
 
 int PolygonCalculate::connect(PolyTree::iterator node, PolyTree::iterator connect_from) {
   // Recursive algorithm to connect all Polygons
@@ -318,8 +358,8 @@ int PolygonCalculate::connect(PolyTree::iterator node, PolyTree::iterator connec
 
 	PolyTree::sibling_iterator child_it = this->p_tree.child(node, 0);
 	if(child_it == this->p_tree.end()) { // invalid pointer == no children
-		connect_from->to = node;
-    node->from = connect_from;
+    connect_from->to = node;
+		node->from = connect_from;
     cout << "Connecting " << &connect_from << " to " << &node << endl;
 		node->visited = true;
 
@@ -413,26 +453,14 @@ void PolygonCalculate::checkPolyIntersection(Line_2 line) {
   // }
 }
 
-char * PolygonCalculate::exportToString() {
-  std::string ret;
-
-}
-
-void PolygonCalculate::round_corners(float r) {
-  // Algorithm to round corners of polygons
-  // Two possible solution possibiliteis:
-  // 1.  Circle with radius at corner (at the moment implemented)
-  // 2.  Interprete corner as spline control point
-  //     And use 2 other points on edge as origin points
-
-  PolyTree::iterator it_node = this->p_tree.begin();
-  Polygon_2::Vertex_const_iterator p_begin = it_node->poly.vertices_begin();
-  Polygon_2::Vertex_const_iterator p_end = it_node->poly.vertices_end();
-  
-
+void PolygonCalculate::round_outer_corners(float r) {
+  PolyTree::iterator it_node;
   Transformation rotate_90(CGAL::ROTATION, sin(M_PI/2), cos(M_PI/2)); 
   Transformation rotate_m90(CGAL::ROTATION, sin(-M_PI/2), cos(-M_PI/2)); 
-  
+
+  it_node = this->p_tree.begin();
+  Polygon_2::Vertex_const_iterator p_begin = it_node->poly.vertices_begin();
+  Polygon_2::Vertex_const_iterator p_end = it_node->poly.vertices_end();
   int len = it_node->poly.size();
   for(int i = 0; i <= len; ++i ) {
 
@@ -447,7 +475,8 @@ void PolygonCalculate::round_corners(float r) {
     Vector_2 v2_n = v2 / sqrt(v2.squared_length());
 
     float angle = this->calc_angle(v1_n, v2_n);
-    float counter_angle = M_PI - angle;
+    if(angle != angle) continue;
+    float counter_angle = M_PI + angle;
 
     float l_down = r / tan(angle / 2);
     float interpolate_angle = 0.01 * M_PI; 
@@ -455,11 +484,11 @@ void PolygonCalculate::round_corners(float r) {
     // code for inside
     Vector_2 rotate_rad;
     if(this->find_orientation(p1, p2, p3) > 0) {
-      v1_m = (p2 - CGAL::ORIGIN) - (v1_n * l_down) - (v1_n.transform(rotate_m90) * r);
-      rotate_rad = ((p2 - CGAL::ORIGIN) - v1_n * l_down) - v1_m;
+      v1_m = (p2 - CGAL::ORIGIN) + (v1_n * l_down) + (v1_n.transform(rotate_m90) * r);
+      rotate_rad = ((p2 - CGAL::ORIGIN) + v1_n * l_down) - v1_m;
     } else {
-      v1_m = (p2 - CGAL::ORIGIN) - (v2_n * l_down) - (v2_n.transform(rotate_m90) * r);
-      rotate_rad = ((p2 - CGAL::ORIGIN) - v2_n * l_down) - v1_m;
+      v1_m = (p2 - CGAL::ORIGIN) + (v2_n * l_down) + (v2_n.transform(rotate_m90) * r);
+      rotate_rad = ((p2 - CGAL::ORIGIN) + v2_n * l_down) - v1_m;
     }
 
     std::list<Point_2> list;// = std::list<Point_2>();
@@ -473,26 +502,109 @@ void PolygonCalculate::round_corners(float r) {
     // }
     int len_interpol = floor(counter_angle / interpolate_angle);
     cout << angle << " " << counter_angle << " " <<  interpolate_angle << endl;
+    // check NaN
+    list.push_back(p2);
     for(float i = 0; i < counter_angle; i += counter_angle / len_interpol) {
-      Transformation rot(CGAL::ROTATION, sin(i), cos(i)); 
+      Transformation rot(CGAL::ROTATION, sin(-i), cos(-i)); 
       Vector_2 v_temp = rotate_rad.transform(rot);
       list.push_back(CGAL::ORIGIN + (v1_m + v_temp));
       cout << "Iterating over rounded edge " << v_temp.x() << " " << v_temp.y() << endl;
     }
+    list.push_back(p2);  
 
     cout << "pushing back lines" << endl;
     this->round_corners_lines.push_back(list);
   }
   this->round_corners_gi->modelChanged();
 
+}
+void PolygonCalculate::round_corners(float r) {
+  // Algorithm to round corners of polygons
+  // Two possible solution possibiliteis:
+  // 1.  Circle with radius at corner (at the moment implemented)
+  // 2.  Interprete corner as spline control point
+  //     And use 2 other points on edge as origin points
+
+  PolyTree::iterator it_node = this->p_tree.begin();
+
+  Transformation rotate_90(CGAL::ROTATION, sin(M_PI/2), cos(M_PI/2)); 
+  Transformation rotate_m90(CGAL::ROTATION, sin(-M_PI/2), cos(-M_PI/2)); 
+  
+  for(std::advance(it_node, 1); it_node != this->p_tree.end(); ++it_node) {
+    Polygon_2::Vertex_const_iterator p_begin = it_node->poly.vertices_begin();
+    Polygon_2::Vertex_const_iterator p_end = it_node->poly.vertices_end();
+    int len = it_node->poly.size();
+    for(int i = 0; i <= len; ++i ) {
+
+      Point_2 p1 = it_node->poly[i ? i-1 : len - 1];
+      Point_2 p2 = it_node->poly[i];
+      Point_2 p3 = it_node->poly[i+1 == len ? 0 : i + 1];
+
+      Vector_2 v1 = Vector_2(p1, p2);
+      Vector_2 v1_n = v1 / sqrt(v1.squared_length());
+
+      Vector_2 v2 = Vector_2(p3, p2);
+      Vector_2 v2_n = v2 / sqrt(v2.squared_length());
+
+
+      float angle = this->calc_angle(v1_n, v2_n);
+      float counter_angle = M_PI - angle;
+      float l_down = r / tan(angle / 2);
+
+      // cont. if vectors are too short!
+      if(v2.squared_length() < (l_down * l_down) || 
+         v1.squared_length() < (l_down * l_down)) continue;
+
+      float interpolate_angle = 0.01 * M_PI; 
+      Vector_2 v1_m;
+      // code for inside
+      Vector_2 rotate_rad;
+      if(this->find_orientation(p1, p2, p3) > 0) {
+        v1_m = (p2 - CGAL::ORIGIN) - (v1_n * l_down) - (v1_n.transform(rotate_m90) * r);
+        rotate_rad = ((p2 - CGAL::ORIGIN) - v1_n * l_down) - v1_m;
+      } else {
+        v1_m = (p2 - CGAL::ORIGIN) - (v2_n * l_down) - (v2_n.transform(rotate_m90) * r);
+        rotate_rad = ((p2 - CGAL::ORIGIN) - v2_n * l_down) - v1_m;
+      }
+
+      std::list<Point_2> list;// = std::list<Point_2>();
+      
+      // if(this->find_orientation(p1, p2, p3) > 0) {
+      //   midpoint = (v1_s - v1_s.transform(rotate_90));
+      //   pm = it_node->poly[i] + midpoint;
+      // } else {
+      //   midpoint = (v1_s - v1_s.transform(rotate_m90));      
+      //   pm = it_node->poly[i] - midpoint;
+      // }
+      int len_interpol = floor(counter_angle / interpolate_angle);
+      cout << angle << " " << counter_angle << " " <<  interpolate_angle << endl;
+      // check NaN
+      if(angle != angle) continue;
+      for(float i = 0; i < counter_angle; i += counter_angle / len_interpol) {
+        Transformation rot(CGAL::ROTATION, sin(i), cos(i)); 
+        Vector_2 v_temp = rotate_rad.transform(rot);
+        list.push_back(CGAL::ORIGIN + (v1_m + v_temp));
+        cout << "Iterating over rounded edge " << v_temp.x() << " " << v_temp.y() << endl;
+      }
+
+      cout << "pushing back lines" << endl;
+      this->round_corners_lines.push_back(list);
+    }
+  }
+  this->round_corners_gi->modelChanged();
+  this->round_outer_corners(r);
   // this->calc_angle(it_node[len], it_node[i], it_node[i + 1]);
 
 }
 
 void PolygonCalculate::toggle_sgi(int value) {
   cout << "Toggling SGI: " << value << endl;
-  if(value)
-    this->straight_skel_gi->show();
-  else
-    this->straight_skel_gi->hide();
+  if(value) {
+    // this->straight_skel_gi->show();
+    this->check_tight_stripes();
+  }
+  else {
+    
+    // this->straight_skel_gi->hide();
+  }
 }
