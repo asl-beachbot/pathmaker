@@ -83,6 +83,7 @@ public:
   ExtendedPolygonPtr() :  visited(false) {};
   PolygonGraphicsI * graphx;
   tree<ExtendedPolygonPtr>::iterator_base to;
+  tree<ExtendedPolygonPtr>::iterator_base from;
   void set_graphx() {
 	  this->graphx = new PolygonGraphicsI(&poly);
 	  return;

@@ -319,6 +319,7 @@ int PolygonCalculate::connect(PolyTree::iterator node, PolyTree::iterator connec
 	PolyTree::sibling_iterator child_it = this->p_tree.child(node, 0);
 	if(child_it == this->p_tree.end()) { // invalid pointer == no children
 		connect_from->to = node;
+    node->from = connect_from;
     cout << "Connecting " << &connect_from << " to " << &node << endl;
 		node->visited = true;
 
@@ -345,6 +346,7 @@ int PolygonCalculate::connect(PolyTree::iterator node, PolyTree::iterator connec
 	// first one is NULL
 	if(connect_from != NULL) {
 		connect_from->to = node;
+    node->from = connect_from;
     cout << "Connecting " << &connect_from << " to " << &node << endl;
     Point_2 next_entry = this->find_closest_point_on_poly(connect_from->entry_point, node->poly);
     node->entry_point = next_entry;
@@ -409,6 +411,11 @@ void PolygonCalculate::checkPolyIntersection(Line_2 line) {
   //     cout << "Intersection: " << endl;
   //   }
   // }
+}
+
+char * PolygonCalculate::exportToString() {
+  std::string ret;
+
 }
 
 void PolygonCalculate::round_corners(float r) {
