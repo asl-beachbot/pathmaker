@@ -95,10 +95,10 @@ void PolygonWindow::addItem(QGraphicsItem* item) {
 }
 
 void PolygonWindow::spinBoxValueChanged(double i) {
-  cout << " asasd " << i << endl; 
+  return;
 }
 
-void exportButton() {
+void PolygonWindow::exportButton() {
   cout << "Displaying Export Text" << endl;
   this->polycalc->exportToString();
 }

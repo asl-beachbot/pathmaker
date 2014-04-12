@@ -82,6 +82,20 @@
            </spacer>
           </item>
           <item>
+           <widget class="QLabel" name="label_2">
+            <property name="text">
+             <string>Inset distance</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QDoubleSpinBox" name="insetDistanceSpinbox">
+            <property name="value">
+             <double>10.000000000000000</double>
+            </property>
+           </widget>
+          </item>
+          <item>
            <widget class="QLabel" name="label">
             <property name="font">
              <font>
@@ -96,12 +110,26 @@
           <item>
            <widget class="QDoubleSpinBox" name="doubleSpinBox"/>
           </item>
+          <item>
+           <widget class="QPushButton" name="pushButton">
+            <property name="text">
+             <string>Run Program</string>
+            </property>
+           </widget>
+          </item>
          </layout>
         </item>
         <item>
-         <widget class="QPushButton" name="pushButton">
+         <widget class="QPushButton" name="roundCornersButton">
           <property name="text">
            <string>Round Corners</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QPushButton" name="exportButton">
+          <property name="text">
+           <string>Export Poly</string>
           </property>
          </widget>
         </item>

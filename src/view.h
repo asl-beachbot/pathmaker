@@ -52,4 +52,5 @@ public slots:
   void buttonRoundCorners();
   void toggleStraightSkeleton(int i);
   void spinBoxValueChanged(double i);
+  void exportButton();
 };

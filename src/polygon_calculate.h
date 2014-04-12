@@ -16,6 +16,7 @@
 // polygon_calculate.h
 
 #pragma once
+
 #include <vector>
 #include <iostream>
 
@@ -78,12 +79,12 @@ public:
   bool visited;
 
   Point_2 entry_point;
-
+  int entry_point_index;
   ExtendedPolygonPtr(Polygon_2 poly) : poly(poly), visited(false) {};
   ExtendedPolygonPtr() :  visited(false) {};
   PolygonGraphicsI * graphx;
-  tree<ExtendedPolygonPtr>::iterator_base to;
-  tree<ExtendedPolygonPtr>::iterator_base from;
+  ExtendedPolygonPtr * to;
+  ExtendedPolygonPtr * from;
   void set_graphx() {
 	  this->graphx = new PolygonGraphicsI(&poly);
 	  return;
@@ -133,7 +134,7 @@ private:
 
   PolygonPtrVector render_polys;
   PolygonWithHolesPtr outer_poly_ptr;
-  Point_2 find_closest_point_on_poly(Point_2 exit_point, Polygon_2 p2);
+  Point_2 find_closest_point_on_poly(Point_2 exit_point, Polygon_2 p2, int * entry_point_index);
   void iterate_polygon(Polygon_2 *p);
   void iterate_over_polygon_with_holes(PolygonWithHolesPtrVector *p);
   void connect();

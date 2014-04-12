@@ -1,8 +1,7 @@
 /********************************************************************************
 ** Form generated from reading UI file 'pathfinder.ui'
 **
-** Created: Mon Mar 17 15:30:47 2014
-**      by: Qt User Interface Compiler version 4.8.4
+** Created by: Qt User Interface Compiler version 4.8.6
 **
 ** WARNING! All changes made in this file will be lost when recompiling UI file!
 ********************************************************************************/
@@ -42,7 +41,8 @@ public:
     QSpacerItem *verticalSpacer;
     QLabel *label;
     QDoubleSpinBox *doubleSpinBox;
-    QPushButton *pushButton;
+    QPushButton *roundCornersButton;
+    QPushButton *exportButton;
     QHBoxLayout *horizontalLayout_2;
     QLabel *mouse_xy;
 
@@ -106,10 +106,15 @@ public:
 
         verticalLayout->addLayout(verticalLayout_3);
 
-        pushButton = new QPushButton(centralwidget);
-        pushButton->setObjectName(QString::fromUtf8("pushButton"));
+        roundCornersButton = new QPushButton(centralwidget);
+        roundCornersButton->setObjectName(QString::fromUtf8("roundCornersButton"));
 
-        verticalLayout->addWidget(pushButton);
+        verticalLayout->addWidget(roundCornersButton);
+
+        exportButton = new QPushButton(centralwidget);
+        exportButton->setObjectName(QString::fromUtf8("exportButton"));
+
+        verticalLayout->addWidget(exportButton);
 
 
         horizontalLayout->addLayout(verticalLayout);
@@ -140,7 +145,8 @@ public:
         MainWindow->setWindowTitle(QApplication::translate("MainWindow", "MainWindow", 0, QApplication::UnicodeUTF8));
         ssCheckBox->setText(QApplication::translate("MainWindow", "Show Straight Seleton", 0, QApplication::UnicodeUTF8));
         label->setText(QApplication::translate("MainWindow", "Polygon rounding radius", 0, QApplication::UnicodeUTF8));
-        pushButton->setText(QApplication::translate("MainWindow", "Round Corners", 0, QApplication::UnicodeUTF8));
+        roundCornersButton->setText(QApplication::translate("MainWindow", "Round Corners", 0, QApplication::UnicodeUTF8));
+        exportButton->setText(QApplication::translate("MainWindow", "Export Poly", 0, QApplication::UnicodeUTF8));
         mouse_xy->setText(QApplication::translate("MainWindow", "Coordinates (click and drag to show)", 0, QApplication::UnicodeUTF8));
     } // retranslateUi
 

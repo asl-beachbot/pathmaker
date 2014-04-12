@@ -285,7 +285,7 @@ int PolygonCalculate::addLine(Point_2 from, Point_2 to, std::list<std::list<Poin
 }
 
 
-Point_2 PolygonCalculate::find_closest_point_on_poly(Point_2 exit_point, Polygon_2 p2) {
+Point_2 PolygonCalculate::find_closest_point_on_poly(Point_2 exit_point, Polygon_2 p2, int * entry_point_index) {
   Polygon_2::Vertex_const_iterator p2_begin = p2.vertices_begin();
   Polygon_2::Vertex_const_iterator p2_end = p2.vertices_end();
   float distance, temp_dist;
@@ -296,6 +296,7 @@ Point_2 PolygonCalculate::find_closest_point_on_poly(Point_2 exit_point, Polygon
     if(temp_dist < distance) {
       distance = temp_dist;
       point2 = *p2_begin;
+      *entry_point_index = std::distance(p2_begin, p2.vertices_begin());
     }
   }
   return point2;
@@ -347,21 +348,33 @@ const char * PolygonCalculate::exportToString() {
   // Iterate over tree, find starting point
   std::string ret;
   PolyTree::iterator it_node = this->p_tree.begin();
-  PolyTree::iterator start_node;
+  ExtendedPolygonPtr * start_node;
   for(; it_node != this->p_tree.end(); ++it_node) {
-    if(it_node->from) { // NULL Pointer check
+    if(!it_node->from) { // NULL Pointer check
       cout << "Found Start Node" << endl;
-      start_node = it_node;
+      start_node = &(*it_node);
       break;
     }
   }
 
   while(start_node) {
     cout << "Iterating" << endl;
+    int size = start_node->poly.size();
+    // int start = start_node->entry_point_index;
+    int start = 1;
+    cout << start << endl;
+
     Polygon_2::Vertex_const_iterator p2_begin = start_node->poly.vertices_begin();
     Polygon_2::Vertex_const_iterator p2_end = start_node->poly.vertices_end();
-    for(;p2_begin != p2_end; ++p2_begin) {
-      cout << p2_begin.x() << p2_begin.y() << endl;
+    // for(;p2_begin != p2_end; ++p2_begin) {
+    int j = 0;
+    for(int i = start; i <= start + size - 1; i++) {
+      if(i >= size) {
+        j = i - size;
+      } else {
+        j = i;
+      }
+      cout << start_node->poly[j].x() << ", " << start_node->poly[j].y() << endl;
     }
     start_node = start_node->to;
   }
@@ -384,18 +397,18 @@ int PolygonCalculate::connect(PolyTree::iterator node, PolyTree::iterator connec
 
 	PolyTree::sibling_iterator child_it = this->p_tree.child(node, 0);
 	if(child_it == this->p_tree.end()) { // invalid pointer == no children
-    connect_from->to = node;
-		node->from = connect_from;
+    connect_from->to = &(*node);
+		node->from = &(*connect_from);
     cout << "Connecting " << &connect_from << " to " << &node << endl;
 		node->visited = true;
 
-
     // this->addLine(node->poly[0], connect_from->poly[0]);
     this->connect(this->p_tree.parent(node), node);
-
-    Point_2 next_entry = this->find_closest_point_on_poly(connect_from->entry_point, node->poly);
+    int entry_point_index;
+    Point_2 next_entry = this->find_closest_point_on_poly(connect_from->entry_point, node->poly, &entry_point_index);
     node->entry_point = next_entry;
-    cout << next_entry;
+    node->entry_point_index = entry_point_index;
+
     this->addLine(next_entry, connect_from->entry_point, &this->poly_connector_lines);
 
 		return 1;
@@ -411,11 +424,13 @@ int PolygonCalculate::connect(PolyTree::iterator node, PolyTree::iterator connec
 	// Always starting at a kernel
 	// first one is NULL
 	if(connect_from != NULL) {
-		connect_from->to = node;
-    node->from = connect_from;
+    connect_from->to = &(*node);
+    node->from = &(*connect_from);
+    int entry_point_index;
     cout << "Connecting " << &connect_from << " to " << &node << endl;
-    Point_2 next_entry = this->find_closest_point_on_poly(connect_from->entry_point, node->poly);
+    Point_2 next_entry = this->find_closest_point_on_poly(connect_from->entry_point, node->poly, &entry_point_index);
     node->entry_point = next_entry;
+    node->entry_point_index = entry_point_index;
 
     Line_2 line = Line_2(connect_from->entry_point, next_entry);
     // this->checkPolyIntersection(line);
@@ -423,12 +438,16 @@ int PolygonCalculate::connect(PolyTree::iterator node, PolyTree::iterator connec
     this->addLine(next_entry, connect_from->entry_point, &this->poly_connector_lines);
 
     // this->addLine(node->poly[0], connect_from->poly[0]);
-	} else {
+  } else {
     // first entry point randomly on polygon
+    node->from = NULL;
     node->entry_point = node->poly[0];
+    node->entry_point_index = 0;
   }
+  cout << "Next Entry Index: " << node->entry_point_index << " " << node->entry_point << endl;
 	node->visited = true;
 	if(node == this->p_tree.begin()) {
+    node->to = NULL;
 		return 1;
 	} else {
 		return this->connect(this->p_tree.parent(node), node);
