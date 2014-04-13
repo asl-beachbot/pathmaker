@@ -53,4 +53,5 @@ public slots:
   void toggleStraightSkeleton(int i);
   void spinBoxValueChanged(double i);
   void exportButton();
+  void openSelectSVG();
 };

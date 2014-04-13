@@ -22,7 +22,10 @@ ADD_DEFINITIONS(
     -frounding-math
 )
 
-## 
+
+set(Python_ADDITIONAL_VERSIONS 3.4)
+
+##
 #	BOOST
 ##
 
@@ -31,17 +34,26 @@ set(Boost_USE_MULTITHREADED ON)
 set(Boost_USE_STATIC_RUNTIME OFF)
 set(BOOST_ALL_DYN_LINK ON)
 
-find_package(Boost 1.53.0 COMPONENTS)
+find_package(Boost 1.54.0 COMPONENTS python-py34 filesystem)
 include_directories({$Boost_INCLUDE_DIRS})
 link_directories(${Boost_LIBRARY_DIRS})
-## 
+
+##
+#   PYTHON
+##
+# find_package(PythonInterp 3)
+find_package(PythonLibs REQUIRED)
+include_directories(${PYTHON_INCLUDE_DIRS})
+link_directories(${PYTHON_LIBRARIES})
+
+##
 #	CGAL
 ##
 
 find_package(CGAL COMPONENTS Core Qt4)
 include( ${CGAL_USE_FILE} )
 
-## 
+##
 #	QT
 ##
 set( QT_USE_QTXML     TRUE )
@@ -70,9 +82,14 @@ QT4_WRAP_UI(ui/pathfinder_UI_HEADERS ${pathfinder_ui})
 
 add_executable(bin/pathfinder src/main ui/${pathfinder_UI_HEADERS} ${pathfinder_HEADERS_MOC})
 
-add_library(BeachbotLibrary src/polygon_calculate src/view)
+# add_executable(bin/python_test src/python_wrapper)
+# target_link_libraries(bin/python_test ${Boost_LIBRARIES} ${PYTHON_LIBRARIES})
+
+
+add_library(BeachbotLibrary src/polygon_calculate src/view src/python_wrapper)
 
 target_link_libraries(bin/pathfinder ${QT_LIBRARIES})
 target_link_libraries(bin/pathfinder ${CGAL_LIBRARIES} ${CGAL_3RD_PARTY_LIBRARIES})
+target_link_libraries(bin/pathfinder ${Boost_LIBRARIES} ${PYTHON_LIBRARIES})
 
 target_link_libraries(bin/pathfinder BeachbotLibrary)

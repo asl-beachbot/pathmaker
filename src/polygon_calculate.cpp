@@ -36,6 +36,7 @@
 #include <CGAL/Qt/PolygonWithHolesGraphicsItem.h>
 #include <CGAL/squared_distance_2.h>
 #include <CGAL/intersections.h>
+#include <CGAL/partition_2.h>
 
 #include <CGAL/Aff_transformation_2.h>
 
@@ -144,84 +145,7 @@ int PolygonCalculate::find_and_add(PolyTree * tree, PolyTree::iterator curr_node
   return 1;
 }
 
-
-void PolygonCalculate::run_program(int argc, char** argv, PolygonWindow* window) {
-
-  this->window = window;
-
-  cout << endl << "Welcome to the Pathfinder. Finding a path through the dark since 1999." <<
-    endl << "  (c) BeachBot Productions LLC. ";
-
-
-  this->plgi = new PolylinesGraphicsI(&this->poly_connector_lines);
-
-  this->round_corners_gi = new PolylinesGraphicsI(&this->round_corners_lines);
-
-  this->straight_skel_gi = new PolylinesGraphicsI(&this->straight_skel_lines);
-
-  // QObject::connect(window, SIGNAL(changed()),
-  //                  this->plgi, SLOT(modelChanged()));
-
-
-  QColor pen_color(255, 0, 0);
-  QPen pen(pen_color, 3);
-  pen.setCosmetic(false);
-  // sgi->setEdgesPen(pen);
-  // sgi->setVerticesPen(pen);
-  // sgi = new CGAL::Qt::SegmentsGraphicsItem<std::list<Segment_2> >(&connector_lines);
-  this->plgi->setEdgesPen(QPen(Qt::blue, 2, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin));
-  this->round_corners_gi->setEdgesPen(QPen(Qt::red, 0, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin));
-
-  this->straight_skel_gi->setEdgesPen(QPen(Qt::green, 0, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin));
-
-  window->addItem(this->plgi);
-  window->addItem(this->straight_skel_gi);
-  window->addItem(this->round_corners_gi);
-  this->straight_skel_gi->show();
-  this->round_corners_gi->show();
-
-  if( argc > 1 ) {
-    std::string filename = argv[1];
-    std::ifstream input_stream(filename.c_str());
-    if(input_stream) {
-      input_stream >> polygon_wh;
-      this->phgi = new PolygonWithHolesGraphicsI(&polygon_wh);
-      this->phgi->show();
-      window->addItem(phgi);
-    }
-  }
-
-  int insets = 10;
-  double inset_width = 2;
-  int pen_width = 2;
-  bool pen_cosmetic = false;
-  if (argc > 2) {
-    for(int i = 1; i < argc; i++) {
-      cout << argv[i] << " das war argv" << endl;
-      if(strcmp(argv[i], "-n") == 0) {
-        insets = atoi(argv[i+1]);
-        cout << "Insets: " << insets << endl;
-        i = i + 1;
-      }
-      else if (strcmp(argv[i], "-w") == 0) {
-        inset_width = atof(argv[i+1]);
-        cout << "Inset width: " << inset_width << endl;
-        i = i + 1;
-      }
-      else if (strcmp(argv[i], "--pen-width") == 0) {
-        pen_width = atof(argv[i+1]);
-        cout << "Pen width: " << pen_width << endl;
-        i = i + 1;
-      }
-      else if (strcmp(argv[i], "--pen-cosmetic") == 0) {
-        pen_cosmetic = true;
-        cout << "Pen is cosmetic" << endl;
-        i = i + 1;
-      }
-    }
-  }
-
-  double lOffset = inset_width;
+void PolygonCalculate::straightSkeletonMethod() {
 
   // TODO
   // Investigate usage of straight skeleton calculation
@@ -275,6 +199,105 @@ void PolygonCalculate::run_program(int argc, char** argv, PolygonWindow* window)
     this->window->addItem(node->graphx);
     ++node;
   }
+}
+
+void PolygonCalculate::convexPartitioning() {
+//  CGAL::optimal_convex_partition_2(polygon_wh.vertices_begin(),
+  //                                 polygon_wh.vertices_end())
+}
+
+void PolygonCalculate::loadFromString(std::string data) {
+  std::istringstream istream(data);
+  istream >> polygon_wh;
+  this->phgi = new PolygonWithHolesGraphicsI(&polygon_wh);
+  this->phgi->show();
+  window->addItem(phgi);
+  return;
+}
+
+void PolygonCalculate::loadFromFile(std::string filename) {
+  std::ifstream input_stream(filename.c_str());
+  if(input_stream) {
+    input_stream >> polygon_wh;
+    this->phgi = new PolygonWithHolesGraphicsI(&polygon_wh);
+    this->phgi->show();
+    window->addItem(phgi);
+  }
+}
+
+void PolygonCalculate::run_program(int argc, char** argv, PolygonWindow* window) {
+
+  this->window = window;
+
+  cout << endl << "Welcome to the Pathfinder. Finding a path through the dark since 1999." <<
+    endl << "  (c) BeachBot Productions LLC. ";
+
+
+  this->plgi = new PolylinesGraphicsI(&this->poly_connector_lines);
+
+  this->round_corners_gi = new PolylinesGraphicsI(&this->round_corners_lines);
+
+  this->straight_skel_gi = new PolylinesGraphicsI(&this->straight_skel_lines);
+
+  // QObject::connect(window, SIGNAL(changed()),
+  //                  this->plgi, SLOT(modelChanged()));
+
+
+  QColor pen_color(255, 0, 0);
+  QPen pen(pen_color, 3);
+  pen.setCosmetic(false);
+  // sgi->setEdgesPen(pen);
+  // sgi->setVerticesPen(pen);
+  // sgi = new CGAL::Qt::SegmentsGraphicsItem<std::list<Segment_2> >(&connector_lines);
+  this->plgi->setEdgesPen(QPen(Qt::blue, 2, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin));
+  this->round_corners_gi->setEdgesPen(QPen(Qt::red, 0, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin));
+
+  this->straight_skel_gi->setEdgesPen(QPen(Qt::green, 0, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin));
+
+  window->addItem(this->plgi);
+  window->addItem(this->straight_skel_gi);
+  window->addItem(this->round_corners_gi);
+  this->straight_skel_gi->show();
+  this->round_corners_gi->show();
+
+  if( argc > 1 ) {
+    loadFromFile(argv[1]);
+  }
+
+  // default values
+  int pen_width = 2;
+  bool pen_cosmetic = false;
+  double inset_width = 2;
+
+  // parse args
+  if (argc > 2) {
+    for(int i = 1; i < argc; i++) {
+      cout << argv[i] << " das war argv" << endl;
+      if(strcmp(argv[i], "-n") == 0) {
+        this->insets = atoi(argv[i+1]);
+        cout << "Insets: " << insets << endl;
+        i = i + 1;
+      }
+      else if (strcmp(argv[i], "-w") == 0) {
+        inset_width = atof(argv[i+1]);
+        cout << "Inset width: " << inset_width << endl;
+        i = i + 1;
+      }
+      else if (strcmp(argv[i], "--pen-width") == 0) {
+        pen_width = atof(argv[i+1]);
+        cout << "Pen width: " << pen_width << endl;
+        i = i + 1;
+      }
+      else if (strcmp(argv[i], "--pen-cosmetic") == 0) {
+        pen_cosmetic = true;
+        cout << "Pen is cosmetic" << endl;
+        i = i + 1;
+      }
+    }
+  }
+
+  this->lOffset = inset_width;
+
 }
 
 int PolygonCalculate::addLine(Point_2 from, Point_2 to, std::list<std::list<Point_2> > * lines_list) {

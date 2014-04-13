@@ -109,6 +109,8 @@ public:
   int check_tight_stripes();
   void toggle_sgi(int value);
   const char * exportToString();
+  void loadFromFile(std::string filename);
+  void loadFromString(std::string data);
 private:
   PolygonWindow* window;
 
@@ -135,6 +137,8 @@ private:
   PolygonPtrVector render_polys;
   PolygonWithHolesPtr outer_poly_ptr;
   Point_2 find_closest_point_on_poly(Point_2 exit_point, Polygon_2 p2, int * entry_point_index);
+  int insets;
+  double lOffset;
   void iterate_polygon(Polygon_2 *p);
   void iterate_over_polygon_with_holes(PolygonWithHolesPtrVector *p);
   void connect();
@@ -143,6 +147,8 @@ private:
   void checkPolyIntersection(Line_2 line);
   float calc_angle(Vector_2 v1, Vector_2 v2);
   int find_orientation(Point_2 p1, Point_2 p2, Point_2 p3);
+  void straightSkeletonMethod();
+  void convexPartitioning();
   int find_and_add(PolyTree * tree, PolyTree::iterator curr_node, 
   PolygonWithHolesPtr p, int depth);
 };

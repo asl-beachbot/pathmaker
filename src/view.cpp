@@ -23,9 +23,11 @@
 #include <CGAL/Exact_predicates_inexact_constructions_kernel.h>
 
 #include <QtGui>
+#include <QFileDialog>
 
 #include <CGAL/Qt/GraphicsViewNavigation.h>
 
+#include "python_wrapper.h"
 #include "polygon_calculate.h"
 #include "view.h"
 
@@ -62,6 +64,10 @@ int PolygonWindow::initWindow(int argc, char** argv) {
   QObject::connect(
       ui.ssCheckBox, SIGNAL(stateChanged(int)),
       this, SLOT(toggleStraightSkeleton(int))
+  );
+  QObject::connect(
+      ui.selectSVG, SIGNAL(released()),
+      this, SLOT(openSelectSVG())
   );
   QObject::connect(
       ui.roundCornersButton, SIGNAL(released()),
@@ -106,6 +112,12 @@ void PolygonWindow::exportButton() {
 void PolygonWindow::toggleStraightSkeleton(int value) {
   cout << " Hide the skeleton " << value << endl;
   this->polycalc->toggle_sgi(value);
+}
+
+void PolygonWindow::openSelectSVG() {
+  QString s = QFileDialog::getOpenFileName(this, "Open Image", "../",  tr("Vector Files (*.svg)") );
+  std::string dat = get_dat_from_svg(s.toUtf8().constData());
+  this->polycalc->loadFromString(dat);
 }
 
 // void PolygonWindow::acceptValueFromCheckbox(int value) {

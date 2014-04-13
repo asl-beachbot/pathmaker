@@ -38,6 +38,13 @@
         <item>
          <layout class="QVBoxLayout" name="verticalLayout_3">
           <item>
+           <widget class="QPushButton" name="selectSVG">
+            <property name="text">
+             <string>Select SVG</string>
+            </property>
+           </widget>
+          </item>
+          <item>
            <spacer name="verticalSpacer_2">
             <property name="orientation">
              <enum>Qt::Vertical</enum>
@@ -113,7 +120,14 @@
           <item>
            <widget class="QPushButton" name="pushButton">
             <property name="text">
-             <string>Run Program</string>
+             <string>Run Straight Skel Program</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QPushButton" name="pushButton_2">
+            <property name="text">
+             <string>Partition Poly</string>
             </property>
            </widget>
           </item>

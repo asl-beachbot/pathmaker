@@ -36,11 +36,16 @@ public:
     QGraphicsView *view;
     QVBoxLayout *verticalLayout;
     QVBoxLayout *verticalLayout_3;
+    QPushButton *selectSVG;
     QSpacerItem *verticalSpacer_2;
     QCheckBox *ssCheckBox;
     QSpacerItem *verticalSpacer;
+    QLabel *label_2;
+    QDoubleSpinBox *insetDistanceSpinbox;
     QLabel *label;
     QDoubleSpinBox *doubleSpinBox;
+    QPushButton *pushButton;
+    QPushButton *pushButton_2;
     QPushButton *roundCornersButton;
     QPushButton *exportButton;
     QHBoxLayout *horizontalLayout_2;
@@ -73,6 +78,11 @@ public:
         verticalLayout->setObjectName(QString::fromUtf8("verticalLayout"));
         verticalLayout_3 = new QVBoxLayout();
         verticalLayout_3->setObjectName(QString::fromUtf8("verticalLayout_3"));
+        selectSVG = new QPushButton(centralwidget);
+        selectSVG->setObjectName(QString::fromUtf8("selectSVG"));
+
+        verticalLayout_3->addWidget(selectSVG);
+
         verticalSpacer_2 = new QSpacerItem(20, 40, QSizePolicy::Minimum, QSizePolicy::Expanding);
 
         verticalLayout_3->addItem(verticalSpacer_2);
@@ -90,6 +100,17 @@ public:
 
         verticalLayout_3->addItem(verticalSpacer);
 
+        label_2 = new QLabel(centralwidget);
+        label_2->setObjectName(QString::fromUtf8("label_2"));
+
+        verticalLayout_3->addWidget(label_2);
+
+        insetDistanceSpinbox = new QDoubleSpinBox(centralwidget);
+        insetDistanceSpinbox->setObjectName(QString::fromUtf8("insetDistanceSpinbox"));
+        insetDistanceSpinbox->setValue(10);
+
+        verticalLayout_3->addWidget(insetDistanceSpinbox);
+
         label = new QLabel(centralwidget);
         label->setObjectName(QString::fromUtf8("label"));
         QFont font1;
@@ -102,6 +123,16 @@ public:
         doubleSpinBox->setObjectName(QString::fromUtf8("doubleSpinBox"));
 
         verticalLayout_3->addWidget(doubleSpinBox);
+
+        pushButton = new QPushButton(centralwidget);
+        pushButton->setObjectName(QString::fromUtf8("pushButton"));
+
+        verticalLayout_3->addWidget(pushButton);
+
+        pushButton_2 = new QPushButton(centralwidget);
+        pushButton_2->setObjectName(QString::fromUtf8("pushButton_2"));
+
+        verticalLayout_3->addWidget(pushButton_2);
 
 
         verticalLayout->addLayout(verticalLayout_3);
@@ -143,8 +174,12 @@ public:
     void retranslateUi(QMainWindow *MainWindow)
     {
         MainWindow->setWindowTitle(QApplication::translate("MainWindow", "MainWindow", 0, QApplication::UnicodeUTF8));
+        selectSVG->setText(QApplication::translate("MainWindow", "Select SVG", 0, QApplication::UnicodeUTF8));
         ssCheckBox->setText(QApplication::translate("MainWindow", "Show Straight Seleton", 0, QApplication::UnicodeUTF8));
+        label_2->setText(QApplication::translate("MainWindow", "Inset distance", 0, QApplication::UnicodeUTF8));
         label->setText(QApplication::translate("MainWindow", "Polygon rounding radius", 0, QApplication::UnicodeUTF8));
+        pushButton->setText(QApplication::translate("MainWindow", "Run Straight Skel Program", 0, QApplication::UnicodeUTF8));
+        pushButton_2->setText(QApplication::translate("MainWindow", "Partition Poly", 0, QApplication::UnicodeUTF8));
         roundCornersButton->setText(QApplication::translate("MainWindow", "Round Corners", 0, QApplication::UnicodeUTF8));
         exportButton->setText(QApplication::translate("MainWindow", "Export Poly", 0, QApplication::UnicodeUTF8));
         mouse_xy->setText(QApplication::translate("MainWindow", "Coordinates (click and drag to show)", 0, QApplication::UnicodeUTF8));
