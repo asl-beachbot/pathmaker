@@ -149,6 +149,7 @@ private:
   int find_orientation(Point_2 p1, Point_2 p2, Point_2 p3);
   void straightSkeletonMethod();
   void convexPartitioning();
+  void scaleToPoles(std::list<Points_2> poles);
   int find_and_add(PolyTree * tree, PolyTree::iterator curr_node, 
   PolygonWithHolesPtr p, int depth);
 };

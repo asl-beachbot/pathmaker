@@ -676,3 +676,38 @@ void PolygonCalculate::toggle_sgi(int value) {
     // this->straight_skel_gi->hide();
   }
 }
+
+void PolygonCalculate::scaleToPoles(std::list<Points_2> poles) {
+  // Assumption: all poles are correct.
+  // Second Assumption: Poles are more-or-less rectangular
+  // Third Assumption: There are 4 Poles
+  std::list<Points_2> hull_poles, hull_poly;
+  
+  // calculate hull (counterclockwise!)
+  CGAL::upper_hull_points_2(poles.begin(), poles.end(), hull_poles.begin());
+  CGAL::upper_hull_points_2(polygon_wh.outer_boundary().vertices_begin(), 
+      polygon_wh.outer_boundary().vertices_end(), hull_poly.begin());
+
+  if(hull_poles.size() != 4) { 
+    cout << "There are more than 4 Poles!" << endl;
+  }
+
+  // find biggest rectangle in the Hull
+
+  Polygon_2 max_rectangle(hull_poles.begin(), hull_poles.end());
+  for(int i = 0; i <= 3; i++) {
+    Point_2 p1 = max_rectangle[i - 1 % 4];
+    Point_2 p2 = max_rectangle[i];
+    Point_2 p3 = max_rectangle[i + 1 % 4];
+    Point_2 p4 = max_rectangle[i + 2 % 4]
+    if(CGAL::Angle_2(p1, p2, p3) == CGAL::OBTUSE) {
+      // Cut here
+      double angle = calc_angle(p2 - p1, p2 - p3);
+      angle = angle - M_PI/4;
+      double len = tan(angle) * sqrt((p3 - p2).squared_length());
+      Vector_2 v2 = p4 - p1;
+      Vector_2 v2_n = v2 / sqrt(v2.squared_length());
+      v2_n * len;
+    } 
+  }
+}
