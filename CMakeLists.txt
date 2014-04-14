@@ -70,7 +70,7 @@ include(${QT_USE_FILE})
 find_package(Eigen3 REQUIRED)
 include_directories(${EIGEN3_INCLUDE_DIR})
 
-if( CGAL_Core_FOUND)
+if(CGAL_Core_FOUND)
     add_definitions(-DCGAL_USE_CORE)
 endif()
 
@@ -86,10 +86,10 @@ add_executable(bin/pathfinder src/main ui/${pathfinder_UI_HEADERS} ${pathfinder_
 # target_link_libraries(bin/python_test ${Boost_LIBRARIES} ${PYTHON_LIBRARIES})
 
 
-add_library(BeachbotLibrary src/polygon_calculate src/view src/python_wrapper)
+add_library(BeachbotLibrary src/polygon_calculate src/view)
 
+target_link_libraries(BeachbotLibrary ${Boost_LIBRARIES} ${PYTHON_LIBRARIES})
 target_link_libraries(bin/pathfinder ${QT_LIBRARIES})
 target_link_libraries(bin/pathfinder ${CGAL_LIBRARIES} ${CGAL_3RD_PARTY_LIBRARIES})
-target_link_libraries(bin/pathfinder ${Boost_LIBRARIES} ${PYTHON_LIBRARIES})
 
 target_link_libraries(bin/pathfinder BeachbotLibrary)

@@ -15,6 +15,9 @@
 
 // view.cpp
 
+// Python Wrapper before QT otherwise compilation error!!!
+#include "python_wrapper.h"
+
 #include <iostream>
 #include <vector>
 #include <fstream>
@@ -27,7 +30,6 @@
 
 #include <CGAL/Qt/GraphicsViewNavigation.h>
 
-#include "python_wrapper.h"
 #include "polygon_calculate.h"
 #include "view.h"
 

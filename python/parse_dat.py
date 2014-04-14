@@ -39,14 +39,14 @@ class SVGElement():
             else:
                 relative_to = [0, 0]
             for x in range(0, len(c), 2):
-                print(c)
+                # print(c)
                 self.coords.append([rel_coords[0] + float(c[x]),
                                     rel_coords[1] + float(c[x + 1])])
         else:
             for x in range(0, len(c), 2):
                 self.coords.append([float(c[x]), float(c[x + 1])])
 
-        print(self)
+        # print(self)
 
     def __repr__(self):
         print(self.element_type, self.coords)
@@ -112,7 +112,7 @@ def call_from_cpp(filename):
         for e in el:
             poly.extend(e.to_poly())
 
-            print(e.element_type.__repr__() + e.to_poly().__str__())
+            # print(e.element_type.__repr__() + e.to_poly().__str__())
 
             if e.element_type == "z":
                 if len(e.coords) == 0:
@@ -180,7 +180,7 @@ def run():
             for e in el:
                 poly.extend(e.to_poly())
 
-                print(e.element_type.__repr__() + e.to_poly().__str__())
+                # print(e.element_type.__repr__() + e.to_poly().__str__())
 
                 if e.element_type == "z":
                     if len(e.coords) == 0:
@@ -190,7 +190,7 @@ def run():
 
             poly.reverse()
             polys.append(poly)
-        print(polys)
+        # print(polys)
     if ns.to == "mat":
         text = "poly = ["
         for p2 in poly:
@@ -210,7 +210,7 @@ def run():
             for p2 in poly:
                 text += "%s %s\n" % (p2[0], p2[1])
         text = text[:-1]
-        print(text)
+        # print(text)
         name = ns.filename.split(".")[0]
         name += ".dat"
         fw = open(name, 'w')
