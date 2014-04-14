@@ -90,7 +90,7 @@ typedef CGAL::Aff_transformation_2<K> Transformation;
 typedef typename SS::Halfedge_const_iterator Halfedge_const_iterator ;
 typedef typename SS::Halfedge_const_handle   Halfedge_const_handle ;
 
-typedef tree<ExtendedPolygonPtr> PolyTree;
+typedef tree<ElementPtr> PolyTree;
 
 using std::endl; using std::cout;
 
@@ -134,7 +134,7 @@ int PolygonCalculate::find_and_add(PolyTree * tree, PolyTree::iterator curr_node
   int leaf = 0;
   for(std::vector<PolygonWithHolesPtr>::iterator i = offset_poly_wh.begin(); i != offset_poly_wh.end(); ++i) {
     Polygon_2 outer = (**i).outer_boundary();
-    ExtendedPolygonPtr poly_element = ExtendedPolygonPtr(outer);
+    ElementPtr poly_element = ElementPtr(outer);
     PolyTree::iterator next_node = tree->append_child(curr_node, poly_element);
     //recursive iteration to next node
     leaf++;
@@ -179,7 +179,7 @@ void PolygonCalculate::straightSkeletonMethod() {
   this->outer_poly_ptr = PolygonWithHolesPtr(&(this->polygon_wh));
 
   // new code for recursive tree
-  ExtendedPolygonPtr top_ptr = ExtendedPolygonPtr(polygon_wh.outer_boundary());
+  ElementPtr top_ptr = ElementPtr(polygon_wh.outer_boundary());
   this->p_tree = PolyTree(top_ptr);
   find_and_add(&this->p_tree, p_tree.begin(), outer_poly_ptr, 0);
   print_tree(&this->p_tree);
@@ -371,7 +371,7 @@ const char * PolygonCalculate::exportToString() {
   // Iterate over tree, find starting point
   std::string ret;
   PolyTree::iterator it_node = this->p_tree.begin();
-  ExtendedPolygonPtr * start_node;
+  ElementPtr * start_node;
   for(; it_node != this->p_tree.end(); ++it_node) {
     if(!it_node->from) { // NULL Pointer check
       cout << "Found Start Node" << endl;
@@ -511,7 +511,7 @@ int PolygonCalculate::find_orientation(Point_2 p1, Point_2 p2, Point_2 p3) {
 }
 
 void PolygonCalculate::checkPolyIntersection(Line_2 line) {
-  // for(ExtendedPolygonPtr p: this->p_tree) {
+  // for(ElementPtr p: this->p_tree) {
   //   Polygon_2::Edge_const_iterator begin = p.poly.edges_begin();
   //   Polygon_2::Edge_const_iterator end = p.poly.edges_end();
   //   for(;begin != end; ++begin) {

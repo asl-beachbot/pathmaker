@@ -72,7 +72,12 @@ typedef CGAL::Qt::PolygonGraphicsItem<Polygon_2> PolygonGraphicsI;
 typedef CGAL::Qt::CustomPolylinesGraphicsItem<std::list<std::list<Point_2> > > PolylinesGraphicsI;
 // typedef CustomPolylinesGraphicsItem PolylinesGraphicsI;
 
-class ExtendedPolygonPtr{
+
+// This can be one of three things:
+//    1. Filled polygon
+//    2. Closed line (i.e. non filled polygon)
+//    3. Single line 
+class ElementPtr{
 public:
   Polygon_2 poly;
   int visited_polys[];
@@ -80,11 +85,11 @@ public:
 
   Point_2 entry_point;
   int entry_point_index;
-  ExtendedPolygonPtr(Polygon_2 poly) : poly(poly), visited(false) {};
-  ExtendedPolygonPtr() :  visited(false) {};
+  ElementPtr(Polygon_2 poly) : poly(poly), visited(false) {};
+  ElementPtr() :  visited(false) {};
   PolygonGraphicsI * graphx;
-  ExtendedPolygonPtr * to;
-  ExtendedPolygonPtr * from;
+  ElementPtr * to;
+  ElementPtr * from;
   void set_graphx() {
 	  this->graphx = new PolygonGraphicsI(&poly);
 	  return;
@@ -97,7 +102,7 @@ public:
   }
 };
 
-typedef tree<ExtendedPolygonPtr> PolyTree;
+typedef tree<ElementPtr> PolyTree;
 
 
 class PolygonCalculate {
