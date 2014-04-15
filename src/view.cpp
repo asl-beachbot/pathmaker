@@ -83,6 +83,10 @@ int PolygonWindow::initWindow(int argc, char** argv) {
       ui.doubleSpinBox, SIGNAL(valueChanged(double)),
       this, SLOT(spinBoxValueChanged(double))
   );
+  QObject::connect(
+      ui.partitionButton, SIGNAL(released()),
+      this, SLOT(partitionPoly())
+  );
   ui.view->setRenderHint(QPainter::Antialiasing);
   ui.view->setAcceptDrops(false);
  
@@ -122,6 +126,10 @@ void PolygonWindow::openSelectSVG() {
   this->polycalc->loadFromString(dat);
 }
 
+void PolygonWindow::partitionPoly() {
+  cout << "Partitioning" << endl;
+  this->polycalc->convexPartitioning();
+}
 // void PolygonWindow::acceptValueFromCheckbox(int value) {
 //   cout << " test2 " << endl;
 // }

@@ -45,7 +45,7 @@ public:
     QLabel *label;
     QDoubleSpinBox *doubleSpinBox;
     QPushButton *pushButton;
-    QPushButton *pushButton_2;
+    QPushButton *partitionButton;
     QPushButton *roundCornersButton;
     QPushButton *exportButton;
     QHBoxLayout *horizontalLayout_2;
@@ -129,10 +129,10 @@ public:
 
         verticalLayout_3->addWidget(pushButton);
 
-        pushButton_2 = new QPushButton(centralwidget);
-        pushButton_2->setObjectName(QString::fromUtf8("pushButton_2"));
+        partitionButton = new QPushButton(centralwidget);
+        partitionButton->setObjectName(QString::fromUtf8("partitionButton"));
 
-        verticalLayout_3->addWidget(pushButton_2);
+        verticalLayout_3->addWidget(partitionButton);
 
 
         verticalLayout->addLayout(verticalLayout_3);
@@ -179,7 +179,7 @@ public:
         label_2->setText(QApplication::translate("MainWindow", "Inset distance", 0, QApplication::UnicodeUTF8));
         label->setText(QApplication::translate("MainWindow", "Polygon rounding radius", 0, QApplication::UnicodeUTF8));
         pushButton->setText(QApplication::translate("MainWindow", "Run Straight Skel Program", 0, QApplication::UnicodeUTF8));
-        pushButton_2->setText(QApplication::translate("MainWindow", "Partition Poly", 0, QApplication::UnicodeUTF8));
+        partitionButton->setText(QApplication::translate("MainWindow", "Partition Poly", 0, QApplication::UnicodeUTF8));
         roundCornersButton->setText(QApplication::translate("MainWindow", "Round Corners", 0, QApplication::UnicodeUTF8));
         exportButton->setText(QApplication::translate("MainWindow", "Export Poly", 0, QApplication::UnicodeUTF8));
         mouse_xy->setText(QApplication::translate("MainWindow", "Coordinates (click and drag to show)", 0, QApplication::UnicodeUTF8));

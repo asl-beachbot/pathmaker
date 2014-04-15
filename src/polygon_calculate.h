@@ -111,6 +111,7 @@ public:
   const char * exportToString();
   void loadFromFile(std::string filename);
   void loadFromString(std::string data);
+  void convexPartitioning();
 private:
   PolygonWindow* window;
 
@@ -134,6 +135,10 @@ private:
   PolygonGraphicsI * pgi;
   SSPtr straight_skel;
 
+  // Partition Polys
+  std::list<Polygon_2> partition_polys;
+  std::list<PolygonGraphicsI * > partition_poly_gi;
+
   PolygonPtrVector render_polys;
   PolygonWithHolesPtr outer_poly_ptr;
   Point_2 find_closest_point_on_poly(Point_2 exit_point, Polygon_2 p2, int * entry_point_index);
@@ -148,8 +153,11 @@ private:
   float calc_angle(Vector_2 v1, Vector_2 v2);
   int find_orientation(Point_2 p1, Point_2 p2, Point_2 p3);
   void straightSkeletonMethod();
+<<<<<<< HEAD
   void convexPartitioning();
   void scaleToPoles(std::list<Points_2> poles);
+=======
+>>>>>>> b4e6935fb2b200f1a6e09f5fd5dd0c3dd3f951a3
   int find_and_add(PolyTree * tree, PolyTree::iterator curr_node, 
   PolygonWithHolesPtr p, int depth);
 };
