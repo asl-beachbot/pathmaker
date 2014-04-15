@@ -54,4 +54,5 @@ public slots:
   void spinBoxValueChanged(double i);
   void exportButton();
   void openSelectSVG();
+  void partitionPoly();
 };

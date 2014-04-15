@@ -36,6 +36,8 @@
 #include <CGAL/Qt/PolygonWithHolesGraphicsItem.h>
 #include <CGAL/squared_distance_2.h>
 #include <CGAL/intersections.h>
+
+#include <CGAL/Partition_traits_2.h>
 #include <CGAL/partition_2.h>
 
 #include <CGAL/Aff_transformation_2.h>
@@ -87,8 +89,13 @@ typedef CGAL::Qt::CustomPolylinesGraphicsItem<std::list<std::list<Point_2> > > P
 
 typedef CGAL::Aff_transformation_2<K> Transformation;
 
-typedef typename SS::Halfedge_const_iterator Halfedge_const_iterator ;
-typedef typename SS::Halfedge_const_handle   Halfedge_const_handle ;
+// Traits
+typedef CGAL::Partition_traits_2<K> Traits;
+typedef Traits::Polygon_2 Traits_Polygon_2;
+
+
+typedef SS::Halfedge_const_iterator Halfedge_const_iterator ;
+typedef SS::Halfedge_const_handle   Halfedge_const_handle ;
 
 typedef tree<ExtendedPolygonPtr> PolyTree;
 
@@ -202,8 +209,27 @@ void PolygonCalculate::straightSkeletonMethod() {
 }
 
 void PolygonCalculate::convexPartitioning() {
-//  CGAL::optimal_convex_partition_2(polygon_wh.vertices_begin(),
-  //                                 polygon_wh.vertices_end())
+  Polygon_2 outer_p2 = polygon_wh.outer_boundary();
+  Traits_Polygon_2 outer(outer_p2.vertices_begin(), outer_p2.vertices_end());
+  std::list<Traits_Polygon_2> part_list;
+  CGAL::optimal_convex_partition_2(outer.vertices_begin(),
+                                  outer.vertices_end(),
+                                  std::back_inserter(part_list));
+  cout << "Polygons" << endl;
+  for(Traits_Polygon_2 p : part_list) {
+    Polygon_2 reg_poly(p.vertices_begin(), p.vertices_end());
+    this->partition_polys.push_back(reg_poly);
+    PolygonGraphicsI * pg = new PolygonGraphicsI(&(this->partition_polys.back()));
+    
+    QColor pen_color(255, 0, 0);
+    QPen pen(pen_color, 3);
+    pg->setEdgesPen(pen);
+    pg->show();
+    partition_poly_gi.push_back(pg);
+    this->window->addItem(partition_poly_gi.back());
+    cout << "Poly: " << p << endl;
+  }
+
 }
 
 void PolygonCalculate::loadFromString(std::string data) {
