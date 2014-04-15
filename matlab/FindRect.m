@@ -29,7 +29,7 @@ for i=0:3
     v3_n = v3 / norm(v3);
     alpha = acos(dot(v1_n, v2_n))
     if( alpha > pi/2 )
-        disp("adjusting")
+        disp('adjusting')
         alpha_ub = alpha - pi/2
         len = sin(alpha_ub) * norm(v2)
         v3_minus = v3_n * len
@@ -40,4 +40,4 @@ for i=0:3
     end
 end
 rect_inner = rect_inner + ones(4, 2)
-plot(rect_inner(:, 1), rect_inner(:, 2), "r")
+plot(rect_inner(:, 1), rect_inner(:, 2), 'r')
