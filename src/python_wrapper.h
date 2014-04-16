@@ -1,4 +1,5 @@
 // Python Interface
+// https://wiki.python.org/moin/boost.python/EmbeddingPython
 #include <iostream>
 #include <boost/python.hpp>
 #include <boost/filesystem.hpp>
@@ -25,8 +26,11 @@ std::string handle_pyerror()
     return bp::extract<std::string>(formatted);
 }
 
+int initializePython() {
+  Py_Initialize();
+}
+
 std::string get_dat_from_svg(std::string filename) {
-	Py_Initialize();
 	bool py_exception = false;
 	try {
 		boost::filesystem::path workingDir = boost::filesystem::absolute("./python/").normalize();
