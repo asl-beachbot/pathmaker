@@ -11,6 +11,8 @@
 #  Investigate .mat usage for matlab (scipy)
 
 import argparse
+import pprint
+pp = pprint.PrettyPrinter(indent=4)
 
 from bs4 import BeautifulSoup
 import re
@@ -22,26 +24,27 @@ from math import *
 from numpy import linspace
 
 r = re.compile(r"([a-z])([^a-z]*)", flags=re.IGNORECASE)
+css_re = re.compile(r"([\w]+):(.+?);")
 
 t = linspace(1/10, 1, 10-1)
-
 
 class SVGElement():
     def __init__(self, t, c, prev_el=None, relative_to=None):
         self.element_type = t
-        print(c)
         self.coords = list()
+
         if t == "z":
             return
         if c[0] == '':
+            print("Error! First coordinate empty!")
             return
         if prev_el:
             self.coords.append(prev_el.coords[-1])
         if t.islower():
-            if relative_to or t == "C":
+            if (relative_to or t == "C") and len(relative_to.coords):
                 rel_coords = relative_to.coords[-1]
             else:
-                relative_to = [0, 0]
+                rel_coords = [0, 0]
             for x in range(0, len(c), 2):
                 # print(c)
                 self.coords.append([rel_coords[0] + float(c[x]),
@@ -49,10 +52,10 @@ class SVGElement():
         else:
             for x in range(0, len(c), 2):
                 self.coords.append([float(c[x]), float(c[x + 1])])
-
-        # print(self)
+        print("coords %r" % self.coords)
 
     def __repr__(self):
+        return "%s | %r" % (self.element_type, self.coords)
         print(self.element_type, self.coords)
 
     def __str__(self):
@@ -73,22 +76,28 @@ class SVGElement():
         return res
 
     def to_poly(self):
-        if self.element_type == "z":
+        if self.element_type in ["z", "Z"]:
             return
-        if self.element_type == "c" or self.element_type == "C":
+        if self.element_type in ["c", "C"]:
             return SVGElement.bezier(self.coords, t)
         if self.element_type in ["l", "L"]:
-            print (self.coords[-1])
             return [self.coords[-1]]
         return self.coords
 
     @staticmethod
     def parse_path(path, container=list()):
         print(path)
-        print("test")
         d = path['d']
         element = dict()
-        if path.has_attr("fill") and path["fill"].lower() != "none":
+        css = re.findall(css_re, path['style'])
+        fill = False
+        for c in css:
+            if c[0].lower() == 'fill'\
+                and (c[1].lower() != 'none' 
+                or c[1].lower() != "#ffffff"
+                or c[1].lower() != "#fff"):
+                fill = True
+        if path.has_attr("fill") and path["fill"].lower() != "none" or fill:
             element['filled'] = True
         else:
             element['filled'] = False
@@ -99,19 +108,34 @@ class SVGElement():
 
         m = re.findall(r, d)
         element['svg_elems'] = list()
+        element['holes'] = list()
+        curr_el = element['svg_elems']
+        i = 0
         if m:
             for match in m:
+                if match[0] in ('M', 'm') and i != 0:
+                    # This is a hole?
+                    print('a hole')
+                    curr_el = list()
+                    element['holes'].append(curr_el)
+                # print("Match: ")
+                # print(match)
                 coords = match[1]
-                coords = coords.lstrip()
-                coords = coords.rstrip()
+                coords = coords.lstrip().rstrip()
                 coords_list = re.split("[^\d\-.]*", coords)
                 #if(coords_list[0] == ''): continue
                 for x in range(0, int(len(coords_list)), 6):
-                    prev_el = element['svg_elems'][-1] if element['svg_elems'] else None
+                    rel_el = None
+                    prev_el = curr_el[-1] if (curr_el and len(curr_el)) else None
+                    prev_coords = None
+                    if prev_el:
+                        rel_el = prev_el
                     inst_coords = coords_list[x:x+6]
-                    inst = SVGElement(match[0], inst_coords, prev_el)
-
-                element['svg_elems'].append(inst)
+                    inst = SVGElement(match[0], inst_coords, prev_el, rel_el)
+                    print (inst)
+                curr_el.append(inst)
+                i = i + 1
+        # pp.pprint(element)
         container.append(element)
         return container
 
@@ -148,7 +172,7 @@ def parse(filename):
     base = dict()
     base['width'] = float(soup.svg['width'])
     base['height'] = float(soup.svg['height'])
-    print(soup.svg['width'])
+
     res = dict()
     res['svg_base'] = base
     res["elements"] = list()
@@ -158,10 +182,12 @@ def parse(filename):
         SVGElement.parse_path(p, svg_element_list)
 
     polys = list()
+    pp.pprint(svg_element_list)
     for el in svg_element_list:
         poly = list()
         for e in el["svg_elems"]:
-            poly.extend(tuple(map(tuple, e.to_poly())))
+            print("E: ")
+            print(e)
 
             # print(e.element_type.__repr__() + e.to_poly().__str__())
 
@@ -169,28 +195,32 @@ def parse(filename):
                 if len(e.coords) == 0:
                     pass
                 else:
+                    poly.extend(tuple(map(tuple, e.to_poly())))
                     del poly[0]
-
-        print(poly)
+            else:
+                poly.extend(tuple(map(tuple, e.to_poly())))
+        holes = list()
+        for hole in el["holes"]:
+            hole_poly = list()
+            for h in hole:
+                if h.element_type == "z":
+                    if len(h.coords) == 0:
+                        pass
+                    else:
+                        hole_poly.extend(tuple(map(tuple, h.to_poly())))
+                        del poly[0]
+                else:
+                    hole_poly.extend(tuple(map(tuple, h.to_poly())))
+            holes.append(hole_poly)
         poly.reverse()
         polys.append(poly)
         res["elements"].append({
             "closed": el["closed"],
             "filled": el["filled"],
-            "coords": poly
+            "coords": poly,
+            "holes" : holes
             })
     return res
-    text = ""
-    for idx, poly in enumerate(polys):
-        if(idx == 1):
-            text += "%s\n" % (len(polys) - 1)
-        text += "%s\n" % len(poly)
-        for p2 in poly:
-            text += "%s %s\n" % (p2[0], p2[1])
-    text = text[:-1]
-    # print(text)
-    return text
-
 
 def run():
     if not ns.filename:

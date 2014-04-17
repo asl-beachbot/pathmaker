@@ -20,12 +20,22 @@ public:
   bool closed;
   bool filled;
   std::list<Point_2> vertices;
+  std::list< std::list<Point_2> >holes;
   void repr() {
     cout << "Closed: " << closed << endl <<
             "Filled: " << filled << endl <<
             "Points: " << endl;
     for(Point_2 p : vertices) {
       cout << p << endl;
+    }
+    cout << "Holes: " << endl;
+    int i = 0;
+    for(std::list<Point_2> h: holes) {
+      cout << " - " << i << " - "<< endl;
+      for(Point_2 p: h) {
+        cout << p << endl;
+      }
+      ++i;
     }
   }
 //   VectorElement(std::list<Point_2> vertices,
@@ -78,6 +88,20 @@ public:
             bp::extract<float>(coords_list[j][1])
             )
           );
+        }
+        bp::list holes_list = bp::extract<bp::list>(elem_list[i]["holes"]);
+        int holes_len = bp::len(holes_list);
+        for(int j = 0; j < holes_len; ++j) {
+          int hole_len = bp::len(holes_list[j]);
+          std::list<Point_2> hole_poly_list;
+          for(int k = 0; k < hole_len; ++k) {
+            hole_poly_list.push_back(Point_2(
+              bp::extract<float>(holes_list[j][k][0]),
+              bp::extract<float>(holes_list[j][k][1])
+              )
+            );
+          }
+          ve.holes.push_back(hole_poly_list);
         }
         this->elements.push_back(ve);
       }

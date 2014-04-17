@@ -7,7 +7,7 @@ enum ElementType {
   POLYLINE
 };
 
-class ElementPtr{
+class ElementPtr {
 public:
   bool visited;
 
