@@ -15,9 +15,10 @@ import argparse
 from bs4 import BeautifulSoup
 import re
 
+import numpy as np
+
 from math import *
 
-from svg_parse_plot import bezier
 from numpy import linspace
 
 r = re.compile(r"([a-z])([^a-z]*)", flags=re.IGNORECASE)
@@ -28,8 +29,11 @@ t = linspace(1/10, 1, 10-1)
 class SVGElement():
     def __init__(self, t, c, prev_el=None, relative_to=None):
         self.element_type = t
+        print(c)
         self.coords = list()
         if t == "z":
+            return
+        if c[0] == '':
             return
         if prev_el:
             self.coords.append(prev_el.coords[-1])
@@ -54,11 +58,25 @@ class SVGElement():
     def __str__(self):
         return "%s | %r" % (self.element_type, self.coords)
 
+    @staticmethod
+    def bezier(P, t):
+        def bernstein(n, i, t):
+            return factorial(n) / (factorial(i) * factorial(n - i)) \
+                * t**i * (1-t)**(n-i)
+        res = np.zeros([len(t), 2])
+        for i, k in enumerate(t):
+            for j, c in enumerate(P):
+                res[i][0] = res[i][0] + c[0] * bernstein(len(P) - 1,
+                                                         j, t[i])
+                res[i][1] = res[i][1] + c[1] * bernstein(len(P) - 1,
+                                                         j, t[i])
+        return res
+
     def to_poly(self):
         if self.element_type == "z":
-            return []
+            return
         if self.element_type == "c" or self.element_type == "C":
-            return bezier(self.coords, t)
+            return SVGElement.bezier(self.coords, t)
         if self.element_type in ["l", "L"]:
             print (self.coords[-1])
             return [self.coords[-1]]
@@ -66,9 +84,21 @@ class SVGElement():
 
     @staticmethod
     def parse_path(path, container=list()):
+        print(path)
+        print("test")
         d = path['d']
+        element = dict()
+        if path.has_attr("fill") and path["fill"].lower() != "none":
+            element['filled'] = True
+        else:
+            element['filled'] = False
+        if d.endswith("z") or d.endswith("Z"):
+            element['closed'] = True
+        else:
+            element['closed'] = False
+
         m = re.findall(r, d)
-        element = list()
+        element['svg_elems'] = list()
         if m:
             for match in m:
                 coords = match[1]
@@ -77,16 +107,34 @@ class SVGElement():
                 coords_list = re.split("[^\d\-.]*", coords)
                 #if(coords_list[0] == ''): continue
                 for x in range(0, int(len(coords_list)), 6):
-                    prev_el = element[-1] if element else None
+                    prev_el = element['svg_elems'][-1] if element['svg_elems'] else None
                     inst_coords = coords_list[x:x+6]
                     inst = SVGElement(match[0], inst_coords, prev_el)
 
-                element.append(inst)
+                element['svg_elems'].append(inst)
         container.append(element)
         return container
 
 
-def call_from_cpp(filename):
+def parse(filename):
+    # return {
+    #     "svg_base": {
+    #         "width": 512,
+    #         "height": 215
+    #     },
+    #     "elements": [
+    #         {
+    #             "closed": True,
+    #             "filled": False,
+    #             "coords": [(1, 2), (3, 5), (7, 1)]
+    #         },
+    #         {
+    #             "closed": True,
+    #             "filled": True,
+    #             "coords": [(1, 2), (3, 5), (7, 1)]
+    #         }
+    #     ]
+    # }
     try:
         f = open(filename, 'r')
     except:
@@ -98,9 +146,12 @@ def call_from_cpp(filename):
     f.close()
     soup = BeautifulSoup(xml)
     base = dict()
-    base['w'] = soup.svg.width
-    base['h'] = soup.svg.height
-
+    base['width'] = float(soup.svg['width'])
+    base['height'] = float(soup.svg['height'])
+    print(soup.svg['width'])
+    res = dict()
+    res['svg_base'] = base
+    res["elements"] = list()
     path = soup.find_all("path")
 
     for p in path:
@@ -109,8 +160,8 @@ def call_from_cpp(filename):
     polys = list()
     for el in svg_element_list:
         poly = list()
-        for e in el:
-            poly.extend(e.to_poly())
+        for e in el["svg_elems"]:
+            poly.extend(tuple(map(tuple, e.to_poly())))
 
             # print(e.element_type.__repr__() + e.to_poly().__str__())
 
@@ -120,9 +171,15 @@ def call_from_cpp(filename):
                 else:
                     del poly[0]
 
+        print(poly)
         poly.reverse()
         polys.append(poly)
-
+        res["elements"].append({
+            "closed": el["closed"],
+            "filled": el["filled"],
+            "coords": poly
+            })
+    return res
     text = ""
     for idx, poly in enumerate(polys):
         if(idx == 1):

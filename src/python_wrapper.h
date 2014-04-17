@@ -27,7 +27,11 @@ std::string handle_pyerror()
 }
 
 int initializePython() {
+  cout << "Init Python" << endl;
   Py_Initialize();
+  boost::filesystem::path workingDir = boost::filesystem::absolute("./python/").normalize();
+  PyObject* sysPath = PySys_GetObject("path");
+  PyList_Insert( sysPath, 0, PyUnicode_FromString(workingDir.string().c_str()));
 }
 
 std::string get_dat_from_svg(std::string filename) {

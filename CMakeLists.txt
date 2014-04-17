@@ -18,7 +18,7 @@ include_directories("${PROJECT_SRC_DIR}")
 
 # Add C++11 flags for foreach and regexp
 ADD_DEFINITIONS(
-    #-std=c++11
+    -std=c++11
     -frounding-math
 )
 
@@ -81,7 +81,8 @@ QT4_WRAP_CPP(pathfinder_HEADERS_MOC ${pathfinder_qt_src})
 QT4_WRAP_UI(ui/pathfinder_UI_HEADERS ${pathfinder_ui})
 
 add_executable(bin/pathfinder src/main ui/${pathfinder_UI_HEADERS} ${pathfinder_HEADERS_MOC})
-
+add_executable(bin/svg_parser src/SVGParserAdapter)
+target_link_libraries(bin/svg_parser ${Boost_LIBRARIES} ${PYTHON_LIBRARIES})
 # add_executable(bin/python_test src/python_wrapper)
 # target_link_libraries(bin/python_test ${Boost_LIBRARIES} ${PYTHON_LIBRARIES})
 
