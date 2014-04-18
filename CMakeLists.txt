@@ -8,6 +8,9 @@ set (pathfinder_VERSION_MINOR 0)
 set(PROJECT_BINARY_DIR ./bin)
 set(PROJECT_SRC_DIR ./src)
 
+set (CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/CMakeModules/")
+include(cotire)
+
 configure_file(
     "${PROJECT_SOURCE_DIR}/config/PathfinderConfig.h.in"
     "${PROJECT_BINARY_DIR}/config/PathfinderConfig.h"
@@ -17,9 +20,11 @@ include_directories("${PROJECT_BINARY_DIR}")
 include_directories("${PROJECT_SRC_DIR}")
 
 # Add C++11 flags for foreach and regexp
+# REMOVE O0 slows down execution!!
 ADD_DEFINITIONS(
     -std=c++11
     -frounding-math
+    -O0
 )
 
 
@@ -50,7 +55,7 @@ link_directories(${PYTHON_LIBRARIES})
 #	CGAL
 ##
 
-find_package(CGAL COMPONENTS Core Qt4)
+find_package(CGAL COMPONENTS Core Qt4 PATHS src/include/CGAL)
 include( ${CGAL_USE_FILE} )
 
 ##
@@ -70,9 +75,10 @@ include(${QT_USE_FILE})
 find_package(Eigen3 REQUIRED)
 include_directories(${EIGEN3_INCLUDE_DIR})
 
-if(CGAL_Core_FOUND)
-    add_definitions(-DCGAL_USE_CORE)
-endif()
+
+# if(CGAL_Core_FOUND)
+#     add_definitions(-DCGAL_USE_CORE)
+# endif()
 
 SET(pathfinder_ui ui/pathfinder.ui)
 SET(pathfinder_qt_src src/view.h)
@@ -80,17 +86,32 @@ SET(pathfinder_qt_src src/view.h)
 QT4_WRAP_CPP(pathfinder_HEADERS_MOC ${pathfinder_qt_src})
 QT4_WRAP_UI(ui/pathfinder_UI_HEADERS ${pathfinder_ui})
 
-add_executable(bin/pathfinder src/main ui/${pathfinder_UI_HEADERS} ${pathfinder_HEADERS_MOC})
+include_directories(src/include)
+
+add_executable(bin/pathfinder
+	src/main
+	src/polygon_calculate
+	src/view
+	ui/${pathfinder_UI_HEADERS}
+	${pathfinder_HEADERS_MOC})
+
 add_executable(bin/svg_parser src/SVGParserAdapter)
 target_link_libraries(bin/svg_parser ${Boost_LIBRARIES} ${PYTHON_LIBRARIES})
 # add_executable(bin/python_test src/python_wrapper)
 # target_link_libraries(bin/python_test ${Boost_LIBRARIES} ${PYTHON_LIBRARIES})
 
+# add_library(BeachbotLibrary )
 
-add_library(BeachbotLibrary src/polygon_calculate src/view)
-
-target_link_libraries(BeachbotLibrary ${Boost_LIBRARIES} ${PYTHON_LIBRARIES})
+target_link_libraries(bin/pathfinder ${Boost_LIBRARIES} ${PYTHON_LIBRARIES})
 target_link_libraries(bin/pathfinder ${QT_LIBRARIES})
 target_link_libraries(bin/pathfinder ${CGAL_LIBRARIES} ${CGAL_3RD_PARTY_LIBRARIES})
 
-target_link_libraries(bin/pathfinder BeachbotLibrary)
+cotire(bin/pathfinder)
+cotire(bin/svg_parser)
+
+message("THANK YOU FOR CHOOSING PATHMAKER: ") 
+message("  CGAL: ${CGAL_USE_FILE}") 
+message("  BOOST: ${CGAL_USE_FILE}") 
+message("  CGAL: ${CGAL_USE_FILE}") 
+
+# target_link_libraries(bin/pathfinder BeachbotLibrary)

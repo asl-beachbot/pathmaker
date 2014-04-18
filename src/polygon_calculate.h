@@ -80,7 +80,7 @@ typedef CGAL::Qt::CustomPolylinesGraphicsItem<std::list<std::list<Point_2> > > P
 class ElementPtr{
 public:
   Polygon_2 poly;
-  int visited_polys[];
+  // int visited_polys[];
   bool visited;
 
   Point_2 entry_point;

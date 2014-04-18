@@ -305,6 +305,7 @@ int PolygonCalculate::addLine(Point_2 from, Point_2 to, std::list<std::list<Poin
   list.push_back(from);
   list.push_back(to);
   lines_list->push_back(list);
+  return 0; // TODO Change return stuff
 }
 
 
@@ -365,6 +366,7 @@ int PolygonCalculate::check_tight_stripes() {
     }
   }
   this->round_corners_gi->modelChanged();
+  return 1; // TODO change return
 }
 
 const char * PolygonCalculate::exportToString() {

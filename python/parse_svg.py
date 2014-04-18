@@ -191,7 +191,7 @@ def parse(filename):
 
             # print(e.element_type.__repr__() + e.to_poly().__str__())
 
-            if e.element_type == "z":
+            if e.element_type in ["z", "Z"]:
                 if len(e.coords) == 0:
                     pass
                 else:

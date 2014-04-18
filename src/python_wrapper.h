@@ -50,14 +50,14 @@ std::string get_dat_from_svg(std::string filename) {
 	}
 	catch (bp::error_already_set) {
 		std::string msg;
-        if (PyErr_Occurred()) {
-            msg = handle_pyerror(); 
-        }
-        py_exception = true;
-        bp::handle_exception();
-        PyErr_Clear();
-        cout << "::: ERROR ::: "<< endl << msg << endl;
-        return "ERROR";
+    if (PyErr_Occurred()) {
+        msg = handle_pyerror(); 
+    }
+    py_exception = true;
+    bp::handle_exception();
+    PyErr_Clear();
+    cout << "::: ERROR ::: "<< endl << msg << endl;
+    return "ERROR";
 	}
 }
 
