@@ -1,5 +1,4 @@
 // Parsed SVG 
-#include "SVGParserAdapter.h"
 
 #include "python_wrapper.h"
 
@@ -8,12 +7,8 @@
 #include <boost/filesystem.hpp>
 #include <string>
 
-#include <CGAL/Exact_predicates_inexact_constructions_kernel.h>
-
 #include "VectorElementTree.h"
-
-// typedef CGAL::Exact_predicates_inexact_constructions_kernel K;
-// typedef K::Point_2 Point_2;
+#include "SVGParserAdapter.h"
 
 using namespace std;
 namespace bp = boost::python;

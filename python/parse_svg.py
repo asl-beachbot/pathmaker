@@ -28,6 +28,7 @@ css_re = re.compile(r"([\w]+):(.+?);")
 
 t = linspace(1/10, 1, 10-1)
 
+
 class SVGElement():
     def __init__(self, t, c, prev_el=None, relative_to=None):
         self.element_type = t
@@ -93,9 +94,7 @@ class SVGElement():
         fill = False
         for c in css:
             if c[0].lower() == 'fill'\
-                and (c[1].lower() != 'none' 
-                or c[1].lower() != "#ffffff"
-                or c[1].lower() != "#fff"):
+                and c[1].lower() not in ["none", "#ffffff", "#fff"]:
                 fill = True
         if path.has_attr("fill") and path["fill"].lower() != "none" or fill:
             element['filled'] = True
