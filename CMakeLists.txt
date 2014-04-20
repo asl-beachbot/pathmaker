@@ -28,8 +28,25 @@ ADD_DEFINITIONS(
     -O0
 )
 
+##
+#   OPENMP
+##
 
+find_package(OpenMP)
+if (OPENMP_FOUND)
+    set (CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${OpenMP_C_FLAGS}")
+    set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${OpenMP_CXX_FLAGS}")
+endif()
+
+##
+#   PYTHON
+##
+
+# find_package(PythonInterp 3)
 set(Python_ADDITIONAL_VERSIONS 3.4)
+find_package(PythonLibs REQUIRED)
+include_directories(${PYTHON_INCLUDE_DIRS})
+link_directories(${PYTHON_LIBRARIES})
 
 ##
 #	BOOST
@@ -44,13 +61,6 @@ find_package(Boost 1.54.0 COMPONENTS python-py34 filesystem)
 include_directories(${Boost_INCLUDE_DIRS})
 link_directories(${Boost_LIBRARY_DIRS})
 
-##
-#   PYTHON
-##
-# find_package(PythonInterp 3)
-find_package(PythonLibs REQUIRED)
-include_directories(${PYTHON_INCLUDE_DIRS})
-link_directories(${PYTHON_LIBRARIES})
 
 ##
 #	CGAL

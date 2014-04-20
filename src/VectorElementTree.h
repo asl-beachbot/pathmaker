@@ -61,7 +61,7 @@ public:
 
   ElementType get_type() { return EL_POLYGON; }
   void print() {
-    std::cout << "Polygon " << std::endl;
+    std::cout << "Polygon " << element << std::endl;
   }
   Polygon_2 * convexHull() {
     return &element;
@@ -110,8 +110,8 @@ public:
       element.outer_boundary().vertices_end(),
       back_inserter(convex_hull_list)
     );
-    Polygon_2 * convex_hull = new Polygon_2(convex_hull_list.begin(), 
-                                        convex_hull_list.end());
+    Polygon_2 * convex_hull = new Polygon_2(convex_hull_list.begin(),
+                                            convex_hull_list.end());
     cout << * convex_hull << endl;
     return convex_hull;
     // Polygon_2(
@@ -119,7 +119,7 @@ public:
   };
 
   void print() {
-    std::cout << "PolygonWithHolesGraphicsI " << std::endl;
+    std::cout << "Polygon With Holes " << element << std::endl;
   };
 
 };
@@ -154,7 +154,6 @@ public:
   Polygon_2 * convexHull() {
     return NULL;
   }
-
 };
 
 class VectorElementTree {
@@ -180,16 +179,32 @@ private:
             return false;
         }
       }
+      else {
+        // Check Polyline:
+        // Only Interesting: First and last point!
+        Point_2 start = static_cast<PolyLineElementPtr*>(elem)->element.front();
+        Point_2 end = static_cast<PolyLineElementPtr*>(elem)->element.back();
+        if (CGAL::bounded_side_2(
+          elem->convexHull()->vertices_begin(),
+          elem->convexHull()->vertices_end(), start) ||
+          CGAL::bounded_side_2(
+            elem->convexHull()->vertices_begin(),
+            elem->convexHull()->vertices_end(), end)
+          ) {
+          return true;
+        }
+      }
+
       // it->skip_children(); (skips children for one increment)
       //it->convexHull().onBounded
-      return false; 
+      return false;
     }
   }
   Tree_ElementPtr::iterator findSpot(ElementPtr * elem_ptr) {
     // if(element_tree.size() == 1) {
 
     // }  // return top elem if empty tree
-    Tree_ElementPtr::breadth_first_iterator it = element_tree.begin_breadth_first();
+    Tree_ElementPtr::breadth_first_iterator it = ++element_tree.begin_breadth_first(); // skip playfield
     Tree_ElementPtr::breadth_first_iterator it_end = element_tree.end_breadth_first();
     Tree_ElementPtr::iterator curr_parent = element_tree.begin();
     elem_ptr->print();
@@ -198,14 +213,17 @@ private:
       cout << "Checking all polys" <<  endl;
       (*it)->print();
 
-        if(it == curr_parent) {continue;}
+        if(it == curr_parent) {continue;} // check if parent is playfield
         if(isInside((*it), elem_ptr)) {
           curr_parent = it;
           cout << "Curr Parent " << (*curr_parent) << endl;
-
-          // it = Tree_ElementPtr::breadth_first_iterator(it.node->first_child);
-        } else {  
-          //it.skip_children();
+          if(it.node->first_child) {
+            it = Tree_ElementPtr::breadth_first_iterator(it.node->first_child);
+          } else {
+            break; // end of tree
+          }
+        } else {
+          it.skip_children();
         }
     }
     // found some parent?
@@ -215,15 +233,17 @@ private:
     new_element_iter = element_tree.append_child(curr_parent, elem_ptr);
     // iterate over siblings: are they children of the new node?
     // If yes: reparent!
-    // Tree_ElementPtr::sibling_iterator sit = element_tree.begin(curr_parent);
-    // Tree_ElementPtr::sibling_iterator sit_end = element_tree.end(curr_parent);
-    // for(; sit != sit_end; ++sit) {
-    //   if(&(*sit) == elem_ptr) { continue; }
-    //   if(isInside(elem_ptr, &(*sit))) {
-    //     // reparent subtree
-    //     element_tree.insert(new_element_iter, *sit);
-    //   }
-    // }
+    Tree_ElementPtr::sibling_iterator sit = element_tree.begin(curr_parent);
+    Tree_ElementPtr::sibling_iterator sit_end = element_tree.end(curr_parent);
+    for(; sit != sit_end; ++sit) {
+      if((*sit) == elem_ptr) { continue; }
+      if(isInside(elem_ptr, (*sit))) {
+        // reparent subtree
+        cout << "reparenting" << endl;
+        Tree_ElementPtr::iterator it = (Tree_ElementPtr::iterator) sit;
+        element_tree.append_child(new_element_iter, it);
+      }
+    }
     return NULL;
   }
   ElementPtr * getElementRepresentation(VectorElement * ve) {
@@ -256,12 +276,11 @@ public:
     Tree_ElementPtr::iterator sib2 = element_tree.begin();
     Tree_ElementPtr::iterator end2 = element_tree.end();
     while(sib2!=end2) {
-      cout << "Depth: " << element_tree.depth(sib2) << endl;
-
       for(int i = 0; i < element_tree.depth(sib2); ++i)
         cout << " ";
-      cout << (*sib2) << endl;
-      (*sib2)->print();
+      cout << (*sib2);
+      // (*sib2)->print();
+      cout << endl;
       ++sib2;
     }
   }
