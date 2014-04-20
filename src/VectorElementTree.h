@@ -29,6 +29,7 @@ public:
   ElementPtr * from;
 
   ElementPtr() :  visited(false) {};
+  ~ElementPtr() {cout << "delete called" << endl;};
   virtual Point_2 getFromIndex(int i) {};
   virtual void set_graphx() {};
   virtual ElementType get_type() {};
@@ -67,7 +68,7 @@ public:
   }
 };
 
-typedef tree< ElementPtr > Tree_ElementPtr;
+typedef tree < ElementPtr * > Tree_ElementPtr;
 
 class FilledPolygonElementPtr : public ElementPtr {
 public:
@@ -144,7 +145,11 @@ public:
   ElementType get_type() { return EL_POLYLINE; }
 
   void print() {
-    std::cout << "PolyList" << std::endl;
+    std::cout << "Polyline ";
+    for(Point_2 p : element) {
+      cout << p << " ";
+    }
+    cout << std::endl;
   }
   Polygon_2 * convexHull() {
     return NULL;
@@ -191,23 +196,23 @@ private:
     // cout << "Length: " << it - it_end << endl;
     for(; it != it_end; ++it) {
       cout << "Checking all polys" <<  endl;
-      it->print();
+      (*it)->print();
 
-      // if(it == curr_parent) {continue;}
-      // if(isInside(&(*it), elem_ptr)) {
-      //   curr_parent = it;
-      //   cout << "Curr Parent " << &(*curr_parent) << endl;
+        if(it == curr_parent) {continue;}
+        if(isInside((*it), elem_ptr)) {
+          curr_parent = it;
+          cout << "Curr Parent " << (*curr_parent) << endl;
 
-      //   // it = Tree_ElementPtr::breadth_first_iterator(it.node->first_child);
-      // } else {  
-      //   //it.skip_children();
-      // }
+          // it = Tree_ElementPtr::breadth_first_iterator(it.node->first_child);
+        } else {  
+          //it.skip_children();
+        }
     }
     // found some parent?
     Tree_ElementPtr::iterator new_element_iter;
 
-    cout << "Inserting Element at " << &(*curr_parent) << endl;
-    new_element_iter = element_tree.insert(curr_parent, *elem_ptr);
+    cout << "Inserting Element at " << (*curr_parent) << endl;
+    new_element_iter = element_tree.append_child(curr_parent, elem_ptr);
     // iterate over siblings: are they children of the new node?
     // If yes: reparent!
     // Tree_ElementPtr::sibling_iterator sit = element_tree.begin(curr_parent);
@@ -255,7 +260,8 @@ public:
 
       for(int i = 0; i < element_tree.depth(sib2); ++i)
         cout << " ";
-      sib2->print();
+      cout << (*sib2) << endl;
+      (*sib2)->print();
       ++sib2;
     }
   }
@@ -269,10 +275,11 @@ public:
     Tree_ElementPtr::iterator top = element_tree.begin();
     playfield = new PolygonElementPtr(Polygon_2());
     playfield->print();
-    element_tree.insert(top, *playfield); // Parent of all`
+    element_tree.insert(top, playfield); // Parent of all`
     for(VectorElement ve : ps->elements) {
       ElementPtr * elem_ptr = this->getElementRepresentation(&ve);
       // find parent tree iter if possible
+      elem_ptr->print();
       findSpot(elem_ptr);
       cout << "Looping" << element_tree.size() << endl;
     }

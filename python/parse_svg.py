@@ -123,13 +123,24 @@ class SVGElement():
                 coords = coords.lstrip().rstrip()
                 coords_list = re.split("[^\d\-.]*", coords)
                 #if(coords_list[0] == ''): continue
-                for x in range(0, int(len(coords_list)), 6):
+                if match[0] in ["c", "C"]:
+                    for x in range(0, int(len(coords_list)), 6):
+                        rel_el = None
+                        prev_el = curr_el[-1] if (curr_el and len(curr_el)) else None
+                        prev_coords = None
+                        if prev_el:
+                            rel_el = prev_el
+                        inst_coords = coords_list[x:x+6]
+                        inst = SVGElement(match[0], inst_coords, prev_el, rel_el)
+                        print (inst)
+                else:
+                    # apparently "M 1,2 3,4 5,6" is valid, too :( 
                     rel_el = None
                     prev_el = curr_el[-1] if (curr_el and len(curr_el)) else None
                     prev_coords = None
                     if prev_el:
                         rel_el = prev_el
-                    inst_coords = coords_list[x:x+6]
+                    inst_coords = coords_list
                     inst = SVGElement(match[0], inst_coords, prev_el, rel_el)
                     print (inst)
                 curr_el.append(inst)
