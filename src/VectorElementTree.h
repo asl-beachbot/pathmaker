@@ -7,7 +7,8 @@
 #include "CustomPolylinesGraphicsItem.h"
 #include "tree.h"
 #include <iterator>
-
+#include <QColor>
+#include <QPen>
 #include "CGAL_Headers.h"
 
 enum ElementType {
@@ -19,6 +20,11 @@ enum ElementType {
 class ElementPtr {
 public:
   bool visited;
+  QPen pen;
+  void setColorFromDepth(int depth) {
+    QColor pen_color(depth * 40, 100, 0);
+    pen = QPen(pen_color, 0);
+  }
 
   Point_2 entry_point;
   Point_2 exit_point;
@@ -53,6 +59,7 @@ public:
   PolygonGraphicsI * graphx;
   void set_graphx() {
     this->graphx = new PolygonGraphicsI(&element);
+    this->graphx->setEdgesPen(pen);
     return;
   }
   Point_2 getFromIndex(int i) {
@@ -94,6 +101,7 @@ public:
 
   void set_graphx() {
     this->graphx = new PolygonWithHolesGraphicsI(&element);
+    this->graphx->setEdgesPen(pen);
     return;
   }
   ElementType get_type() { return EL_FILLED_POLYGON; };
@@ -127,14 +135,23 @@ public:
 class PolyLineElementPtr : public ElementPtr {
 public:
   std::list<Point_2>  element;
-
+  std::list< std::list < Point_2 > > graphx_elem;
   // int visited_vertices[];
   PolyLineElementPtr(std::list<Point_2> polyline) : element(polyline) {};
   PolylinesGraphicsI * graphx;
   void set_graphx() {
-    // this->graphx = new PolylinesGraphicsI(&element);
+    graphx_elem.push_back(element);
+    this->graphx = new PolylinesGraphicsI(&graphx_elem);
+    this->graphx->setEdgesPen(pen);
     return;
   }
+
+  // Start and endpoints:
+  // What if it is a spiral ? Start in the middle
+  // would be preferred!
+  // Solution: Calculate convex hull
+  // And check if first or last point are inside
+  // if inside: Choose as start point!
 
   Point_2 getFromIndex(int i) {
     if(i == 0) {
@@ -182,17 +199,31 @@ private:
       else {
         // Check Polyline:
         // Only Interesting: First and last point!
-        Point_2 start = static_cast<PolyLineElementPtr*>(elem)->element.front();
-        Point_2 end = static_cast<PolyLineElementPtr*>(elem)->element.back();
-        if (CGAL::bounded_side_2(
-          elem->convexHull()->vertices_begin(),
-          elem->convexHull()->vertices_end(), start) ||
-          CGAL::bounded_side_2(
-            elem->convexHull()->vertices_begin(),
-            elem->convexHull()->vertices_end(), end)
-          ) {
-          return true;
+        Point_2 start = static_cast<PolyLineElementPtr*>(tested_elem)->element.front();
+        Point_2 end = static_cast<PolyLineElementPtr*>(tested_elem)->element.back();
+        Polygon_2 * test_hull = elem->convexHull();
+        int start_bounded = CGAL::bounded_side_2(
+          test_hull->vertices_begin(),
+          test_hull->vertices_end(), start);
+        switch(start_bounded) {
+          case CGAL::ON_BOUNDED_SIDE:
+          case CGAL::ON_BOUNDARY:
+            cout << "Inside: " << elem << endl;
+            return true;
+            break;
         }
+        int end_bounded = CGAL::bounded_side_2(
+          test_hull->vertices_begin(),
+          test_hull->vertices_end(), end);
+        switch(end_bounded) {
+          case CGAL::ON_BOUNDED_SIDE:
+          case CGAL::ON_BOUNDARY:
+            cout << "Inside: " << elem << endl;
+            return true;
+            break;
+        }
+        return false;
+        delete test_hull;
       }
 
       // it->skip_children(); (skips children for one increment)
@@ -218,12 +249,12 @@ private:
           curr_parent = it;
           cout << "Curr Parent " << (*curr_parent) << endl;
           if(it.node->first_child) {
-            it = Tree_ElementPtr::breadth_first_iterator(it.node->first_child);
+            // it = Tree_ElementPtr::breadth_first_iterator(it.node->first_child);
           } else {
             break; // end of tree
           }
         } else {
-          it.skip_children();
+          // it.skip_children();
         }
     }
     // found some parent?
@@ -235,15 +266,16 @@ private:
     // If yes: reparent!
     Tree_ElementPtr::sibling_iterator sit = element_tree.begin(curr_parent);
     Tree_ElementPtr::sibling_iterator sit_end = element_tree.end(curr_parent);
-    for(; sit != sit_end; ++sit) {
-      if((*sit) == elem_ptr) { continue; }
-      if(isInside(elem_ptr, (*sit))) {
-        // reparent subtree
-        cout << "reparenting" << endl;
-        Tree_ElementPtr::iterator it = (Tree_ElementPtr::iterator) sit;
-        element_tree.append_child(new_element_iter, it);
-      }
-    }
+    // for(; sit != sit_end; ++sit) {
+    //   if((*sit) == elem_ptr) { continue; }
+    //   if(isInside(elem_ptr, (*sit))) {
+    //     // reparent subtree
+    //     cout << "reparenting" << endl;
+    //     Tree_ElementPtr::iterator it = (Tree_ElementPtr::iterator) sit;
+    //     element_tree.append_child(new_element_iter, it);
+    //     element_tree.erase(sit);
+    //   }
+    // }
     return NULL;
   }
   ElementPtr * getElementRepresentation(VectorElement * ve) {
@@ -270,6 +302,7 @@ private:
 public:
   Tree_ElementPtr element_tree;
   PolygonElementPtr * playfield;
+  View * window;
   VectorElementTree() {
   };
   void print_tree() {
@@ -282,6 +315,48 @@ public:
       // (*sib2)->print();
       cout << endl;
       ++sib2;
+    }
+  }
+  void addWindow(View * window) {
+    this->window = window;
+  }
+  void drawTreeOnCanvas() {
+    Tree_ElementPtr::iterator it = element_tree.begin();
+    Tree_ElementPtr::iterator it_end = element_tree.end();
+    for(; it != it_end; ++it) {
+      (*it)->setColorFromDepth(element_tree.depth(it));
+      char text[10];
+      sprintf(text, "D: %d",element_tree.depth(it));
+      switch((*it)->get_type()){
+        case EL_FILLED_POLYGON:
+          static_cast<FilledPolygonElementPtr * >(*it)->set_graphx();
+          window->addItem(static_cast<FilledPolygonElementPtr * >(*it)->graphx);
+          if(static_cast<FilledPolygonElementPtr * >(*it)->element.outer_boundary().size() > 0) {
+            window->addText(text,
+              static_cast<FilledPolygonElementPtr * >(*it)->getFromIndex(0).x(),
+              static_cast<FilledPolygonElementPtr * >(*it)->getFromIndex(0).y());
+          }
+          break;
+        case EL_POLYGON:
+          static_cast<PolygonElementPtr * >(*it)->set_graphx();
+          window->addItem(static_cast<PolygonElementPtr * >(*it)->graphx);
+          if(static_cast<PolygonElementPtr * >(*it)->element.size() > 0) {
+            window->addText(text,
+              static_cast<PolygonElementPtr * >(*it)->getFromIndex(0).x(),
+              static_cast<PolygonElementPtr * >(*it)->getFromIndex(0).y());
+          }
+          break;
+        case EL_POLYLINE:
+          static_cast<PolyLineElementPtr * >(*it)->set_graphx();
+          window->addItem(static_cast<PolyLineElementPtr * >(*it)->graphx);
+          if(static_cast<PolyLineElementPtr * >(*it)->element.size() > 0) {
+            window->addText(text,
+              static_cast<PolyLineElementPtr * >(*it)->getFromIndex(0).x(),
+              static_cast<PolyLineElementPtr * >(*it)->getFromIndex(0).y());
+          }
+
+          break;
+      }
     }
   }
 

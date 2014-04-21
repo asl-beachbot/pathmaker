@@ -1,5 +1,7 @@
 // Python Interface
 // https://wiki.python.org/moin/boost.python/EmbeddingPython
+#pragma once
+
 #include <iostream>
 #include <boost/python.hpp>
 #include <boost/filesystem.hpp>

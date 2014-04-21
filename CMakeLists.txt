@@ -108,10 +108,12 @@ add_executable(pathfinder
 
 add_executable(svg_parser
     src/SVGParserAdapter.cpp
-    src/VectorElementTree.h src/include/CGAL_Headers.h
+    src/VectorElementTree.h 
+    src/include/CGAL_Headers.h
     src/include/tree.h)
 
-target_link_libraries(svg_parser  ${Boost_LIBRARIES} ${PYTHON_LIBRARIES})
+
+target_link_libraries(svg_parser  ${Boost_LIBRARIES} ${PYTHON_LIBRARIES} ${QT_LIBRARIES})
 # add_executable(bin/python_test src/python_wrapper)
 # target_link_libraries(bin/python_test ${Boost_LIBRARIES} ${PYTHON_LIBRARIES})
 

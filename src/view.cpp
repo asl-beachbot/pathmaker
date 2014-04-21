@@ -25,6 +25,8 @@
 
 #include <CGAL/Exact_predicates_inexact_constructions_kernel.h>
 
+#include <QApplication>
+
 #include <QtGui>
 #include <QFileDialog>
 
@@ -133,3 +135,4 @@ void PolygonWindow::buttonRoundCorners() {
 // constructor
 PolygonWindow::PolygonWindow(QWidget* parent) : QMainWindow(parent){
 }
+

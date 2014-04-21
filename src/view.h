@@ -55,4 +55,10 @@ public slots:
   void spinBoxValueChanged(double i);
   void exportButton();
   void openSelectSVG();
+  // void runWindow();
+  // possible singleton instance ? 
+  // static PolygonWindow& getInstance() {
+  //   static PolygonWindow instance;
+  //   return instance;
+  // }
 };

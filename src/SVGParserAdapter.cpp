@@ -1,4 +1,4 @@
-// Parsed SVG 
+// Parsed SVG
 
 #include "python_wrapper.h"
 
@@ -97,11 +97,20 @@ void ParsedSVG::parseSVGFile(std::string filename) {
 }
 
 
-int main() {
+int main(int argc, char** argv) {
   ParsedSVG * ps = new ParsedSVG();
   ps->parseSVGFile("assets/2.svg");
   VectorElementTree vet;
   vet.createAndSortTree(ps);
+
+  QApplication app(argc, argv);
+  View * window = new View();
+  window->initWindow();
+  window->show();
+  vet.addWindow(window);
+  vet.drawTreeOnCanvas();
+  return app.exec();
+
   delete ps;
   return 0;
 }

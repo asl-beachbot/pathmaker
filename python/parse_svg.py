@@ -50,10 +50,11 @@ class SVGElement():
                 # print(c)
                 self.coords.append([rel_coords[0] + float(c[x]),
                                     rel_coords[1] + float(c[x + 1])])
+                if t in ["m"]:
+                    rel_coords = self.coords[-1]
         else:
             for x in range(0, len(c), 2):
                 self.coords.append([float(c[x]), float(c[x + 1])])
-        print("coords %r" % self.coords)
 
     def __repr__(self):
         return "%s | %r" % (self.element_type, self.coords)
@@ -130,9 +131,13 @@ class SVGElement():
                         prev_coords = None
                         if prev_el:
                             rel_el = prev_el
+                        # if x / 6 > 0:
+                        #     prev_el = 
                         inst_coords = coords_list[x:x+6]
                         inst = SVGElement(match[0], inst_coords, prev_el, rel_el)
                         print (inst)
+                        curr_el.append(inst)
+
                 else:
                     # apparently "M 1,2 3,4 5,6" is valid, too :( 
                     rel_el = None
@@ -143,7 +148,9 @@ class SVGElement():
                     inst_coords = coords_list
                     inst = SVGElement(match[0], inst_coords, prev_el, rel_el)
                     print (inst)
-                curr_el.append(inst)
+                    curr_el.append(inst)
+
+                # curr_el.append(inst)
                 i = i + 1
         # pp.pprint(element)
         container.append(element)
@@ -196,7 +203,6 @@ def parse(filename):
     for el in svg_element_list:
         poly = list()
         for e in el["svg_elems"]:
-            print("E: ")
             print(e)
 
             # print(e.element_type.__repr__() + e.to_poly().__str__())
