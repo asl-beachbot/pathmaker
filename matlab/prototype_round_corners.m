@@ -40,7 +40,7 @@ interpol = interpol + repmat(v1_m, len_interpol + 1, 1)
 
 hold on
 axis equal
-plot([p1(1), p2(1), p3(1)]', [p1(2), p2(2), p3(2)]')
+plot([p1(1), p2(1), p3(1)]', [p1(2), p2(2), p3(2)]', 'LineWidth', 3)
 pv = [p2 - (v1n*0.3); v1_m; p2 - (v2n*0.3)];
-plot(pv(:,1), pv(:,2), '-oc');
-plot(interpol(:,1), interpol(:,2), '-or');
+plot(pv(:,1), pv(:,2), '-oc', 'LineWidth', 3);
+plot(interpol(:,1), interpol(:,2), '-or', 'LineWidth', 3);

@@ -10,6 +10,13 @@
 #  Implement remaining formats if needed
 #  Investigate .mat usage for matlab (scipy)
 
+# Sublime Text Quick Tip
+# Reformat SVG:
+# ([LlMmZzCc]) -> $1\n
+
+# TODO: Fill Rule (even - odd?)
+# TODO: Connected shapes which are not shape + hole?
+
 import argparse
 import pprint
 pp = pprint.PrettyPrinter(indent=4)
