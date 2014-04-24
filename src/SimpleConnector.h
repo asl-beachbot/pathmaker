@@ -21,6 +21,7 @@ public:
 class SimpleConnector : public Connector {
 private:
   Point_2 find_closest_point_on_element(Point_2 exit_point, ElementPtr * p2, int * entry_point_index) {
+    if(p2 == *element_tree->begin()) {return Point_2(0, 0);}
     if(p2->get_type() != EL_POLYLINE) {
       float distance, temp_dist;
       Polygon_2::Vertex_const_iterator p2_begin, p2_end;
@@ -104,7 +105,7 @@ private:
       (*connect_from)->to = *node;
       (*node)->from = *connect_from;
       int entry_point_index;
-      cout << "Connecting " << &connect_from << " to " << &node << endl;
+      cout << "Connecting " << *connect_from << " to " << *node << endl;
       Point_2 next_entry = this->find_closest_point_on_element((*connect_from)->entry_point, (*node), &entry_point_index);
       (*node)->entry_point = next_entry;
       (*node)->entry_point_index = entry_point_index;
@@ -134,7 +135,7 @@ private:
     cout << "Next Entry Index: " << (*node)->entry_point_index << " " << (*node)->entry_point << endl;
     (*node)->visited = true;
     // TODO check if this is correct (leave out first "playfield"!)
-    if(node == ++this->element_tree->begin()) {
+    if(node == this->element_tree->begin()) {
       (*node)->to = NULL;
       return 1;
     } else {
@@ -148,6 +149,7 @@ public:
   }
 	void connect() {
     element_tree = &(this->tree->element_tree);
+    cout << (*element_tree->begin()) << endl;
     Tree_ElementPtr::post_order_iterator test_node = element_tree->begin_post();
     connect_recursive(test_node, NULL);
   }

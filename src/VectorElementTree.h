@@ -360,6 +360,13 @@ public:
       }
     }
   }
+  int addLine(Point_2 from, Point_2 to, std::list<std::list<Point_2> > * lines_list) {
+    std::list<Point_2> list;// = std::list<Point_2>();
+    list.push_back(from);
+    list.push_back(to);
+    lines_list->push_back(list);
+    return 0; // TODO Change return stuff
+  }
 
   void createAndSortTree(ParsedSVG * ps) {
     // Here we have the list of all SVG elements
@@ -380,4 +387,19 @@ public:
     }
     this->print_tree();
   };
+  void drawConnections() {
+    Tree_ElementPtr::iterator it = element_tree.begin();
+    Tree_ElementPtr::iterator it_end = element_tree.end();
+
+    for(; it != it_end; ++it) {
+      if((*it)->connect_from == NULL) {
+        break; // it = start iterator
+      }
+    }
+    ElementPtr * elem = (*it);
+    while(elem->to != NULL) {
+
+      elem = elem->to;
+    }
+  }
 };

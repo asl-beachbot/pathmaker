@@ -106,12 +106,15 @@ int main(int argc, char** argv) {
   SimpleConnector * sc = new SimpleConnector(vet);
   sc->connect();
   QApplication app(argc, argv);
-  View * window = new View();
-  window->initWindow();
-  window->show();
-  vet->addWindow(window);
-  vet->drawTreeOnCanvas();
-  return app.exec();
+  if(argc > 1) {
+    View * window = new View();
+    window->initWindow();
+    window->show();
+    vet->addWindow(window);
+    vet->drawTreeOnCanvas();
+    vet->drawConnections();
+    return app.exec();
+  }
 
   delete ps;
   return 0;
