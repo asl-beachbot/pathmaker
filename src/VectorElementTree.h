@@ -75,8 +75,6 @@ public:
   }
 };
 
-typedef tree < ElementPtr * > Tree_ElementPtr;
-
 class FilledPolygonElementPtr : public ElementPtr {
 public:
   Polygon_with_holes_2 element;
@@ -174,6 +172,9 @@ public:
 };
 
 class VectorElementTree {
+public:
+  typedef tree < ElementPtr * > Tree_ElementPtr;
+
 private:
   bool isInside(ElementPtr * elem, ElementPtr * tested_elem) {
     if(elem->get_type() != EL_POLYLINE) {

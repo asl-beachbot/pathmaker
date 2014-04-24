@@ -9,6 +9,7 @@
 
 #include "VectorElementTree.h"
 #include "SVGParserAdapter.h"
+#include "SimpleConnector.h"
 
 using namespace std;
 namespace bp = boost::python;
@@ -100,15 +101,16 @@ void ParsedSVG::parseSVGFile(std::string filename) {
 int main(int argc, char** argv) {
   ParsedSVG * ps = new ParsedSVG();
   ps->parseSVGFile("assets/2.svg");
-  VectorElementTree vet;
-  vet.createAndSortTree(ps);
-
+  VectorElementTree * vet = new VectorElementTree;
+  vet->createAndSortTree(ps);
+  SimpleConnector * sc = new SimpleConnector(vet);
+  sc->connect();
   QApplication app(argc, argv);
   View * window = new View();
   window->initWindow();
   window->show();
-  vet.addWindow(window);
-  vet.drawTreeOnCanvas();
+  vet->addWindow(window);
+  vet->drawTreeOnCanvas();
   return app.exec();
 
   delete ps;
