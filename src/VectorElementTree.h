@@ -136,7 +136,7 @@ public:
   std::list< std::list < Point_2 > > graphx_elem;
   // int visited_vertices[];
   PolyLineElementPtr(std::list<Point_2> polyline) : element(polyline) {};
-  PolylinesGraphicsI * graphx;
+  CGAL::Qt::CustomPolylinesGraphicsItem<std::list<std::list<Point_2> > > * graphx;
   void set_graphx() {
     graphx_elem.push_back(element);
     this->graphx = new PolylinesGraphicsI(&graphx_elem);
@@ -302,7 +302,7 @@ private:
   }
 public:
   Tree_ElementPtr element_tree;
-  PolygonElementPtr * playfield;
+  PolyLineElementPtr * playfield;
   View * window;
   VectorElementTree() {
   };
@@ -375,7 +375,9 @@ public:
     cout << "Creating and sorting tree" << endl;
     cout << "Looping" << element_tree.size() << endl;
     Tree_ElementPtr::iterator top = element_tree.begin();
-    playfield = new PolygonElementPtr(Polygon_2());
+    std::list<Point_2> playfield_list;
+    playfield_list.push_back(Point_2(0, 0));
+    playfield = new PolyLineElementPtr(playfield_list);
     playfield->print();
     element_tree.insert(top, playfield); // Parent of all`
     for(VectorElement ve : ps->elements) {
@@ -410,5 +412,6 @@ public:
       this->addLine(elem->exit_point, elem->to->entry_point, &connect_lines);
       elem = elem->to;
     }
+    connect_lines_gi->modelChanged();
   }
 };

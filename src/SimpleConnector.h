@@ -20,7 +20,7 @@ public:
 
 class SimpleConnector : public Connector {
 private:
-  Point_2 find_closest_point_on_element(Point_2 exit_point, ElementPtr * p2, int * entry_point_index) {
+  Point_2 find_closest_point_on_element(Point_2 exit_point, ElementPtr * p2, bool connect) {
     if(p2 == *element_tree->begin()) {return Point_2(0, 0);}
     p2->entry_point_index = 1; // fix...
 
@@ -42,11 +42,13 @@ private:
           distance = temp_dist;
           point2 = *p2_begin;
           // *entry_point_index = std::distance(p2_begin, p2->vertices_begin());
-          entry_point_index = new int(1);
+          //entry_point_index = new int(1);
         }
       }
-      p2->entry_point = point2;
-      p2->exit_point = point2;
+      if(connect) {
+        p2->entry_point = point2;
+        p2->exit_point = point2;
+      }
       return point2;
     }
     else {
@@ -56,13 +58,17 @@ private:
         float distance_begin = CGAL::squared_distance(exit_point, p2_begin);
         float distance_end = CGAL::squared_distance(exit_point, p2_end);
         if(distance_begin > distance_end) {
-          p2->entry_point = p2_end;
-          p2->exit_point = p2_begin;
+          if(connect) {
+            p2->entry_point = p2_end;
+            p2->exit_point = p2_begin;
+          }
           return p2_end;
         }
         else {
-          p2->entry_point = p2_begin;
-          p2->exit_point = p2_end;
+          if(connect) {
+            p2->entry_point = p2_begin;
+            p2->exit_point = p2_end;
+          }
           return p2_begin;
         }
     }
@@ -91,7 +97,7 @@ private:
       // this->addLine(node->poly[0], connect_from->poly[0]);
       this->connect_recursive(this->element_tree->parent(node), node);
       int entry_point_index;
-      Point_2 next_entry = this->find_closest_point_on_element((*connect_from)->exit_point, (*node), &entry_point_index);
+      Point_2 next_entry = this->find_closest_point_on_element((*connect_from)->exit_point, (*node), true);
       (*node)->entry_point = next_entry;
       (*node)->entry_point_index = entry_point_index;
 
@@ -101,9 +107,27 @@ private:
     }
     for(;child_it != child_it.end();++child_it) {
       cout << "child visited?" << endl;
+      Tree_ElementPtr::sibling_iterator fn_it = this->element_tree->child(node, 0);
+      Tree_ElementPtr::sibling_iterator fn_it_end = element_tree->end(fn_it);
+      Point_2 closest_point;
+      float cur_dist = 1000000;
+      Tree_ElementPtr::sibling_iterator next_element = child_it;
+
       if(!(*child_it)->visited) {
         cout << "unvisited child !" << endl;
-        this->connect_recursive(child_it, connect_from);
+        for(; fn_it != fn_it_end; ++fn_it) {
+          cout << "checking for nearest" ;
+          if((*fn_it)->visited) {continue;}
+          closest_point = this->find_closest_point_on_element((*connect_from)->exit_point, (*fn_it), false);
+          cout << "Cur dist " << CGAL::squared_distance((*connect_from)->exit_point, closest_point) << endl;
+          if(CGAL::squared_distance((*connect_from)->exit_point, closest_point) < cur_dist) {
+            cur_dist = CGAL::squared_distance((*connect_from)->exit_point, closest_point);
+            cout << cur_dist << " as " << *next_element << endl;
+            next_element = fn_it;
+          }
+          cout << *next_element << " from " << *connect_from << endl;
+        }
+        this->connect_recursive(next_element, connect_from);
         return 1;
       }
     }
@@ -114,7 +138,7 @@ private:
       (*node)->from = *connect_from;
       int entry_point_index;
       cout << "Connecting " << *connect_from << " to " << *node << endl;
-      Point_2 next_entry = this->find_closest_point_on_element((*connect_from)->entry_point, (*node), &entry_point_index);
+      Point_2 next_entry = this->find_closest_point_on_element((*connect_from)->entry_point, (*node), true);
       // (*node)->entry_point = next_entry;
       // (*node)->entry_point_index = entry_point_index;
 
