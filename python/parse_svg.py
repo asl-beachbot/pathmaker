@@ -163,36 +163,11 @@ class SVGElement():
         container.append(element)
         return container
 
-
-def parse(filename):
-    # return {
-    #     "svg_base": {
-    #         "width": 512,
-    #         "height": 215
-    #     },
-    #     "elements": [
-    #         {
-    #             "closed": True,
-    #             "filled": False,
-    #             "coords": [(1, 2), (3, 5), (7, 1)]
-    #         },
-    #         {
-    #             "closed": True,
-    #             "filled": True,
-    #             "coords": [(1, 2), (3, 5), (7, 1)]
-    #         }
-    #     ]
-    # }
-    try:
-        f = open(filename, 'r')
-    except:
-        print("Illegal Filename")
-        return False
+def parse_string(svg_string):
     poly = list()
     svg_element_list = list()
-    xml = f.read()
-    f.close()
-    soup = BeautifulSoup(xml)
+
+    soup = BeautifulSoup(svg_string)
     base = dict()
     base['width'] = float(soup.svg['width'])
     base['height'] = float(soup.svg['height'])
@@ -244,6 +219,33 @@ def parse(filename):
             "holes" : holes
             })
     return res
+
+def parse_file(filename):
+    # return {
+    #     "svg_base": {
+    #         "width": 512,
+    #         "height": 215
+    #     },
+    #     "elements": [
+    #         {
+    #             "closed": True,
+    #             "filled": False,
+    #             "coords": [(1, 2), (3, 5), (7, 1)]
+    #         },
+    #         {
+    #             "closed": True,
+    #             "filled": True,
+    #             "coords": [(1, 2), (3, 5), (7, 1)]
+    #         }
+    #     ]
+    # }
+    try:
+        f = open(filename, 'r')
+    except:
+        print("Illegal Filename")
+        return False
+    xml = f.read()
+    f.close()
 
 def run():
     if not ns.filename:

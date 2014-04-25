@@ -4,7 +4,7 @@
 #pragma once
 
 #include "SVGParserAdapter.h"
-#include "CustomPolylinesGraphicsItem.h"
+// #include "CustomPolylinesGraphicsItem.h"
 #include "tree.h"
 #include <iterator>
 #include <QColor>
@@ -303,7 +303,7 @@ private:
 public:
   Tree_ElementPtr element_tree;
   PolyLineElementPtr * playfield;
-  View * window;
+  //View * window;
   VectorElementTree() {
   };
   void print_tree() {
@@ -318,9 +318,9 @@ public:
       ++sib2;
     }
   }
-  void addWindow(View * window) {
-    this->window = window;
-  }
+  // void addWindow(View * window) {
+  //   this->window = window;
+  // }
   void drawTreeOnCanvas() {
     Tree_ElementPtr::iterator it = element_tree.begin();
     Tree_ElementPtr::iterator it_end = element_tree.end();
@@ -331,30 +331,30 @@ public:
       switch((*it)->get_type()){
         case EL_FILLED_POLYGON:
           static_cast<FilledPolygonElementPtr * >(*it)->set_graphx();
-          window->addItem(static_cast<FilledPolygonElementPtr * >(*it)->graphx);
-          if(static_cast<FilledPolygonElementPtr * >(*it)->element.outer_boundary().size() > 0) {
-            window->addText(text,
-              static_cast<FilledPolygonElementPtr * >(*it)->getFromIndex(0).x(),
-              static_cast<FilledPolygonElementPtr * >(*it)->getFromIndex(0).y());
-          }
+          // window->addItem(static_cast<FilledPolygonElementPtr * >(*it)->graphx);
+          // if(static_cast<FilledPolygonElementPtr * >(*it)->element.outer_boundary().size() > 0) {
+          //   window->addText(text,
+          //     static_cast<FilledPolygonElementPtr * >(*it)->getFromIndex(0).x(),
+          //     static_cast<FilledPolygonElementPtr * >(*it)->getFromIndex(0).y());
+          // }
           break;
         case EL_POLYGON:
           static_cast<PolygonElementPtr * >(*it)->set_graphx();
-          window->addItem(static_cast<PolygonElementPtr * >(*it)->graphx);
-          if(static_cast<PolygonElementPtr * >(*it)->element.size() > 0) {
-            window->addText(text,
-              static_cast<PolygonElementPtr * >(*it)->getFromIndex(0).x(),
-              static_cast<PolygonElementPtr * >(*it)->getFromIndex(0).y());
-          }
+          // window->addItem(static_cast<PolygonElementPtr * >(*it)->graphx);
+          // if(static_cast<PolygonElementPtr * >(*it)->element.size() > 0) {
+          //   window->addText(text,
+          //     static_cast<PolygonElementPtr * >(*it)->getFromIndex(0).x(),
+          //     static_cast<PolygonElementPtr * >(*it)->getFromIndex(0).y());
+          // }
           break;
         case EL_POLYLINE:
           static_cast<PolyLineElementPtr * >(*it)->set_graphx();
-          window->addItem(static_cast<PolyLineElementPtr * >(*it)->graphx);
-          if(static_cast<PolyLineElementPtr * >(*it)->element.size() > 0) {
-            window->addText(text,
-              static_cast<PolyLineElementPtr * >(*it)->getFromIndex(0).x(),
-              static_cast<PolyLineElementPtr * >(*it)->getFromIndex(0).y());
-          }
+          // window->addItem(static_cast<PolyLineElementPtr * >(*it)->graphx);
+          // if(static_cast<PolyLineElementPtr * >(*it)->element.size() > 0) {
+          //   window->addText(text,
+          //     static_cast<PolyLineElementPtr * >(*it)->getFromIndex(0).x(),
+          //     static_cast<PolyLineElementPtr * >(*it)->getFromIndex(0).y());
+          // }
 
           break;
       }
@@ -396,7 +396,7 @@ public:
   void drawConnections() {
     connect_lines_gi = new PolylinesGraphicsI(&connect_lines);
     connect_lines_gi->setEdgesPen(QPen(QColor(255,0,0), 2));
-    window->addItem(connect_lines_gi);
+    // window->addItem(connect_lines_gi);
     connect_lines_gi->show();
     Tree_ElementPtr::iterator it = ++element_tree.begin();
     Tree_ElementPtr::iterator it_end = element_tree.end();
@@ -409,9 +409,9 @@ public:
     ElementPtr * elem = (*it);
     while(elem->to != NULL) {
       cout << elem->exit_point.x() << " " << elem->exit_point.y() << " -> " << elem->to->entry_point.x() << " " << elem->to->entry_point.y() << endl;
-      this->addLine(elem->exit_point, elem->to->entry_point, &connect_lines);
+      // this->addLine(elem->exit_point, elem->to->entry_point, &connect_lines);
       elem = elem->to;
     }
-    connect_lines_gi->modelChanged();
+    // connect_lines_gi->modelChanged();
   }
 };

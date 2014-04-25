@@ -126,6 +126,16 @@ target_link_libraries(pathfinder ${CGAL_LIBRARIES} ${CGAL_3RD_PARTY_LIBRARIES})
 # cotire(pathfinder) #cant cotire because of python vs qt bug!
 cotire(svg_parser)
 
+## Adding Python Lib
+add_library(beachbot_pathgen SHARED 
+    src/PythonBindings.cpp
+    src/SVGParserAdapter.h
+    src/SVGParserAdapter.cpp
+) # src/SVGParserAdapter.h
+set_target_properties(beachbot_pathgen PROPERTIES PREFIX "")
+target_link_libraries(beachbot_pathgen ${Boost_LIBRARIES} ${PYTHON_LIBRARIES} ${QT_LIBRARIES})
+
+
 message("THANK YOU FOR CHOOSING PATHMAKER: ") 
 message("  CGAL: ${CGAL_USE_FILE}") 
 message("  BOOST: ${CGAL_USE_FILE}") 

@@ -5,59 +5,15 @@
 
 #include "CGAL_Headers.h"
 
-#include <QObject>
-#include <QMainWindow>
-#include <QtGui>
-#include <CGAL/Qt/GraphicsViewNavigation.h>
-#include <ui/ui_pathfinder.h>
+// #include <QObject>
+// #include <QMainWindow>
+// #include <QtGui>
+// #include <CGAL/Qt/GraphicsViewNavigation.h>
+// #include <ui/ui_pathfinder.h>
+#include <boost/python.hpp>
 
 using namespace std;
-
-class View : public QMainWindow {
-public:
-  View(QWidget* parent = 0);
-  void addItem(QGraphicsItem* item);
-  int initWindow();
-  void addText(char * txt, int x, int y) {
-    // text = scene.addText("test", QFont("Arial", 10));
-    printf("text: %s, %d, %d", txt, x, y);
-    QGraphicsTextItem * text = scene.addText(QString(txt), QFont("Arial", 10));
-    text->setPos(x, y);
-    text->show();
-    this->textItems.push_back(text);
-  }
-private:
-  QGraphicsTextItem * text;
-  std::list< QGraphicsTextItem * > textItems;
-  Ui::MainWindow ui;
-  QGraphicsScene scene;
-  CGAL::Qt::GraphicsViewNavigation* navigation;
-};
-
-int View::initWindow() {
-  setWindowTitle("Quick View Window");
-  QApplication::setGraphicsSystem("opengl");
-  ui.setupUi(this);
-  this->show();
-
-  navigation = new CGAL::Qt::GraphicsViewNavigation();
-  ui.view->installEventFilter(navigation);
-  ui.view->viewport()->installEventFilter(navigation);
-  ui.view->setRenderHint(QPainter::Antialiasing);
-  ui.view->setAcceptDrops(false);
-
-  scene.setItemIndexMethod(QGraphicsScene::NoIndex);
-
-  ui.view->setScene(&scene);
-  ui.view->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOn);
-  ui.view->show();
-}
-void View::addItem(QGraphicsItem* item) {
-  scene.addItem(item);
-  ui.view->show();
-}
-View::View(QWidget* parent) : QMainWindow(parent){
-}
+namespace bp = boost::python;
 
 class VectorElement {
 public:
@@ -69,10 +25,19 @@ public:
 };
 
 class ParsedSVG {
+private:
+  void extractPython(bp::dict result);
 public:
   float width, height;
   list<VectorElement> elements;
   void repr();
+  void test() {
+    cout << "asasd" << endl;
+  }
+  ParsedSVG() {
+
+  };
   void parseSVGFile(string filename);
+  void parseSVGString(string svg_xml_string);
 };
 
