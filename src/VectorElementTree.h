@@ -34,7 +34,7 @@ public:
   ElementPtr * to;
   ElementPtr * from;
 
-  ElementPtr() :  visited(false) {};
+  ElementPtr() :  visited(false), to(NULL), from(NULL) {};
   ~ElementPtr() {cout << "delete called" << endl;};
   virtual Point_2 getFromIndex(int i) {};
   virtual void set_graphx() {};
@@ -387,18 +387,27 @@ public:
     }
     this->print_tree();
   };
+
+  PolylinesGraphicsI * connect_lines_gi;
+  std::list<std::list<Point_2> > connect_lines;
+
   void drawConnections() {
-    Tree_ElementPtr::iterator it = element_tree.begin();
+    connect_lines_gi = new PolylinesGraphicsI(&connect_lines);
+    connect_lines_gi->setEdgesPen(QPen(QColor(255,0,0), 2));
+    window->addItem(connect_lines_gi);
+    connect_lines_gi->show();
+    Tree_ElementPtr::iterator it = ++element_tree.begin();
     Tree_ElementPtr::iterator it_end = element_tree.end();
 
     for(; it != it_end; ++it) {
-      if((*it)->connect_from == NULL) {
+      if((*it)->from == NULL) {
         break; // it = start iterator
       }
     }
     ElementPtr * elem = (*it);
     while(elem->to != NULL) {
-
+      cout << elem->exit_point.x() << " " << elem->exit_point.y() << " -> " << elem->to->entry_point.x() << " " << elem->to->entry_point.y() << endl;
+      this->addLine(elem->exit_point, elem->to->entry_point, &connect_lines);
       elem = elem->to;
     }
   }

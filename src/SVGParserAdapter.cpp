@@ -101,7 +101,7 @@ void ParsedSVG::parseSVGFile(std::string filename) {
 int main(int argc, char** argv) {
   ParsedSVG * ps = new ParsedSVG();
   ps->parseSVGFile("assets/2.svg");
-  VectorElementTree * vet = new VectorElementTree;
+  VectorElementTree * vet = new VectorElementTree();
   vet->createAndSortTree(ps);
   SimpleConnector * sc = new SimpleConnector(vet);
   sc->connect();

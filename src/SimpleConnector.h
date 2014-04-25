@@ -22,6 +22,8 @@ class SimpleConnector : public Connector {
 private:
   Point_2 find_closest_point_on_element(Point_2 exit_point, ElementPtr * p2, int * entry_point_index) {
     if(p2 == *element_tree->begin()) {return Point_2(0, 0);}
+    p2->entry_point_index = 1; // fix...
+
     if(p2->get_type() != EL_POLYLINE) {
       float distance, temp_dist;
       Polygon_2::Vertex_const_iterator p2_begin, p2_end;
@@ -43,6 +45,8 @@ private:
           entry_point_index = new int(1);
         }
       }
+      p2->entry_point = point2;
+      p2->exit_point = point2;
       return point2;
     }
     else {
@@ -52,9 +56,13 @@ private:
         float distance_begin = CGAL::squared_distance(exit_point, p2_begin);
         float distance_end = CGAL::squared_distance(exit_point, p2_end);
         if(distance_begin > distance_end) {
+          p2->entry_point = p2_end;
+          p2->exit_point = p2_begin;
           return p2_end;
         }
         else {
+          p2->entry_point = p2_begin;
+          p2->exit_point = p2_end;
           return p2_begin;
         }
     }
@@ -83,7 +91,7 @@ private:
       // this->addLine(node->poly[0], connect_from->poly[0]);
       this->connect_recursive(this->element_tree->parent(node), node);
       int entry_point_index;
-      Point_2 next_entry = this->find_closest_point_on_element((*connect_from)->entry_point, (*node), &entry_point_index);
+      Point_2 next_entry = this->find_closest_point_on_element((*connect_from)->exit_point, (*node), &entry_point_index);
       (*node)->entry_point = next_entry;
       (*node)->entry_point_index = entry_point_index;
 
@@ -107,8 +115,8 @@ private:
       int entry_point_index;
       cout << "Connecting " << *connect_from << " to " << *node << endl;
       Point_2 next_entry = this->find_closest_point_on_element((*connect_from)->entry_point, (*node), &entry_point_index);
-      (*node)->entry_point = next_entry;
-      (*node)->entry_point_index = entry_point_index;
+      // (*node)->entry_point = next_entry;
+      // (*node)->entry_point_index = entry_point_index;
 
       //Line_2 line = Line_2(connect_from->entry_point, next_entry);
       // this->checkPolyIntersection(line);
@@ -122,12 +130,16 @@ private:
       switch((*node)->get_type()) {
         case EL_POLYGON:
           (*node)->entry_point = static_cast<PolygonElementPtr *>(*node)->element[0];
+          (*node)->exit_point = (*node)->entry_point;
           break;
         case EL_FILLED_POLYGON:
           (*node)->entry_point = static_cast<FilledPolygonElementPtr *>(*node)->element.outer_boundary()[0];
+          (*node)->exit_point = (*node)->entry_point;
           break;
         case EL_POLYLINE:
           (*node)->entry_point = static_cast<PolyLineElementPtr *>(*node)->element.front();
+          (*node)->exit_point = static_cast<PolyLineElementPtr *>(*node)->element.back();
+
           break;
       }
       (*node)->entry_point_index = 0;
@@ -137,6 +149,7 @@ private:
     // TODO check if this is correct (leave out first "playfield"!)
     if(node == this->element_tree->begin()) {
       (*node)->to = NULL;
+      (*node)->from = NULL;
       return 1;
     } else {
       return this->connect_recursive(this->element_tree->parent(node), node);

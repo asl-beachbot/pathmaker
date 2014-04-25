@@ -35,10 +35,6 @@ typedef K::Line_2                     Line_2;
 typedef CGAL::Polygon_2<K>            Polygon_2;
 typedef CGAL::Polygon_with_holes_2<K> Polygon_with_holes_2;
 
-typedef CGAL::Qt::PolygonWithHolesGraphicsItem<Polygon_with_holes_2> PolygonWithHolesGraphicsI;
-typedef CGAL::Qt::PolygonGraphicsItem<Polygon_2> PolygonGraphicsI;
-typedef CGAL::Qt::CustomPolylinesGraphicsItem<std::list<std::list<Point_2> > > PolylinesGraphicsI;
-
 typedef boost::shared_ptr<Polygon_2>  PolygonPtr;
 typedef std::vector<PolygonPtr>       PolygonPtrVector ;
 typedef std::vector<PolygonPtrVector> PolygonPtrVectorVector;
@@ -50,6 +46,8 @@ typedef boost::shared_ptr<Polygon_with_holes_2>   PolygonWithHolesPtr;
 typedef std::vector<PolygonWithHolesPtr>          PolygonWithHolesPtrVector;
 typedef std::vector<PolygonWithHolesPtrVector>    PolygonWithHolesPtrVectorVector;
 
+typedef CGAL::Qt::PolygonWithHolesGraphicsItem<Polygon_with_holes_2> PolygonWithHolesGraphicsI;
+typedef CGAL::Qt::PolygonGraphicsItem<Polygon_2> PolygonGraphicsI;
 typedef CGAL::Qt::CustomPolylinesGraphicsItem<std::list<std::list<Point_2> > > PolylinesGraphicsI;
 
 typedef CGAL::Aff_transformation_2<K> Transformation;
