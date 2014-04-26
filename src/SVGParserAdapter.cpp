@@ -14,7 +14,6 @@
 using namespace std;
 namespace bp = boost::python;
 
-
 void VectorElement::repr() {
   cout << "Closed: " << closed << endl <<
           "Filled: " << filled << endl <<
@@ -123,24 +122,29 @@ void ParsedSVG::parseSVGString(std::string svg_xml_string) {
 
 }
 
-// int main(int argc, char** argv) {
-//   ParsedSVG * ps = new ParsedSVG();
-//   ps->parseSVGFile("assets/2.svg");
-//   VectorElementTree * vet = new VectorElementTree();
-//   vet->createAndSortTree(ps);
-//   SimpleConnector * sc = new SimpleConnector(vet);
-//   sc->connect();
-//   QApplication app(argc, argv);
-//   if(argc > 1) {
-//     View * window = new View();
-//     window->initWindow();
-//     window->show();
-//     vet->addWindow(window);
-//     vet->drawTreeOnCanvas();
-//     vet->drawConnections();
-//     return app.exec();
-//   }
+#ifdef STANDALONE
+int main(int argc, char** argv) {
+  ParsedSVG * ps = new ParsedSVG();
+  ps->parseSVGFile("assets/2.svg");
+  VectorElementTree * vet = new VectorElementTree();
+  vet->createAndSortTree(ps);
+  SimpleConnector * sc = new SimpleConnector(vet);
+  sc->connect();
+#ifdef WITH_GUI
+  QApplication app(argc, argv);
 
-//   delete ps;
-//   return 0;
-// }
+  if(argc > 1) {
+    View * window = new View();
+    window->initWindow();
+    window->show();
+    vet->addWindow(window);
+    vet->drawTreeOnCanvas();
+    vet->drawConnections();
+    return app.exec();
+  }
+#endif
+
+  delete ps;
+  return 0;
+}
+#endif

@@ -4,12 +4,15 @@
 #pragma once
 
 #include "SVGParserAdapter.h"
-// #include "CustomPolylinesGraphicsItem.h"
 #include "tree.h"
 #include <iterator>
+
+#include "CGAL_Headers.h"
+
+#ifdef WITH_GUI
 #include <QColor>
 #include <QPen>
-#include "CGAL_Headers.h"
+#endif
 
 enum ElementType {
   EL_POLYGON,
@@ -20,11 +23,13 @@ enum ElementType {
 class ElementPtr {
 public:
   bool visited;
+  #ifdef WITH_GUI
   QPen pen;
   void setColorFromDepth(int depth) {
     QColor pen_color(depth * 40, 100, 0);
     pen = QPen(pen_color, 0);
   }
+  #endif
 
   Point_2 entry_point;
   Point_2 exit_point;
@@ -56,16 +61,17 @@ public:
     this->element = poly;
     this->visited = false;
   };
+  #ifdef WITH_GUI
   PolygonGraphicsI * graphx;
   void set_graphx() {
     this->graphx = new PolygonGraphicsI(&element);
     this->graphx->setEdgesPen(pen);
     return;
   }
+  #endif
   Point_2 getFromIndex(int i) {
     return element[i];
   }
-
   ElementType get_type() { return EL_POLYGON; }
   void print() {
     std::cout << "Polygon " << element << std::endl;
@@ -77,10 +83,9 @@ public:
 
 class FilledPolygonElementPtr : public ElementPtr {
 public:
-  Polygon_with_holes_2 element;
 
   // int visited_vertices[];
-  PolygonWithHolesGraphicsI * graphx;
+  Polygon_with_holes_2 element;
 
   FilledPolygonElementPtr(Polygon_with_holes_2 poly) : element(poly) {
     // convex_hull = 
@@ -96,12 +101,14 @@ public:
     // )
 
   };
-
+  #ifdef WITH_GUI
+  PolygonWithHolesGraphicsI * graphx;
   void set_graphx() {
     this->graphx = new PolygonWithHolesGraphicsI(&element);
     this->graphx->setEdgesPen(pen);
     return;
   }
+  #endif
   ElementType get_type() { return EL_FILLED_POLYGON; };
   Point_2 getFromIndex(int i) {
     return element.outer_boundary()[i];
@@ -136,6 +143,7 @@ public:
   std::list< std::list < Point_2 > > graphx_elem;
   // int visited_vertices[];
   PolyLineElementPtr(std::list<Point_2> polyline) : element(polyline) {};
+  #ifdef WITH_GUI
   CGAL::Qt::CustomPolylinesGraphicsItem<std::list<std::list<Point_2> > > * graphx;
   void set_graphx() {
     graphx_elem.push_back(element);
@@ -143,7 +151,7 @@ public:
     this->graphx->setEdgesPen(pen);
     return;
   }
-
+  #endif
   // Start and endpoints:
   // What if it is a spiral ? Start in the middle
   // would be preferred!
@@ -303,7 +311,6 @@ private:
 public:
   Tree_ElementPtr element_tree;
   PolyLineElementPtr * playfield;
-  //View * window;
   VectorElementTree() {
   };
   void print_tree() {
@@ -318,9 +325,13 @@ public:
       ++sib2;
     }
   }
-  // void addWindow(View * window) {
-  //   this->window = window;
-  // }
+
+#ifdef WITH_GUI
+  View * window;
+
+  void addWindow(View * window) {
+    this->window = window;
+  }
   void drawTreeOnCanvas() {
     Tree_ElementPtr::iterator it = element_tree.begin();
     Tree_ElementPtr::iterator it_end = element_tree.end();
@@ -331,30 +342,30 @@ public:
       switch((*it)->get_type()){
         case EL_FILLED_POLYGON:
           static_cast<FilledPolygonElementPtr * >(*it)->set_graphx();
-          // window->addItem(static_cast<FilledPolygonElementPtr * >(*it)->graphx);
-          // if(static_cast<FilledPolygonElementPtr * >(*it)->element.outer_boundary().size() > 0) {
-          //   window->addText(text,
-          //     static_cast<FilledPolygonElementPtr * >(*it)->getFromIndex(0).x(),
-          //     static_cast<FilledPolygonElementPtr * >(*it)->getFromIndex(0).y());
-          // }
+          window->addItem(static_cast<FilledPolygonElementPtr * >(*it)->graphx);
+          if(static_cast<FilledPolygonElementPtr * >(*it)->element.outer_boundary().size() > 0) {
+            window->addText(text,
+              static_cast<FilledPolygonElementPtr * >(*it)->getFromIndex(0).x(),
+              static_cast<FilledPolygonElementPtr * >(*it)->getFromIndex(0).y());
+          }
           break;
         case EL_POLYGON:
           static_cast<PolygonElementPtr * >(*it)->set_graphx();
-          // window->addItem(static_cast<PolygonElementPtr * >(*it)->graphx);
-          // if(static_cast<PolygonElementPtr * >(*it)->element.size() > 0) {
-          //   window->addText(text,
-          //     static_cast<PolygonElementPtr * >(*it)->getFromIndex(0).x(),
-          //     static_cast<PolygonElementPtr * >(*it)->getFromIndex(0).y());
-          // }
+          window->addItem(static_cast<PolygonElementPtr * >(*it)->graphx);
+          if(static_cast<PolygonElementPtr * >(*it)->element.size() > 0) {
+            window->addText(text,
+              static_cast<PolygonElementPtr * >(*it)->getFromIndex(0).x(),
+              static_cast<PolygonElementPtr * >(*it)->getFromIndex(0).y());
+          }
           break;
         case EL_POLYLINE:
           static_cast<PolyLineElementPtr * >(*it)->set_graphx();
-          // window->addItem(static_cast<PolyLineElementPtr * >(*it)->graphx);
-          // if(static_cast<PolyLineElementPtr * >(*it)->element.size() > 0) {
-          //   window->addText(text,
-          //     static_cast<PolyLineElementPtr * >(*it)->getFromIndex(0).x(),
-          //     static_cast<PolyLineElementPtr * >(*it)->getFromIndex(0).y());
-          // }
+          window->addItem(static_cast<PolyLineElementPtr * >(*it)->graphx);
+          if(static_cast<PolyLineElementPtr * >(*it)->element.size() > 0) {
+            window->addText(text,
+              static_cast<PolyLineElementPtr * >(*it)->getFromIndex(0).x(),
+              static_cast<PolyLineElementPtr * >(*it)->getFromIndex(0).y());
+          }
 
           break;
       }
@@ -367,7 +378,31 @@ public:
     lines_list->push_back(list);
     return 0; // TODO Change return stuff
   }
+  PolylinesGraphicsI * connect_lines_gi;
+  std::list<std::list<Point_2> > connect_lines;
 
+  void drawConnections() {
+    connect_lines_gi = new PolylinesGraphicsI(&connect_lines);
+    connect_lines_gi->setEdgesPen(QPen(QColor(255,0,0), 2));
+    window->addItem(connect_lines_gi);
+    connect_lines_gi->show();
+    Tree_ElementPtr::iterator it = ++element_tree.begin();
+    Tree_ElementPtr::iterator it_end = element_tree.end();
+
+    for(; it != it_end; ++it) {
+      if((*it)->from == NULL) {
+        break; // it = start iterator
+      }
+    }
+    ElementPtr * elem = (*it);
+    while(elem->to != NULL) {
+      cout << elem->exit_point.x() << " " << elem->exit_point.y() << " -> " << elem->to->entry_point.x() << " " << elem->to->entry_point.y() << endl;
+      this->addLine(elem->exit_point, elem->to->entry_point, &connect_lines);
+      elem = elem->to;
+    }
+    connect_lines_gi->modelChanged();
+  }
+#endif
   void createAndSortTree(ParsedSVG * ps) {
     // Here we have the list of all SVG elements
     // There is no CGAL representation of Polylines
@@ -390,28 +425,4 @@ public:
     this->print_tree();
   };
 
-  PolylinesGraphicsI * connect_lines_gi;
-  std::list<std::list<Point_2> > connect_lines;
-
-  void drawConnections() {
-    connect_lines_gi = new PolylinesGraphicsI(&connect_lines);
-    connect_lines_gi->setEdgesPen(QPen(QColor(255,0,0), 2));
-    // window->addItem(connect_lines_gi);
-    connect_lines_gi->show();
-    Tree_ElementPtr::iterator it = ++element_tree.begin();
-    Tree_ElementPtr::iterator it_end = element_tree.end();
-
-    for(; it != it_end; ++it) {
-      if((*it)->from == NULL) {
-        break; // it = start iterator
-      }
-    }
-    ElementPtr * elem = (*it);
-    while(elem->to != NULL) {
-      cout << elem->exit_point.x() << " " << elem->exit_point.y() << " -> " << elem->to->entry_point.x() << " " << elem->to->entry_point.y() << endl;
-      // this->addLine(elem->exit_point, elem->to->entry_point, &connect_lines);
-      elem = elem->to;
-    }
-    // connect_lines_gi->modelChanged();
-  }
 };
