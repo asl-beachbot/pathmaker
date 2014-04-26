@@ -96,7 +96,7 @@ void ParsedSVG::parseSVGFile(std::string filename) {
   }
 }
 
-
+#ifdef STANDALONE
 int main(int argc, char** argv) {
   ParsedSVG * ps = new ParsedSVG();
   ps->parseSVGFile("assets/2.svg");
@@ -121,3 +121,4 @@ int main(int argc, char** argv) {
   delete ps;
   return 0;
 }
+#endif
