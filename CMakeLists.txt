@@ -5,6 +5,8 @@ project(pathfinder)
 set (pathfinder_VERSION_MAJOR 1)
 set (pathfinder_VERSION_MINOR 0)
 
+# add_definitions(-DWITH_GUI)
+
 set(PROJECT_BINARY_DIR ./bin)
 set(PROJECT_SRC_DIR ./src)
 

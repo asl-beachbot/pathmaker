@@ -5,13 +5,15 @@
 
 #include "CGAL_Headers.h"
 
+using namespace std;
+
+#ifdef WITH_GUI
 #include <QObject>
 #include <QMainWindow>
 #include <QtGui>
 #include <CGAL/Qt/GraphicsViewNavigation.h>
 #include <ui/ui_pathfinder.h>
 
-using namespace std;
 
 class View : public QMainWindow {
 public:
@@ -58,6 +60,7 @@ void View::addItem(QGraphicsItem* item) {
 }
 View::View(QWidget* parent) : QMainWindow(parent){
 }
+#endif
 
 class VectorElement {
 public:

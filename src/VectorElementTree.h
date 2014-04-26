@@ -7,9 +7,13 @@
 #include "CustomPolylinesGraphicsItem.h"
 #include "tree.h"
 #include <iterator>
+
+#include "CGAL_Headers.h"
+
+#ifdef WITH_GUI
 #include <QColor>
 #include <QPen>
-#include "CGAL_Headers.h"
+#endif
 
 enum ElementType {
   EL_POLYGON,
@@ -20,11 +24,13 @@ enum ElementType {
 class ElementPtr {
 public:
   bool visited;
+  #ifdef WITH_GUI
   QPen pen;
   void setColorFromDepth(int depth) {
     QColor pen_color(depth * 40, 100, 0);
     pen = QPen(pen_color, 0);
   }
+  #endif
 
   Point_2 entry_point;
   Point_2 exit_point;
@@ -56,16 +62,17 @@ public:
     this->element = poly;
     this->visited = false;
   };
+  #ifdef WITH_GUI
   PolygonGraphicsI * graphx;
   void set_graphx() {
     this->graphx = new PolygonGraphicsI(&element);
     this->graphx->setEdgesPen(pen);
     return;
   }
+  #endif
   Point_2 getFromIndex(int i) {
     return element[i];
   }
-
   ElementType get_type() { return EL_POLYGON; }
   void print() {
     std::cout << "Polygon " << element << std::endl;
@@ -77,10 +84,9 @@ public:
 
 class FilledPolygonElementPtr : public ElementPtr {
 public:
-  Polygon_with_holes_2 element;
 
   // int visited_vertices[];
-  PolygonWithHolesGraphicsI * graphx;
+  Polygon_with_holes_2 element;
 
   FilledPolygonElementPtr(Polygon_with_holes_2 poly) : element(poly) {
     // convex_hull = 
@@ -96,12 +102,14 @@ public:
     // )
 
   };
-
+  #ifdef WITH_GUI
+  PolygonWithHolesGraphicsI * graphx;
   void set_graphx() {
     this->graphx = new PolygonWithHolesGraphicsI(&element);
     this->graphx->setEdgesPen(pen);
     return;
   }
+  #endif
   ElementType get_type() { return EL_FILLED_POLYGON; };
   Point_2 getFromIndex(int i) {
     return element.outer_boundary()[i];
@@ -136,6 +144,7 @@ public:
   std::list< std::list < Point_2 > > graphx_elem;
   // int visited_vertices[];
   PolyLineElementPtr(std::list<Point_2> polyline) : element(polyline) {};
+  #ifdef WITH_GUI
   CGAL::Qt::CustomPolylinesGraphicsItem<std::list<std::list<Point_2> > > * graphx;
   void set_graphx() {
     graphx_elem.push_back(element);
@@ -143,7 +152,7 @@ public:
     this->graphx->setEdgesPen(pen);
     return;
   }
-
+  #endif
   // Start and endpoints:
   // What if it is a spiral ? Start in the middle
   // would be preferred!
@@ -303,7 +312,6 @@ private:
 public:
   Tree_ElementPtr element_tree;
   PolyLineElementPtr * playfield;
-  View * window;
   VectorElementTree() {
   };
   void print_tree() {
@@ -318,6 +326,9 @@ public:
       ++sib2;
     }
   }
+#ifdef WITH_GUI
+  View * window;
+
   void addWindow(View * window) {
     this->window = window;
   }
@@ -367,29 +378,6 @@ public:
     lines_list->push_back(list);
     return 0; // TODO Change return stuff
   }
-
-  void createAndSortTree(ParsedSVG * ps) {
-    // Here we have the list of all SVG elements
-    // There is no CGAL representation of Polylines
-    // Polylines are std::list<Point_2>
-    cout << "Creating and sorting tree" << endl;
-    cout << "Looping" << element_tree.size() << endl;
-    Tree_ElementPtr::iterator top = element_tree.begin();
-    std::list<Point_2> playfield_list;
-    playfield_list.push_back(Point_2(0, 0));
-    playfield = new PolyLineElementPtr(playfield_list);
-    playfield->print();
-    element_tree.insert(top, playfield); // Parent of all`
-    for(VectorElement ve : ps->elements) {
-      ElementPtr * elem_ptr = this->getElementRepresentation(&ve);
-      // find parent tree iter if possible
-      elem_ptr->print();
-      findSpot(elem_ptr);
-      cout << "Looping" << element_tree.size() << endl;
-    }
-    this->print_tree();
-  };
-
   PolylinesGraphicsI * connect_lines_gi;
   std::list<std::list<Point_2> > connect_lines;
 
@@ -414,4 +402,27 @@ public:
     }
     connect_lines_gi->modelChanged();
   }
+#endif
+  void createAndSortTree(ParsedSVG * ps) {
+    // Here we have the list of all SVG elements
+    // There is no CGAL representation of Polylines
+    // Polylines are std::list<Point_2>
+    cout << "Creating and sorting tree" << endl;
+    cout << "Looping" << element_tree.size() << endl;
+    Tree_ElementPtr::iterator top = element_tree.begin();
+    std::list<Point_2> playfield_list;
+    playfield_list.push_back(Point_2(0, 0));
+    playfield = new PolyLineElementPtr(playfield_list);
+    playfield->print();
+    element_tree.insert(top, playfield); // Parent of all`
+    for(VectorElement ve : ps->elements) {
+      ElementPtr * elem_ptr = this->getElementRepresentation(&ve);
+      // find parent tree iter if possible
+      elem_ptr->print();
+      findSpot(elem_ptr);
+      cout << "Looping" << element_tree.size() << endl;
+    }
+    this->print_tree();
+  };
+
 };

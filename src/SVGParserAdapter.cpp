@@ -14,7 +14,6 @@
 using namespace std;
 namespace bp = boost::python;
 
-
 void VectorElement::repr() {
   cout << "Closed: " << closed << endl <<
           "Filled: " << filled << endl <<
@@ -105,7 +104,9 @@ int main(int argc, char** argv) {
   vet->createAndSortTree(ps);
   SimpleConnector * sc = new SimpleConnector(vet);
   sc->connect();
+#ifdef WITH_GUI
   QApplication app(argc, argv);
+
   if(argc > 1) {
     View * window = new View();
     window->initWindow();
@@ -115,6 +116,7 @@ int main(int argc, char** argv) {
     vet->drawConnections();
     return app.exec();
   }
+#endif
 
   delete ps;
   return 0;
