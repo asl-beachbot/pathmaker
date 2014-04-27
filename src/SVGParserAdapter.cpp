@@ -128,11 +128,12 @@ int main(int argc, char** argv) {
   ps->parseSVGFile("assets/2.svg");
   VectorElementTree * vet = new VectorElementTree();
   vet->createAndSortTree(ps);
+  vet->fillPolys();
   SimpleConnector * sc = new SimpleConnector(vet);
   sc->connect();
 #ifdef WITH_GUI
   QApplication app(argc, argv);
-
+ 
   if(argc > 1) {
     View * window = new View();
     window->initWindow();

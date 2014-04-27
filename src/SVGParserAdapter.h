@@ -81,9 +81,6 @@ public:
   float width, height;
   list<VectorElement> elements;
   void repr();
-  void test() {
-    cout << "asasd" << endl;
-  }
   ParsedSVG() {
 
   };

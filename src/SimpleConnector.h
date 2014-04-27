@@ -13,9 +13,6 @@ protected:
   Tree_ElementPtr * element_tree;
 public:
 	virtual void connect () = 0;
-  // Connector(VectorElementTree * tree) : tree(tree) {
-
-  // }
 };
 
 class SimpleConnector : public Connector {

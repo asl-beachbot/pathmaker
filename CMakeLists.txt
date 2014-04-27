@@ -112,11 +112,15 @@ add_executable(pathfinder
 add_executable(svg_parser
     src/SVGParserAdapter.cpp
     src/VectorElementTree.h 
+    src/VectorTreeElements.h 
     src/include/CGAL_Headers.h
-    src/include/tree.h)
+    src/include/tree.h
+    src/FillProcedures.h)
 
 
 target_link_libraries(svg_parser  ${Boost_LIBRARIES} ${PYTHON_LIBRARIES} ${QT_LIBRARIES})
+set_target_properties(svg_parser PROPERTIES COMPILE_DEFINITIONS WITH_GUI,STANDALONE)
+
 # add_executable(bin/python_test src/python_wrapper)
 # target_link_libraries(bin/python_test ${Boost_LIBRARIES} ${PYTHON_LIBRARIES})
 
@@ -125,7 +129,7 @@ target_link_libraries(svg_parser  ${Boost_LIBRARIES} ${PYTHON_LIBRARIES} ${QT_LI
 target_link_libraries(pathfinder ${Boost_LIBRARIES} ${PYTHON_LIBRARIES})
 target_link_libraries(pathfinder ${QT_LIBRARIES})
 target_link_libraries(pathfinder ${CGAL_LIBRARIES} ${CGAL_3RD_PARTY_LIBRARIES})
-
+set_target_properties(pathfinder PROPERTIES COMPILE_DEFINITIONS WITH_GUI,STANDALONE)
 # cotire(pathfinder) #cant cotire because of python vs qt bug!
 cotire(svg_parser)
 
@@ -134,7 +138,7 @@ add_library(beachbot_pathgen SHARED
     src/PythonBindings.cpp
     src/SVGParserAdapter.h
     src/SVGParserAdapter.cpp
-) # src/SVGParserAdapter.h
+) 
 set_target_properties(beachbot_pathgen PROPERTIES PREFIX "")
 target_link_libraries(beachbot_pathgen ${Boost_LIBRARIES} ${PYTHON_LIBRARIES} ${QT_LIBRARIES})
 
