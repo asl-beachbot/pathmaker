@@ -7,7 +7,6 @@
 
 typedef std::list<ElementPtr * > ElemList;
 
-
 // class FillProcedure {
 // public:
 //   ElemList result;
@@ -26,9 +25,10 @@ public:
 	void run() {
     float lOffset = line_distance;
     int count = 0;
-    while(count < 3) {
-      PolygonWithHolesPtrVector offset_poly_wh =
+    PolygonWithHolesPtrVector offset_poly_wh =
         CGAL::create_interior_skeleton_and_offset_polygons_with_holes_2(lOffset, *poly);
+
+    while(offset_poly_wh.size() > 0) {
       cout << "adding poly" << count << " l o " << lOffset << *offset_poly_wh[0]<<  endl;
       count++;
       // no more polys
@@ -39,6 +39,8 @@ public:
         result.push_back(poly_element);
       }
       lOffset = lOffset + line_distance;
+      offset_poly_wh =
+        CGAL::create_interior_skeleton_and_offset_polygons_with_holes_2(lOffset, *poly);
     }
   }
 	Polygon_with_holes_2 * poly;
@@ -47,6 +49,9 @@ public:
     line_distance = 5;
     this->poly = poly;
     this->run();
+    for(ElementPtr * e : result) {
+      cout << "Element: " << e << endl;
+    }
     return result; // return copy of result 
 	}
   ~SpiralFillProcedure() {

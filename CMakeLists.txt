@@ -46,7 +46,7 @@ endif()
 ##
 
 # find_package(PythonInterp 3)
-set(Python_ADDITIONAL_VERSIONS 3.4)
+set(Python_ADDITIONAL_VERSIONS 2.7)
 find_package(PythonLibs REQUIRED)
 include_directories(${PYTHON_INCLUDE_DIRS})
 link_directories(${PYTHON_LIBRARIES})
@@ -60,7 +60,7 @@ set(Boost_USE_MULTITHREADED ON)
 set(Boost_USE_STATIC_RUNTIME OFF)
 set(BOOST_ALL_DYN_LINK ON)
 
-find_package(Boost 1.54.0 COMPONENTS python-py34 filesystem)
+find_package(Boost 1.54.0 COMPONENTS python-py27 filesystem)
 include_directories(${Boost_INCLUDE_DIRS})
 link_directories(${Boost_LIBRARY_DIRS})
 
@@ -139,7 +139,7 @@ add_library(beachbot_pathgen SHARED
     src/SVGParserAdapter.h
     src/SVGParserAdapter.cpp
 ) 
-set_target_properties(beachbot_pathgen PROPERTIES PREFIX "")
+set_target_properties(beachbot_pathgen PROPERTIES PREFIX "" COMPILE_FLAGS "-m32" LINK_FLAGS "-m32")
 target_link_libraries(beachbot_pathgen ${Boost_LIBRARIES} ${PYTHON_LIBRARIES} ${QT_LIBRARIES})
 
 

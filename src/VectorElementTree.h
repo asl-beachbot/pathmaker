@@ -26,6 +26,9 @@ private:
     if(elem->get_type() != EL_POLYLINE) {
       // This is a Polygon, does it contain the points?
       // Also check convex hull of polygon!!
+      cout << "Tested Elements: " << endl;
+      elem->print();
+      tested_elem->print();
       if(tested_elem->get_type() != EL_POLYLINE) {
         switch(CGAL::bounded_side_2(
           elem->convexHull()->vertices_begin(),
@@ -40,6 +43,7 @@ private:
             break; // unnecessary?!
           case CGAL::ON_UNBOUNDED_SIDE:
             // Outside of poly. Outside of children.
+            cout << "Not Inside" << endl;
             return false;
         }
       }
@@ -274,9 +278,9 @@ public:
         FilledPolygonElementPtr * el_ptr = static_cast<FilledPolygonElementPtr *>((*it));
         el_ptr->fill_elements = spiral_singleton->fill(&(el_ptr->element));
         for(ElementPtr * e : el_ptr->fill_elements) {
-          cout << "El: " << e << endl;
-
+          cout << "Finding Spot for element: " << e << endl;
           findSpot(e);
+          this->print_tree();
         }
       }
     }
