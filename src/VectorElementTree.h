@@ -274,6 +274,8 @@ public:
         FilledPolygonElementPtr * el_ptr = static_cast<FilledPolygonElementPtr *>((*it));
         el_ptr->fill_elements = spiral_singleton->fill(&(el_ptr->element));
         for(ElementPtr * e : el_ptr->fill_elements) {
+          cout << "El: " << e << endl;
+
           findSpot(e);
         }
       }

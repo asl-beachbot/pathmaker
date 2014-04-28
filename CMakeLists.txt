@@ -5,8 +5,8 @@ project(pathfinder)
 set (pathfinder_VERSION_MAJOR 1)
 set (pathfinder_VERSION_MINOR 0)
 
-add_definitions(-DWITH_GUI)
-add_definitions(-DSTANDALONE)
+# add_definitions(-DWITH_GUI)
+# add_definitions(-DSTANDALONE)
 
 set(PROJECT_BINARY_DIR ./bin)
 set(PROJECT_SRC_DIR ./src)
@@ -119,7 +119,7 @@ add_executable(svg_parser
 
 
 target_link_libraries(svg_parser  ${Boost_LIBRARIES} ${PYTHON_LIBRARIES} ${QT_LIBRARIES})
-set_target_properties(svg_parser PROPERTIES COMPILE_DEFINITIONS WITH_GUI,STANDALONE)
+set_target_properties(svg_parser PROPERTIES COMPILE_DEFINITIONS "WITH_GUI;STANDALONE")
 
 # add_executable(bin/python_test src/python_wrapper)
 # target_link_libraries(bin/python_test ${Boost_LIBRARIES} ${PYTHON_LIBRARIES})
@@ -131,7 +131,7 @@ target_link_libraries(pathfinder ${QT_LIBRARIES})
 target_link_libraries(pathfinder ${CGAL_LIBRARIES} ${CGAL_3RD_PARTY_LIBRARIES})
 set_target_properties(pathfinder PROPERTIES COMPILE_DEFINITIONS WITH_GUI,STANDALONE)
 # cotire(pathfinder) #cant cotire because of python vs qt bug!
-cotire(svg_parser)
+# cotire(svg_parser)
 
 ## Adding Python Lib
 add_library(beachbot_pathgen SHARED 

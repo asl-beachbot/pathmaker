@@ -10,6 +10,7 @@
 #include "VectorElementTree.h"
 #include "SVGParserAdapter.h"
 #include "SimpleConnector.h"
+#include "FillProcedures.h"
 
 using namespace std;
 namespace bp = boost::python;

@@ -20,6 +20,15 @@
 
 #include <CGAL/convex_hull_2.h>
 
+#ifdef WITH_GUI
+
+#include <CGAL/Qt/PolygonGraphicsItem.h>
+#include <CGAL/Qt/PolygonWithHolesGraphicsItem.h>
+#include <CGAL/Qt/GraphicsViewNavigation.h>
+
+#include "CustomPolylinesGraphicsItem.h"
+
+#endif
 
 typedef CGAL::Exact_predicates_inexact_constructions_kernel K ;
 
@@ -45,15 +54,11 @@ typedef std::vector<PolygonWithHolesPtrVector>    PolygonWithHolesPtrVectorVecto
 
 typedef CGAL::Aff_transformation_2<K> Transformation;
 
-typedef typename SS::Halfedge_const_iterator Halfedge_const_iterator ;
-typedef typename SS::Halfedge_const_handle   Halfedge_const_handle ;
+// typedef typename SS::Halfedge_const_iterator Halfedge_const_iterator ;
+// typedef typename SS::Halfedge_const_handle   Halfedge_const_handle ;
 
 #ifdef WITH_GUI
-#include <CGAL/Qt/PolygonGraphicsItem.h>
-#include <CGAL/Qt/PolygonWithHolesGraphicsItem.h>
-#include <CGAL/Qt/GraphicsViewNavigation.h>
 
-#include "CustomPolylinesGraphicsItem.h"
 
 typedef CGAL::Qt::PolygonWithHolesGraphicsItem<Polygon_with_holes_2> PolygonWithHolesGraphicsI;
 typedef CGAL::Qt::PolygonGraphicsItem<Polygon_2> PolygonGraphicsI;

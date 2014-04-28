@@ -246,6 +246,7 @@ def parse_file(filename):
         return False
     xml = f.read()
     f.close()
+    return parse_string(xml)
 
 def run():
     if not ns.filename:

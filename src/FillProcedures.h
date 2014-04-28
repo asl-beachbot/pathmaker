@@ -8,13 +8,13 @@
 typedef std::list<ElementPtr * > ElemList;
 
 
-class FillProcedure {
-public:
-  ElemList result;
-	virtual ElemList fill(Polygon_with_holes_2 * poly);
-};
-
-class SpiralFillProcedure : public FillProcedure {
+// class FillProcedure {
+// public:
+//   ElemList result;
+// 	virtual ElemList fill(Polygon_with_holes_2 * poly);
+// };
+ // : public FillProcedure
+class SpiralFillProcedure {
 public:
   static SpiralFillProcedure& getInstance() {
       static SpiralFillProcedure instance; // Guaranteed to be destroyed.
@@ -22,31 +22,33 @@ public:
       return instance;
   }
 public:
+  ElemList result;
 	void run() {
     float lOffset = line_distance;
-    PolygonWithHolesPtrVector offset_poly_wh =
-      CGAL::create_interior_skeleton_and_offset_polygons_with_holes_2(lOffset, *poly);
-
-    while(offset_poly_wh.size() > 0) {
+    int count = 0;
+    while(count < 3) {
+      PolygonWithHolesPtrVector offset_poly_wh =
+        CGAL::create_interior_skeleton_and_offset_polygons_with_holes_2(lOffset, *poly);
+      cout << "adding poly" << count << " l o " << lOffset << *offset_poly_wh[0]<<  endl;
+      count++;
       // no more polys
       for(std::vector<PolygonWithHolesPtr>::iterator i = offset_poly_wh.begin(); i != offset_poly_wh.end(); ++i) {
         Polygon_2 outer = (**i).outer_boundary();
         ElementPtr * poly_element = new PolygonElementPtr(outer);
+        cout << poly_element << endl;
         result.push_back(poly_element);
       }
-      lOffset += line_distance;
-      PolygonWithHolesPtrVector offset_poly_wh =
-        CGAL::create_interior_skeleton_and_offset_polygons_with_holes_2(lOffset, *poly);
+      lOffset = lOffset + line_distance;
     }
   }
 	Polygon_with_holes_2 * poly;
   float line_distance;
 	ElemList fill(Polygon_with_holes_2 * poly) {
-    line_distance = 3;
+    line_distance = 5;
     this->poly = poly;
     this->run();
     return result; // return copy of result 
-	} 
+	}
   ~SpiralFillProcedure() {
     // delete poly;
   }
@@ -59,5 +61,5 @@ private:
   void operator=(SpiralFillProcedure const&); // Don't implement
 };
 
-class WiggleFillProcedure : FillProcedure {
-};
+// class WiggleFillProcedure : FillProcedure {
+// };
