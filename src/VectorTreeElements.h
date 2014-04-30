@@ -1,6 +1,7 @@
 #pragma once
 
 #include "CGAL_Headers.h"
+#include <json/json.h>
 
 #ifdef WITH_GUI
 #include <QColor>
@@ -42,6 +43,7 @@ public:
   bool unvisited() {
     return !this->visited;
   }
+  virtual Json::Value toJSON() {};
 };
 
 
@@ -71,6 +73,22 @@ public:
   }
   Polygon_2 * convexHull() {
     return &element;
+  }
+  Json::Value toJSON() {
+    Json::Value val;
+    val["type"] = "POLYGON";
+    val["type_int"] = EL_POLYGON;
+    auto it = element.vertices_begin();
+    auto it_end = element.vertices_end();
+    Json::Value coords(Json::arrayValue);
+    for(; it != it_end; ++it) {
+      Json::Value c(Json::arrayValue);
+      c.append(it->x());
+      c.append(it->y());
+      coords.append(c);
+    }
+    val["coords"] = coords;
+    return val;
   }
 };
 
@@ -129,6 +147,22 @@ public:
   void print() {
     std::cout << "Polygon With Holes " << element << std::endl;
   };
+  Json::Value toJSON() {
+    Json::Value val;
+    val["type"] = "FILLED_POLYGON";
+    val["type_int"] = EL_POLYGON;
+    auto it = element.outer_boundary().vertices_begin();
+    auto it_end = element.outer_boundary().vertices_end();
+    Json::Value coords(Json::arrayValue);
+    for(; it != it_end; ++it) {
+      Json::Value c(Json::arrayValue);
+      c.append(it->x());
+      c.append(it->y());
+      coords.append(c);
+    }
+    val["coords"] = coords;
+    return val;
+  }
 
 };
 
@@ -172,4 +206,21 @@ public:
   Polygon_2 * convexHull() {
     return NULL;
   }
+  Json::Value toJSON() {
+    Json::Value val;
+    val["type"] = "POLYLINE";
+    val["type_int"] = EL_POLYGON;
+    auto it = element.begin();
+    auto it_end = element.end();
+    Json::Value coords(Json::arrayValue);
+    for(; it != it_end; ++it) {
+      Json::Value c(Json::arrayValue);
+      c.append(it->x());
+      c.append(it->y());
+      coords.append(c);
+    }
+    val["coords"] = coords;
+    return val;
+  }
+
 };

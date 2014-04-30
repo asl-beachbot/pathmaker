@@ -132,6 +132,7 @@ int main(int argc, char** argv) {
   vet->fillPolys();
   SimpleConnector * sc = new SimpleConnector(vet);
   sc->connect();
+  vet->toJSON();
 #ifdef WITH_GUI
   QApplication app(argc, argv);
  

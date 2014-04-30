@@ -1,6 +1,8 @@
 cmake_minimum_required(VERSION 2.6)
 project(pathfinder)
 
+option(32BIT "32BIT" OFF)
+
 # The version number
 set (pathfinder_VERSION_MAJOR 1)
 set (pathfinder_VERSION_MINOR 0)
@@ -89,6 +91,11 @@ include(${QT_USE_FILE})
 find_package(Eigen3 REQUIRED)
 include_directories(${EIGEN3_INCLUDE_DIR})
 
+##
+#  JSON Write / Parse
+##
+find_package(JSONCPP REQUIRED)
+include_directories(${JSONCPP_INCLUDE_DIR})
 
 # if(CGAL_Core_FOUND)
 #     add_definitions(-DCGAL_USE_CORE)
@@ -118,7 +125,7 @@ add_executable(svg_parser
     src/FillProcedures.h)
 
 
-target_link_libraries(svg_parser  ${Boost_LIBRARIES} ${PYTHON_LIBRARIES} ${QT_LIBRARIES})
+target_link_libraries(svg_parser  ${Boost_LIBRARIES} ${PYTHON_LIBRARIES} ${QT_LIBRARIES} ${JSONCPP_LIBRARIES})
 set_target_properties(svg_parser PROPERTIES COMPILE_DEFINITIONS "WITH_GUI;STANDALONE")
 
 # add_executable(bin/python_test src/python_wrapper)
@@ -138,9 +145,15 @@ add_library(beachbot_pathgen SHARED
     src/PythonBindings.cpp
     src/SVGParserAdapter.h
     src/SVGParserAdapter.cpp
-) 
-set_target_properties(beachbot_pathgen PROPERTIES PREFIX "" COMPILE_FLAGS "-m32" LINK_FLAGS "-m32")
-target_link_libraries(beachbot_pathgen ${Boost_LIBRARIES} ${PYTHON_LIBRARIES} ${QT_LIBRARIES})
+)
+
+if(32BIT)
+    set_target_properties(beachbot_pathgen PROPERTIES PREFIX "" COMPILE_FLAGS "-m32" LINK_FLAGS "-m32")
+else(32BIT)
+    set_target_properties(beachbot_pathgen PROPERTIES PREFIX "")
+endif(32BIT)
+
+target_link_libraries(beachbot_pathgen ${Boost_LIBRARIES} ${PYTHON_LIBRARIES} ${QT_LIBRARIES} ${JSONCPP_LIBRARIES})
 
 
 message("THANK YOU FOR CHOOSING PATHMAKER: ") 

@@ -12,6 +12,9 @@
 
 #include "VectorTreeElements.h"
 
+// #include <json/json.h>
+#include <json/writer.h>
+
 #ifdef WITH_GUI
 #include <QColor>
 #include <QPen>
@@ -269,6 +272,37 @@ public:
   void insertIntoTree(ElementPtr * elem) {
       this->findSpot(elem);
   };
+  std::string toJSON() {
+    Json::Value json;
+    Json::Value elem_json_arr(Json::arrayValue);
+
+    Tree_ElementPtr::iterator it = ++element_tree.begin();
+    Tree_ElementPtr::iterator it_end = element_tree.end();
+
+    for(; it != it_end; ++it) {
+        Json::Value elem_json;
+        // elem_json["type"] = (*it)->toJSON();
+        elem_json_arr.append((*it)->toJSON());
+    }
+    // ElementPtr * elem = (*it);
+    // while(elem->to != NULL) {
+    //   // cout << elem->exit_point.x() << " " << elem->exit_point.y() << " -> " << elem->to->entry_point.x() << " " << elem->to->entry_point.y() << endl;
+    //   // this->addLine(elem->exit_point, elem->to->entry_point, &connect_lines);
+    //   Json::Value elem_json;
+    //   // elem_json["type"] = elem->get_type();
+    //   elem_json["type"] = "test";
+    //   // for(Point_2 p : elem->element) {
+
+    //   // }
+    //   // pt_elem.put("coords", )
+    //   // pt_elem_array.push_back(pt_elem);
+    //   // elem = elem->to;
+    //   // elem_json_arr.append(elem_json);
+    // }
+    json["elems"] = elem_json_arr;
+    cout << json;
+
+  }
   void fillPolys() {
     Tree_ElementPtr::iterator it = element_tree.begin();
     Tree_ElementPtr::iterator it_end = element_tree.end();
