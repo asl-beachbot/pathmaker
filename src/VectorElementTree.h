@@ -6,6 +6,7 @@
 #include "SVGParserAdapter.h"
 #include "tree.h"
 #include <iterator>
+#include <ostream>
 
 #include "FillProcedures.h"
 #include "CGAL_Headers.h"
@@ -300,8 +301,9 @@ public:
     //   // elem_json_arr.append(elem_json);
     // }
     json["elems"] = elem_json_arr;
-    cout << json;
-
+    std::ostringstream stream;
+    stream << json;
+    return stream.str();
   }
   void fillPolys() {
     Tree_ElementPtr::iterator it = element_tree.begin();
