@@ -36,6 +36,7 @@ typedef K::Point_2                    Point_2;
 typedef K::Segment_2                  Segment_2;
 typedef K::Vector_2                   Vector_2;
 typedef K::Line_2                     Line_2;
+typedef K::Direction_2				  Direction_2;
 
 typedef CGAL::Polygon_2<K>            Polygon_2;
 typedef CGAL::Polygon_with_holes_2<K> Polygon_with_holes_2;

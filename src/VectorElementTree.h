@@ -308,13 +308,14 @@ public:
   void fillPolys() {
     Tree_ElementPtr::iterator it = element_tree.begin();
     Tree_ElementPtr::iterator it_end = element_tree.end();
-    SpiralFillProcedure * spiral_singleton = &SpiralFillProcedure::getInstance();
+    WiggleFillProcedure * spiral_singleton = &WiggleFillProcedure::getInstance();
     for(; it != it_end; ++it) {
       if((*it)->get_type() == EL_FILLED_POLYGON) {
         FilledPolygonElementPtr * el_ptr = static_cast<FilledPolygonElementPtr *>((*it));
         el_ptr->fill_elements = spiral_singleton->fill(&(el_ptr->element));
         for(ElementPtr * e : el_ptr->fill_elements) {
           cout << "Finding Spot for element: " << e << endl;
+          if(!e) {cout << "Error null pointer!" << endl; continue;}
           findSpot(e);
           this->print_tree();
         }

@@ -55,6 +55,8 @@ int View::initWindow() {
 
   ui.view->setScene(&scene);
   ui.view->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOn);
+  QObject::connect(navigation, SIGNAL(mouseCoordinates(QString)),
+                   ui.mouse_xy, SLOT(setText(QString)));
   ui.view->show();
 }
 void View::addItem(QGraphicsItem* item) {

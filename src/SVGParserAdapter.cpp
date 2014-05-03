@@ -125,7 +125,7 @@ void ParsedSVG::parseSVGString(std::string svg_xml_string) {
 #ifdef STANDALONE
 int main(int argc, char** argv) {
   ParsedSVG * ps = new ParsedSVG();
-  ps->parseSVGFile("1assets/2.svg");
+  ps->parseSVGFile("assets/2.svg");
   VectorElementTree * vet = new VectorElementTree();
   vet->createAndSortTree(ps);
   vet->fillPolys();
