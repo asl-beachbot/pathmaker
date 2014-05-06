@@ -11,6 +11,7 @@
 #include "SVGParserAdapter.h"
 #include "SimpleConnector.h"
 #include "FillProcedures.h"
+#include "SegmentationPreProcessor.h"
 
 using namespace std;
 namespace bp = boost::python;
@@ -128,6 +129,8 @@ int main(int argc, char** argv) {
   ps->parseSVGFile("assets/2.svg");
   VectorElementTree * vet = new VectorElementTree();
   vet->createAndSortTree(ps);
+  SegmentationPreProcessor * spp = new SegmentationPreProcessor(vet);
+  spp->process();
   vet->fillPolys();
   SimpleConnector * sc = new SimpleConnector(vet);
   sc->connect();
@@ -145,7 +148,9 @@ int main(int argc, char** argv) {
     return app.exec();
   }
 #endif
-
+  delete spp;
+  delete vet;
+  delete sc;
   delete ps;
   return 0;
 }

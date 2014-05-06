@@ -111,7 +111,7 @@ public:
         }
       }
       cout << "C: " << count;
-      if(count == 0) {
+      if(count < 2) {
         done = true;
       }
       count = 0;

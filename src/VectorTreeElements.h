@@ -163,11 +163,11 @@ public:
     }
     val["coords"] = coords;
 
-    auto it = element.holes_begin();
-    auto it_end = element.holes_end();
+    auto it_holes = element.holes_begin();
+    auto it_end_holes = element.holes_end();
     Json::Value holes(Json::arrayValue);
-    for(; it != it_end; ++it) {
-      Polygon_2 hole = (*it);
+    for(; it_holes != it_end_holes; ++it_holes) {
+      Polygon_2 hole = (*it_holes);
       auto hole_it = hole.vertices_begin();
       auto hole_it_end = hole.vertices_end();
       Json::Value hole_coords(Json::arrayValue);
@@ -180,12 +180,12 @@ public:
       holes.append(hole_coords);
     }
     val["holes"] = holes;
-    auto it = segments.begin();
-    auto it_end = segments.end();
+    auto it_segments = segments.begin();
+    auto it_end_segments = segments.end();
     Json::Value segments_json(Json::arrayValue);
-    for(; it != it_end; ++it) {
-      auto segment_it = segment.vertices_begin();
-      auto segment_it_end = segment.vertices_end();
+    for(; it_segments != it_end_segments; ++it_segments) {
+      auto segment_it = it_segments->vertices_begin();
+      auto segment_it_end = it_segments->vertices_end();
       Json::Value segment_coords(Json::arrayValue);
       for(; segment_it != segment_it_end; ++segment_it) {
         Json::Value c(Json::arrayValue);

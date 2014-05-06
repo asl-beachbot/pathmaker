@@ -122,7 +122,8 @@ add_executable(svg_parser
     src/VectorTreeElements.h 
     src/include/CGAL_Headers.h
     src/include/tree.h
-    src/FillProcedures.h)
+    src/FillProcedures.h
+    src/SegmentationPreProcessor.h)
 
 
 target_link_libraries(svg_parser  ${Boost_LIBRARIES} ${PYTHON_LIBRARIES} ${QT_LIBRARIES} ${JSONCPP_LIBRARIES})
