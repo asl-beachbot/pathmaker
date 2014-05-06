@@ -97,7 +97,7 @@ public:
 
   // int visited_vertices[];
   Polygon_with_holes_2 element;
-
+  std::list<Polygon_2> segments;
   FilledPolygonElementPtr(Polygon_with_holes_2 poly) : element(poly) {
     // convex_hull = 
     // std::list<Point_2> convex_hull_list;
@@ -148,9 +148,10 @@ public:
     std::cout << "Polygon With Holes " << element << std::endl;
   };
   Json::Value toJSON() {
+    // Polygon, holes, and segments to JSON
     Json::Value val;
     val["type"] = "FILLED_POLYGON";
-    val["type_int"] = EL_POLYGON;
+    val["type_int"] = EL_FILLED_POLYGON;
     auto it = element.outer_boundary().vertices_begin();
     auto it_end = element.outer_boundary().vertices_end();
     Json::Value coords(Json::arrayValue);
@@ -161,6 +162,41 @@ public:
       coords.append(c);
     }
     val["coords"] = coords;
+
+    auto it = element.holes_begin();
+    auto it_end = element.holes_end();
+    Json::Value holes(Json::arrayValue);
+    for(; it != it_end; ++it) {
+      Polygon_2 hole = (*it);
+      auto hole_it = hole.vertices_begin();
+      auto hole_it_end = hole.vertices_end();
+      Json::Value hole_coords(Json::arrayValue);
+      for(; hole_it != hole_it_end; ++hole_it) {
+        Json::Value c(Json::arrayValue);
+        c.append(hole_it->x());
+        c.append(hole_it->y());
+        hole_coords.append(c);
+      }
+      holes.append(hole_coords);
+    }
+    val["holes"] = holes;
+    auto it = segments.begin();
+    auto it_end = segments.end();
+    Json::Value segments_json(Json::arrayValue);
+    for(; it != it_end; ++it) {
+      auto segment_it = segment.vertices_begin();
+      auto segment_it_end = segment.vertices_end();
+      Json::Value segment_coords(Json::arrayValue);
+      for(; segment_it != segment_it_end; ++segment_it) {
+        Json::Value c(Json::arrayValue);
+        c.append(segment_it->x());
+        c.append(segment_it->y());
+        segment_coords.append(c);
+      }
+      segments_json.append(segment_coords);
+    }
+    val["segments"] = segments_json;
+
     return val;
   }
 
@@ -209,7 +245,7 @@ public:
   Json::Value toJSON() {
     Json::Value val;
     val["type"] = "POLYLINE";
-    val["type_int"] = EL_POLYGON;
+    val["type_int"] = EL_POLYLINE;
     auto it = element.begin();
     auto it_end = element.end();
     Json::Value coords(Json::arrayValue);
