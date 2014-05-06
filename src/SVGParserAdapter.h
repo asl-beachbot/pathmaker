@@ -17,7 +17,6 @@ namespace bp = boost::python;
 #include <CGAL/Qt/GraphicsViewNavigation.h>
 #include <ui/ui_pathfinder.h>
 
-
 class View : public QMainWindow {
 public:
   View(QWidget* parent = 0);

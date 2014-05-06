@@ -2,6 +2,9 @@
 
 #include "CGAL_Headers.h"
 #include <json/json.h>
+#include <boost/format.hpp>
+
+using boost::format; using boost::str;
 
 #ifdef WITH_GUI
 #include <QColor>
@@ -40,6 +43,7 @@ public:
   virtual ElementType get_type() {};
   virtual Polygon_2 * convexHull() {};
   virtual void print() {};
+  virtual std::string toString() {};
   bool unvisited() {
     return !this->visited;
   }
@@ -90,6 +94,15 @@ public:
     val["coords"] = coords;
     return val;
   }
+  std::string toString() {
+    std::string res;
+    int idx = entry_point_index;
+    int len = element.size();
+    for(int i = 0; i <= len; ++i) {
+      res += str(format("%1% %2% %3%\n") % element[idx + i % len].x() % element[idx + i % len].y() % 0b00010000);
+    }
+    return res;
+  }
 };
 
 class FilledPolygonElementPtr : public ElementPtr {
@@ -114,9 +127,20 @@ public:
   };
   #ifdef WITH_GUI
   PolygonWithHolesGraphicsI * graphx;
+  std::list<PolygonGraphicsI *> segments_graphx;
+  QPen segments_pen;
   void set_graphx() {
+    QColor segments_pen_color(0, 100, 100);
+    segments_pen = QPen(segments_pen_color, 2);
     this->graphx = new PolygonWithHolesGraphicsI(&element);
     this->graphx->setEdgesPen(pen);
+    auto it = segments.begin();
+    auto it_end = segments.end();
+    for( ; it != it_end; ++it ) {
+      cout << "adding segment: " << *it << endl;
+      segments_graphx.push_back(new PolygonGraphicsI(&(*it)));
+      segments_graphx.back()->setEdgesPen(segments_pen);
+    }
     return;
   }
   #endif
@@ -199,7 +223,17 @@ public:
 
     return val;
   }
-
+  std::string toString() {
+    std::string res;
+    int idx = entry_point_index;
+    auto outer = element.outer_boundary();
+    int len = outer.size();
+    for(int i = 0; i <= len; ++i) {
+      res += str(format("%1% %2% %3%\n") % outer[idx + i % len].x() % outer[idx + i % len].y() % 0b00010000);
+    }
+    return res;
+    return res;
+  }
 };
 
 class PolyLineElementPtr : public ElementPtr {
@@ -258,5 +292,11 @@ public:
     val["coords"] = coords;
     return val;
   }
-
+  std::string toString() {
+    std::string res;
+    for(Point_2 p : element) {
+      res += str(format("%1% %2% %3%\n")  % p.x() % p.y() % 0b00010000);
+    }
+    return res;
+  }
 };

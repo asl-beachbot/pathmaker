@@ -19,8 +19,6 @@ class SimpleConnector : public Connector {
 private:
   Point_2 find_closest_point_on_element(Point_2 exit_point, ElementPtr * p2, bool connect) {
     if(p2 == *element_tree->begin()) {return Point_2(0, 0);}
-    p2->entry_point_index = 1; // fix...
-
     if(p2->get_type() != EL_POLYLINE) {
       float distance, temp_dist;
       Polygon_2::Vertex_const_iterator p2_begin, p2_end;
@@ -31,6 +29,7 @@ private:
         p2_begin = static_cast<FilledPolygonElementPtr * >(p2)->element.outer_boundary().vertices_begin();
         p2_end = static_cast<FilledPolygonElementPtr * >(p2)->element.outer_boundary().vertices_end();
       }
+      auto p2_begin_ref = p2_begin;
       Point_2 point2 = *p2_begin;
       distance = CGAL::squared_distance(exit_point, *p2_begin);
       for(;p2_begin != p2_end; ++p2_begin) {
@@ -38,13 +37,12 @@ private:
         if(temp_dist < distance) {
           distance = temp_dist;
           point2 = *p2_begin;
-          // *entry_point_index = std::distance(p2_begin, p2->vertices_begin());
-          //entry_point_index = new int(1);
         }
       }
       if(connect) {
         p2->entry_point = point2;
         p2->exit_point = point2;
+        p2->entry_point_index = std::distance(p2_begin, p2_begin_ref);
       }
       return point2;
     }
@@ -57,6 +55,7 @@ private:
         if(distance_begin > distance_end) {
           if(connect) {
             p2->entry_point = p2_end;
+            p2->entry_point_index = static_cast<PolyLineElementPtr * >(p2)->element.size();
             p2->exit_point = p2_begin;
           }
           return p2_end;
@@ -65,6 +64,7 @@ private:
           if(connect) {
             p2->entry_point = p2_begin;
             p2->exit_point = p2_end;
+            p2->entry_point_index = 0;
           }
           return p2_begin;
         }

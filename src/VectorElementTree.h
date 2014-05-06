@@ -187,13 +187,21 @@ public:
       sprintf(text, "D: %d",element_tree.depth(it));
       switch((*it)->get_type()){
         case EL_FILLED_POLYGON:
-          static_cast<FilledPolygonElementPtr * >(*it)->set_graphx();
-          window->addItem(static_cast<FilledPolygonElementPtr * >(*it)->graphx);
-          if(static_cast<FilledPolygonElementPtr * >(*it)->element.outer_boundary().size() > 0) {
-            window->addText(text,
-              static_cast<FilledPolygonElementPtr * >(*it)->getFromIndex(0).x(),
-              static_cast<FilledPolygonElementPtr * >(*it)->getFromIndex(0).y());
-          }
+          {          
+            FilledPolygonElementPtr * temp_el = static_cast<FilledPolygonElementPtr * >(*it);
+            temp_el->set_graphx();
+            window->addItem(temp_el->graphx);
+            if(temp_el->element.outer_boundary().size() > 0) {
+              window->addText(text,
+                temp_el->getFromIndex(0).x(),
+                temp_el->getFromIndex(0).y());
+            }
+            auto it_seg = temp_el->segments_graphx.begin();
+            auto it_seg_end = temp_el->segments_graphx.end();
+            for(; it_seg != it_seg_end; ++it_seg) {
+              window->addItem((*it_seg));
+            }
+          }          
           break;
         case EL_POLYGON:
           static_cast<PolygonElementPtr * >(*it)->set_graphx();
@@ -206,7 +214,7 @@ public:
           break;
         case EL_POLYLINE:
           static_cast<PolyLineElementPtr * >(*it)->set_graphx();
-          window->addItem(static_cast<PolyLineElementPtr * >(*it)->graphx);
+          //window->addItem(static_cast<PolyLineElementPtr * >(*it)->graphx);
           if(static_cast<PolyLineElementPtr * >(*it)->element.size() > 0) {
             window->addText(text,
               static_cast<PolyLineElementPtr * >(*it)->getFromIndex(0).x(),
@@ -273,6 +281,24 @@ public:
   void insertIntoTree(ElementPtr * elem) {
       this->findSpot(elem);
   };
+  void writeToFile(std::string filename) {
+    cout << "Writing to File" << endl;
+    std::ofstream file_out(filename);
+    auto it = ++element_tree.begin();
+    auto it_end = element_tree.end();
+    for(; it != it_end; ++it) {
+      if((*it)->from == NULL) {
+        break; // it = start iterator
+      }
+    }
+    ElementPtr * elem = (*it);
+    while(elem->to != NULL) {
+      std::string elem_str = elem->toString();
+      cout << elem_str;
+      file_out << elem_str;
+      elem = elem->to;
+    }
+  }
   std::string toJSON() {
     Json::Value json;
     Json::Value elem_json_arr(Json::arrayValue);
@@ -282,24 +308,8 @@ public:
 
     for(; it != it_end; ++it) {
         Json::Value elem_json;
-        // elem_json["type"] = (*it)->toJSON();
         elem_json_arr.append((*it)->toJSON());
     }
-    // ElementPtr * elem = (*it);
-    // while(elem->to != NULL) {
-    //   // cout << elem->exit_point.x() << " " << elem->exit_point.y() << " -> " << elem->to->entry_point.x() << " " << elem->to->entry_point.y() << endl;
-    //   // this->addLine(elem->exit_point, elem->to->entry_point, &connect_lines);
-    //   Json::Value elem_json;
-    //   // elem_json["type"] = elem->get_type();
-    //   elem_json["type"] = "test";
-    //   // for(Point_2 p : elem->element) {
-
-    //   // }
-    //   // pt_elem.put("coords", )
-    //   // pt_elem_array.push_back(pt_elem);
-    //   // elem = elem->to;
-    //   // elem_json_arr.append(elem_json);
-    // }
     json["elems"] = elem_json_arr;
     std::ostringstream stream;
     stream << json;

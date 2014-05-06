@@ -131,10 +131,11 @@ int main(int argc, char** argv) {
   vet->createAndSortTree(ps);
   SegmentationPreProcessor * spp = new SegmentationPreProcessor(vet);
   spp->process();
-  vet->fillPolys();
+  // vet->fillPolys();
   SimpleConnector * sc = new SimpleConnector(vet);
   sc->connect();
   vet->toJSON();
+  vet->writeToFile("outfile.txt");
 #ifdef WITH_GUI
   QApplication app(argc, argv);
  
