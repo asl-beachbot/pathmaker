@@ -26,9 +26,12 @@ private:
                                      std::back_inserter(partition_polys),
                                      partition_traits);
     for(Traits_Polygon_2 tp : partition_polys) {
-      poly_element_ptr->segments.push_back(
-        Polygon_2(tp.vertices_begin(), tp.vertices_end())
-      );
+      FilledSegment f;
+      f.poly = Polygon_2 (tp.vertices_begin(), tp.vertices_end());
+      f.direction = Direction_2(0, 1);
+      f.fill_type = 1;
+
+      poly_element_ptr->segments.push_back(f);
     }
     // = partition_polys;
   }

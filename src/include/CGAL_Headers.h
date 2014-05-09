@@ -3,7 +3,7 @@
 #include <boost/shared_ptr.hpp>
 
 #include <CGAL/Exact_predicates_inexact_constructions_kernel.h>
-
+#include <CGAL/Exact_predicates_exact_constructions_kernel.h>
 #include <CGAL/Polygon_2.h>
 #include <CGAL/Polygon_with_holes_2.h>
 #include <CGAL/Polygon_2_algorithms.h>

@@ -187,7 +187,7 @@ public:
       sprintf(text, "D: %d",element_tree.depth(it));
       switch((*it)->get_type()){
         case EL_FILLED_POLYGON:
-          {          
+          {
             FilledPolygonElementPtr * temp_el = static_cast<FilledPolygonElementPtr * >(*it);
             temp_el->set_graphx();
             window->addItem(temp_el->graphx);
@@ -201,7 +201,7 @@ public:
             for(; it_seg != it_seg_end; ++it_seg) {
               window->addItem((*it_seg));
             }
-          }          
+          }
           break;
         case EL_POLYGON:
           static_cast<PolygonElementPtr * >(*it)->set_graphx();
@@ -214,7 +214,7 @@ public:
           break;
         case EL_POLYLINE:
           static_cast<PolyLineElementPtr * >(*it)->set_graphx();
-          //window->addItem(static_cast<PolyLineElementPtr * >(*it)->graphx);
+          window->addItem(static_cast<PolyLineElementPtr * >(*it)->graphx);
           if(static_cast<PolyLineElementPtr * >(*it)->element.size() > 0) {
             window->addText(text,
               static_cast<PolyLineElementPtr * >(*it)->getFromIndex(0).x(),
@@ -237,7 +237,7 @@ public:
 
   void drawConnections() {
     connect_lines_gi = new PolylinesGraphicsI(&connect_lines);
-    connect_lines_gi->setEdgesPen(QPen(QColor(255,0,0), 2));
+    connect_lines_gi->setEdgesPen(QPen(QColor(0,40,60), 2));
     window->addItem(connect_lines_gi);
     connect_lines_gi->show();
     Tree_ElementPtr::iterator it = ++element_tree.begin();
@@ -323,7 +323,7 @@ public:
     for(; it != it_end; ++it) {
       if((*it)->get_type() == EL_FILLED_POLYGON) {
         FilledPolygonElementPtr * el_ptr = static_cast<FilledPolygonElementPtr *>((*it));
-        el_ptr->fill_elements = spiral_singleton->fill(&(el_ptr->element));
+        el_ptr->fill_elements = spiral_singleton->fill(el_ptr);
         for(ElementPtr * e : el_ptr->fill_elements) {
           cout << "Finding Spot for element: " << e << endl;
           if(!e) {cout << "Error null pointer!" << endl; continue;}

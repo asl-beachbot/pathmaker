@@ -131,10 +131,13 @@ int main(int argc, char** argv) {
   vet->createAndSortTree(ps);
   SegmentationPreProcessor * spp = new SegmentationPreProcessor(vet);
   spp->process();
-  // vet->fillPolys();
+  vet->fillPolys();
   SimpleConnector * sc = new SimpleConnector(vet);
   sc->connect();
-  vet->toJSON();
+  std::string json = "var PolyJSON = '" + vet->toJSON();
+  json += "'";
+  std::ofstream of("PolyJSON.js");
+  of << json;
   vet->writeToFile("outfile.txt");
 #ifdef WITH_GUI
   QApplication app(argc, argv);

@@ -3,6 +3,7 @@
 #include "CGAL_Headers.h"
 #include <json/json.h>
 #include <boost/format.hpp>
+#include <stdlib.h>
 
 using boost::format; using boost::str;
 
@@ -35,8 +36,10 @@ public:
 
   ElementPtr * to;
   ElementPtr * from;
-
-  ElementPtr() :  visited(false), to(NULL), from(NULL) {};
+  unsigned int id;
+  ElementPtr() :  visited(false), to(NULL), from(NULL) {
+    id = rand() % 10000000;
+  };
   ~ElementPtr() {cout << "delete called" << endl;};
   virtual Point_2 getFromIndex(int i) {};
   virtual void set_graphx() {};
@@ -82,6 +85,7 @@ public:
     Json::Value val;
     val["type"] = "POLYGON";
     val["type_int"] = EL_POLYGON;
+    val["id"] = id;
     auto it = element.vertices_begin();
     auto it_end = element.vertices_end();
     Json::Value coords(Json::arrayValue);
@@ -105,12 +109,22 @@ public:
   }
 };
 
+class FilledSegment {
+public:
+  Polygon_2 poly;
+  int fill_type; // fill type: 1 = Skeleton, 2 = wiggle
+  Direction_2 direction; // only for wiggle fill
+};
+
 class FilledPolygonElementPtr : public ElementPtr {
 public:
 
   // int visited_vertices[];
   Polygon_with_holes_2 element;
-  std::list<Polygon_2> segments;
+  std::list<FilledSegment> segments;
+  int fill_type; // fill type: 1 = Skeleton, 2 = wiggle
+  Direction_2 direction; // only for wiggle fill
+
   FilledPolygonElementPtr(Polygon_with_holes_2 poly) : element(poly) {
     // convex_hull = 
     // std::list<Point_2> convex_hull_list;
@@ -123,8 +137,8 @@ public:
 
     // Polygon_2(
     // )
-
   };
+
   #ifdef WITH_GUI
   PolygonWithHolesGraphicsI * graphx;
   std::list<PolygonGraphicsI *> segments_graphx;
@@ -137,13 +151,14 @@ public:
     auto it = segments.begin();
     auto it_end = segments.end();
     for( ; it != it_end; ++it ) {
-      cout << "adding segment: " << *it << endl;
-      segments_graphx.push_back(new PolygonGraphicsI(&(*it)));
+      cout << "adding segment: " << (it->poly) << endl;
+      segments_graphx.push_back(new PolygonGraphicsI(&((*it).poly)));
       segments_graphx.back()->setEdgesPen(segments_pen);
     }
     return;
   }
   #endif
+
   std::list< ElementPtr * > fill_elements;
   ElementType get_type() { return EL_FILLED_POLYGON; };
   Point_2 getFromIndex(int i) {
@@ -171,11 +186,13 @@ public:
   void print() {
     std::cout << "Polygon With Holes " << element << std::endl;
   };
+
   Json::Value toJSON() {
     // Polygon, holes, and segments to JSON
     Json::Value val;
     val["type"] = "FILLED_POLYGON";
     val["type_int"] = EL_FILLED_POLYGON;
+    val["id"] = id;
     auto it = element.outer_boundary().vertices_begin();
     auto it_end = element.outer_boundary().vertices_end();
     Json::Value coords(Json::arrayValue);
@@ -208,8 +225,8 @@ public:
     auto it_end_segments = segments.end();
     Json::Value segments_json(Json::arrayValue);
     for(; it_segments != it_end_segments; ++it_segments) {
-      auto segment_it = it_segments->vertices_begin();
-      auto segment_it_end = it_segments->vertices_end();
+      auto segment_it = it_segments->poly.vertices_begin();
+      auto segment_it_end = it_segments->poly.vertices_end();
       Json::Value segment_coords(Json::arrayValue);
       for(; segment_it != segment_it_end; ++segment_it) {
         Json::Value c(Json::arrayValue);
@@ -217,12 +234,18 @@ public:
         c.append(segment_it->y());
         segment_coords.append(c);
       }
-      segments_json.append(segment_coords);
+      Json::Value segment_value;
+      segment_value["fill_type"] = it_segments->fill_type;
+      segment_value["direction_dx"] = it_segments->direction.dx();
+      segment_value["direction_dy"] = it_segments->direction.dy();
+      segment_value["coords"] = segment_coords;
+      segments_json.append(segment_value);
     }
     val["segments"] = segments_json;
 
     return val;
   }
+
   std::string toString() {
     std::string res;
     int idx = entry_point_index;
@@ -280,6 +303,7 @@ public:
     Json::Value val;
     val["type"] = "POLYLINE";
     val["type_int"] = EL_POLYLINE;
+    val["id"] = id;
     auto it = element.begin();
     auto it_end = element.end();
     Json::Value coords(Json::arrayValue);
