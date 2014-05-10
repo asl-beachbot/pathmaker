@@ -62,7 +62,7 @@ set(Boost_USE_MULTITHREADED ON)
 set(Boost_USE_STATIC_RUNTIME OFF)
 set(BOOST_ALL_DYN_LINK ON)
 
-find_package(Boost 1.54.0 COMPONENTS python-py27 filesystem)
+find_package(Boost 1.54.0 COMPONENTS python-py27 filesystem program_options)
 include_directories(${Boost_INCLUDE_DIRS})
 link_directories(${Boost_LIBRARY_DIRS})
 

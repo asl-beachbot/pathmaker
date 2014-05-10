@@ -225,15 +225,15 @@ public:
       }
     }
   }
-  int addLine(Point_2 from, Point_2 to, std::list<std::list<Point_2> > * lines_list) {
-    std::list<Point_2> list;// = std::list<Point_2>();
-    list.push_back(from);
-    list.push_back(to);
-    lines_list->push_back(list);
+  int addLine(Point_2 from, Point_2 to, std::list<PolyLine_P> * lines_list) {
+    PolyLine_P polyline;// = std::list<Point_2>();
+    polyline.push_back(from);
+    polyline.push_back(to);
+    lines_list->push_back(polyline);
     return 0; // TODO Change return stuff
   }
   PolylinesGraphicsI * connect_lines_gi;
-  std::list<std::list<Point_2> > connect_lines;
+  std::list<PolyLine_P> connect_lines;
 
   void drawConnections() {
     connect_lines_gi = new PolylinesGraphicsI(&connect_lines);

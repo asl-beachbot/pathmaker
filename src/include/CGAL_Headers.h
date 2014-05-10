@@ -21,7 +21,7 @@
 #include <CGAL/convex_hull_2.h>
 
 #ifdef WITH_GUI
-
+ 
 #include <CGAL/Qt/PolygonGraphicsItem.h>
 #include <CGAL/Qt/PolygonWithHolesGraphicsItem.h>
 #include <CGAL/Qt/GraphicsViewNavigation.h>
@@ -36,7 +36,7 @@ typedef K::Point_2                    Point_2;
 typedef K::Segment_2                  Segment_2;
 typedef K::Vector_2                   Vector_2;
 typedef K::Line_2                     Line_2;
-typedef K::Direction_2				  Direction_2;
+typedef K::Direction_2				        Direction_2;
 
 typedef CGAL::Polygon_2<K>            Polygon_2;
 typedef CGAL::Polygon_with_holes_2<K> Polygon_with_holes_2;
@@ -52,6 +52,8 @@ typedef boost::shared_ptr<Polygon_with_holes_2>   PolygonWithHolesPtr;
 typedef std::vector<PolygonWithHolesPtr>          PolygonWithHolesPtrVector;
 typedef std::vector<PolygonWithHolesPtrVector>    PolygonWithHolesPtrVectorVector;
 
+typedef std::vector< Point_2 > PolyLine_P; // custom polyline type, eventually change to curve
+
 
 typedef CGAL::Aff_transformation_2<K> Transformation;
 
@@ -63,6 +65,6 @@ typedef CGAL::Aff_transformation_2<K> Transformation;
 
 typedef CGAL::Qt::PolygonWithHolesGraphicsItem<Polygon_with_holes_2> PolygonWithHolesGraphicsI;
 typedef CGAL::Qt::PolygonGraphicsItem<Polygon_2> PolygonGraphicsI;
-typedef CGAL::Qt::CustomPolylinesGraphicsItem<std::list<std::list<Point_2> > > PolylinesGraphicsI;
+typedef CGAL::Qt::CustomPolylinesGraphicsItem<std::list< PolyLine_P> > PolylinesGraphicsI;
 
 #endif

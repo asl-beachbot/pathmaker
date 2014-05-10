@@ -12,6 +12,12 @@
 #include "SimpleConnector.h"
 #include "FillProcedures.h"
 #include "SegmentationPreProcessor.h"
+#include "PostProcessor.h"
+
+#ifdef STANDALONE
+#include <boost/program_options.hpp>
+namespace po = boost::program_options;
+#endif
 
 using namespace std;
 namespace bp = boost::python;
@@ -124,7 +130,36 @@ void ParsedSVG::parseSVGString(std::string svg_xml_string) {
 }
 
 #ifdef STANDALONE
+
+
+
 int main(int argc, char** argv) {
+  float radius = 0.5;
+  po::options_description desc("Allowed options");
+  desc.add_options()
+      ("help", "produce help message")
+      ("round_radius", po::value<float>(), "set radius for corner rounding")
+  ;
+
+  po::variables_map vm;
+  po::store(po::parse_command_line(argc, argv, desc), vm);
+  po::notify(vm);
+
+  if (vm.count("help")) {
+      cout << desc << "\n";
+      return 1;
+  }
+
+  if (vm.count("round_radius")) {
+      cout << "corner rounding was set to " 
+   << vm["round_radius"].as<float>() << ".\n";
+   radius = vm["round_radius"].as<float>();
+  } else {
+      cout << "round_radius was not set.\n";
+  }
+
+
+
   ParsedSVG * ps = new ParsedSVG();
   ps->parseSVGFile("assets/2.svg");
   VectorElementTree * vet = new VectorElementTree();
@@ -134,6 +169,8 @@ int main(int argc, char** argv) {
   vet->fillPolys();
   SimpleConnector * sc = new SimpleConnector(vet);
   sc->connect();
+  PostProcessor *  psc = new PostProcessor(vet, radius);
+  psc->process();
   std::string json = "var PolyJSON = '" + vet->toJSON();
   json += "'";
   std::ofstream of("PolyJSON.js");

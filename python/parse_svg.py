@@ -193,10 +193,20 @@ def parse_string(svg_string):
                 if len(e.coords) == 0:
                     pass
                 else:
-                    poly.extend(tuple(map(tuple, e.to_poly())))
-                    del poly[0]
+                    if(e.coords[0] == poly[0][0] and e.coords[1] == poly[0][1]):
+                        pass
+                    else:
+                        poly.extend(tuple(map(tuple, e.to_poly())))
+                        del poly[0]
             else:
                 poly.extend(tuple(map(tuple, e.to_poly())))
+        mark_for_deletion = list()
+        for i in xrange(len(poly) - 1):
+            if((poly[i][0]-poly[i+1][0]) * (poly[i][0]-poly[i+1][0])
+                + (poly[i][0]-poly[i+1][0]) * (poly[i][0]-poly[i+1][0]) < 0.001):
+                mark_for_deletion.append(i)
+        for i in reversed(mark_for_deletion): # delete from the back to not kill enumerator
+            del poly[i]
         holes = list()
         for hole in el["holes"]:
             hole_poly = list()
@@ -206,7 +216,7 @@ def parse_string(svg_string):
                         pass
                     else:
                         hole_poly.extend(tuple(map(tuple, h.to_poly())))
-                        del poly[0]
+                        del hole_poly[0]
                 else:
                     hole_poly.extend(tuple(map(tuple, h.to_poly())))
             holes.append(hole_poly)

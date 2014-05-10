@@ -7,6 +7,8 @@
 
 using boost::format; using boost::str;
 
+typedef std::vector<unsigned char> RakeVector;
+
 #ifdef WITH_GUI
 #include <QColor>
 #include <QPen>
@@ -18,9 +20,19 @@ enum ElementType {
   EL_POLYLINE
 };
 
+enum Rake {
+  RAKE_ZERO = 0,
+  RAKE_SMALL = 0 | 1 << 3,
+  RAKE_MEDIUM = 0x1c,
+  RAKE_LARGE = 0x3e,
+  RAKE_FULL = 0x7f
+};
+
 class ElementPtr {
 public:
   bool visited;
+  RakeVector rake_states;
+
   #ifdef WITH_GUI
   QPen pen;
   void setColorFromDepth(int depth) {
@@ -57,10 +69,10 @@ public:
 class PolygonElementPtr : public ElementPtr {
 public:
   Polygon_2 element;
-
   // int visited_vertices[];
-  PolygonElementPtr(Polygon_2 poly) {
+  PolygonElementPtr(Polygon_2 poly, int linewidth = Rake::RAKE_MEDIUM) {
     this->element = poly;
+    this->rake_states = RakeVector(poly.size(), linewidth);
     this->visited = false;
   };
   #ifdef WITH_GUI
@@ -103,7 +115,8 @@ public:
     int idx = entry_point_index;
     int len = element.size();
     for(int i = 0; i <= len; ++i) {
-      res += str(format("%1% %2% %3%\n") % element[idx + i % len].x() % element[idx + i % len].y() % 0b00010000);
+      // poor mans circulator
+      res += str(format("%1% %2% %3%\n") % element[idx + i % len].x() % element[idx + i % len].y() % (int)rake_states[idx + i % len]);
     }
     return res;
   }
@@ -125,7 +138,10 @@ public:
   int fill_type; // fill type: 1 = Skeleton, 2 = wiggle
   Direction_2 direction; // only for wiggle fill
 
-  FilledPolygonElementPtr(Polygon_with_holes_2 poly) : element(poly) {
+  FilledPolygonElementPtr(Polygon_with_holes_2 poly, int linewidth = Rake::RAKE_MEDIUM) : element(poly) {
+    // This probably will have to be a bit more complicated!
+    // this->rake_states = RakeVector(poly.size(), linewidth);
+
     // convex_hull = 
     // std::list<Point_2> convex_hull_list;
     // convex_hull_list::iterator convex_hull_iter = convex_hull_list.begin();
@@ -255,18 +271,26 @@ public:
       res += str(format("%1% %2% %3%\n") % outer[idx + i % len].x() % outer[idx + i % len].y() % 0b00010000);
     }
     return res;
-    return res;
   }
 };
 
 class PolyLineElementPtr : public ElementPtr {
 public:
-  std::list<Point_2>  element;
-  std::list< std::list < Point_2 > > graphx_elem;
+  // Change implementation to Curve_2!
+  PolyLine_P  element;
+  std::list< PolyLine_P > graphx_elem;
   // int visited_vertices[];
-  PolyLineElementPtr(std::list<Point_2> polyline) : element(polyline) {};
+  PolyLineElementPtr(PolyLine_P polyline, int linewidth = Rake::RAKE_MEDIUM) : element(polyline) {
+    this->rake_states = RakeVector(polyline.size(), linewidth);
+  };
+  PolyLineElementPtr(std::list<Point_2> polyline, int linewidth = Rake::RAKE_MEDIUM) {
+    this->element = PolyLine_P{std::begin(polyline),
+                               std::end(polyline)};
+    this->rake_states = RakeVector(polyline.size(), linewidth);
+
+  };
   #ifdef WITH_GUI
-  CGAL::Qt::CustomPolylinesGraphicsItem<std::list<std::list<Point_2> > > * graphx;
+  PolylinesGraphicsI * graphx;
   void set_graphx() {
     graphx_elem.push_back(element);
     this->graphx = new PolylinesGraphicsI(&graphx_elem);
@@ -318,8 +342,9 @@ public:
   }
   std::string toString() {
     std::string res;
-    for(Point_2 p : element) {
-      res += str(format("%1% %2% %3%\n")  % p.x() % p.y() % 0b00010000);
+    assert(element.size() == rake_states.size());
+    for(int i = 0; i < element.size(); ++i) {
+      res += str(format("%1% %2% %3%\n")  % element[i].x() % element[i].y() % (int)rake_states[i]);
     }
     return res;
   }
