@@ -129,7 +129,7 @@ private:
     elem_to_round.v2_n = elem_to_round.v2 / sqrt(elem_to_round.v2.squared_length());
 
     elem_to_round.angle = this->calc_angle(elem_to_round.v1_n, elem_to_round.v2_n);
-    if(elem_to_round.angle != elem_to_round.angle) return PointList{p2};
+    if(elem_to_round.angle != elem_to_round.angle) return PointList({p2});
 
     elem_to_round.orientation = CGAL::orientation(p1, p2, p3);
     if(filling_element) {
