@@ -28,7 +28,7 @@ include_directories("${PROJECT_SRC_DIR}")
 # Add C++11 flags for foreach and regexp
 # REMOVE O0 slows down execution!!
 ADD_DEFINITIONS(
-    -std=c++11
+    -std=c++0x
     -frounding-math
     -O0
 )
@@ -62,7 +62,7 @@ set(Boost_USE_MULTITHREADED ON)
 set(Boost_USE_STATIC_RUNTIME OFF)
 set(BOOST_ALL_DYN_LINK ON)
 
-find_package(Boost 1.54.0 COMPONENTS python-py27 filesystem program_options)
+find_package(Boost COMPONENTS python-py27 filesystem program_options)
 include_directories(${Boost_INCLUDE_DIRS})
 link_directories(${Boost_LIBRARY_DIRS})
 
@@ -71,18 +71,12 @@ link_directories(${Boost_LIBRARY_DIRS})
 #	CGAL
 ##
 
-find_package(CGAL COMPONENTS Core Qt4 PATHS src/include/CGAL)
+find_package(CGAL COMPONENTS Core PATHS src/include/CGAL)
 include( ${CGAL_USE_FILE} )
 
 ##
 #	QT
 ##
-set( QT_USE_QTXML     TRUE )
-set( QT_USE_QTMAIN    TRUE )
-set( QT_USE_QTSCRIPT  TRUE )
-set( QT_USE_QTOPENGL  TRUE )
-
-include(${QT_USE_FILE})
 
 ##
 #   Eigen
@@ -94,8 +88,9 @@ include_directories(${EIGEN3_INCLUDE_DIR})
 ##
 #  JSON Write / Parse
 ##
-find_package(JSONCPP REQUIRED)
-include_directories(${JSONCPP_INCLUDE_DIR})
+#find_package(JSONCPP REQUIRED)
+include_directories(/usr/include/jsoncpp)
+set(JSONCPP_LIBRARIES /usr/lib/libjsoncpp.so)
 
 # if(CGAL_Core_FOUND)
 #     add_definitions(-DCGAL_USE_CORE)
@@ -104,8 +99,6 @@ include_directories(${JSONCPP_INCLUDE_DIR})
 SET(pathfinder_ui ui/pathfinder.ui)
 SET(pathfinder_qt_src src/view.h)
 
-QT4_WRAP_CPP(pathfinder_HEADERS_MOC ${pathfinder_qt_src})
-QT4_WRAP_UI(ui/pathfinder_UI_HEADERS ${pathfinder_ui})
 
 include_directories(src/include)
 
@@ -124,7 +117,6 @@ add_executable(svg_parser
     src/include/tree.h
     src/FillProcedures.h
     src/SegmentationPreProcessor.h)
-
 
 target_link_libraries(svg_parser  ${Boost_LIBRARIES} ${PYTHON_LIBRARIES} ${QT_LIBRARIES} ${JSONCPP_LIBRARIES})
 set_target_properties(svg_parser PROPERTIES COMPILE_DEFINITIONS "WITH_GUI;STANDALONE")

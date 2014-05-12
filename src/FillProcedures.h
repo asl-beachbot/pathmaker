@@ -1,12 +1,12 @@
 #pragma once
 #include "CGAL_Headers.h"
 #include <CGAL/Boolean_set_operations_2.h>
+#include <cmath>
 // forward declare
 
 #include "VectorTreeElements.h"
 
 typedef std::list<ElementPtr * > ElemList;
-Transformation rotate90(CGAL::ROTATION, sin(-M_PI/2), cos(-M_PI/2));
 
 class FillProcedure {
 public:
@@ -85,6 +85,7 @@ class WiggleFillProcedure : FillProcedure {
 
 
 private:
+  Transformation rotate_90;
   Direction_2 direction;
   float line_distance;
   void fill_polygon(Polygon_2 poly) {
@@ -98,7 +99,7 @@ private:
     Point_2 v_start = findStartingPoint(poly);
 
     Vector_2 repos_vector = direction.vector();
-    repos_vector = rotate90(repos_vector);
+    repos_vector = rotate_90(repos_vector);
     // repos_vector = repos_vector.transform(Transformation(CGAL::SCALING, line_distance));
     cout << "REPOS VECTOR " << repos_vector << endl;
 
@@ -181,6 +182,10 @@ public:
                                          // Instantiated on first use.
     return instance;
   }
+  WiggleFillProcedure() {
+    rotate_90 = Transformation(CGAL::ROTATION, sin(-M_PI/2), cos(-M_PI/2));
+  }
+
   Polygon_2 p;
   ElemList fill(FilledPolygonElementPtr * filled_poly_ptr) {
     line_distance = 5;
