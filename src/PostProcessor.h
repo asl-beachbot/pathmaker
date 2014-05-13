@@ -5,6 +5,7 @@
 #include "CGAL_Headers.h"
 #include <cmath>  // sqrt
 #include <boost/format.hpp>
+#include "GlobalOptions.h"
 using boost::format; using boost::str;
 
 
@@ -12,8 +13,6 @@ typedef VectorElementTree::Tree_ElementPtr::iterator TreeIterator;
 typedef VectorElementTree::Tree_ElementPtr Tree_ElementPtr;
 typedef VectorElementTree Tree;
 typedef PolyLine_P PointList;
-
-
 
 struct ThreePointElem {
   Point_2 p1;
@@ -27,11 +26,13 @@ struct ThreePointElem {
   int orientation;
 };
 
+
 class PostProcessor {
 private:
   float radius;
   float angle_interpolation;
-
+  float max_squared_interpol_distance;
+  int number_of_bezier_segs;
   VectorElementTree * tree;
   Transformation rotate_90;
   Transformation rotate_m90;
@@ -49,11 +50,10 @@ private:
   {
     PointList res;
     unsigned int i;
-    int N_SEG = 30;
     cout << "Creating bezier with " << p1 << " " << c1 << " " << c2 << " " << p2 << endl;
-    for (i=0; i <= N_SEG; ++i)
+    for (i=0; i <= number_of_bezier_segs; ++i)
     {
-      double t = (double)i / (double)N_SEG;
+      double t = (double)i / (double)number_of_bezier_segs;
 
       double a = pow((1.0 - t), 3.0);
       double b = 3.0 * t * pow((1.0 - t), 2.0);
@@ -188,16 +188,28 @@ private:
     }
     return PointList{p2};
   }
-
+  PointList interpolateDistance(Point_2 p1, Point_2 p2) {
+    PointList res;
+    if((p1 - p2).squared_length() > max_squared_interpol_distance) {
+      Vector_2 v_n = (p1-p2) / sqrt((p1 - p2).squared_length());
+      int n_elems = floor((p1-p2).squared_length() / max_squared_interpol_distance);
+      double len_el = sqrt((p1-p2).squared_length()) / n_elems;
+      for(int i = 0; i <= n_elems; i++) {
+        res.push_back(p1 + (v_n * len_el * i));
+      }
+      return res;
+    } else {
+      PointList{p1, p2};
+    }
+  }
 public:
   PolyLine_P * final_path;
   RakeVector * final_rake;
-	PostProcessor(VectorElementTree * tree, float r) : tree(tree) {
-    angle_interpolation = 0.2;
-    radius = 0.7;
-    if(r != 0) {
-      radius = r;
-    }
+	PostProcessor(VectorElementTree * tree) : tree(tree) {
+    radius = GlobalOptions::getInstance().rounding_radius;
+    angle_interpolation = GlobalOptions::getInstance().angle_interpolation_stepsize;
+    number_of_bezier_segs = GlobalOptions::getInstance().number_of_bezier_segs;
+    max_squared_interpol_distance = GlobalOptions::getInstance().max_squared_point_distance;
     rotate_90 = Transformation(CGAL::ROTATION, sin(M_PI/2), cos(M_PI/2));
     rotate_m90 =  Transformation(CGAL::ROTATION, sin(-M_PI/2), cos(-M_PI/2));
   }
@@ -372,6 +384,14 @@ public:
                 rake_state = Rake::RAKE_MEDIUM; // replace with Linewidth
               }
             }
+
+            PointList interpolation = interpolateDistance(p1, p2);
+            int prev_rake_state = Rake::RAKE_MEDIUM;
+            for(Point_2 p : interpolation) {
+              assert(p != p0);
+              final_path->push_back(p); 
+              final_rake->push_back(prev_rake_state);
+            }
             for(Point_2 p : res) {
               assert(p != p0);
               final_path->push_back(p);
@@ -435,8 +455,6 @@ public:
 
     assert(final_path->size() == final_rake->size());
     for(int i = 0; i < final_path->size(); ++i) {
-      // poor mans circulator
-      cout << "writing" << endl;
       res += str(format("%1% %2% %3%\n") % final_path->at(i).x() % final_path->at(i).y() % (int)final_rake->at(i));
     }
     return res;

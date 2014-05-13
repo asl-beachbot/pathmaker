@@ -13,10 +13,10 @@
 #include "FillProcedures.h"
 #include "SegmentationPreProcessor.h"
 #include "PostProcessor.h"
+#include "PreProcessor.cpp"
+#include "GlobalOptions.h"
 
 #ifdef STANDALONE
-#include <boost/program_options.hpp>
-namespace po = boost::program_options;
 #endif
 
 using namespace std;
@@ -134,44 +134,29 @@ void ParsedSVG::parseSVGString(std::string svg_xml_string) {
 
 
 int main(int argc, char** argv) {
-  float radius = 0.5;
-  po::options_description desc("Allowed options");
-  desc.add_options()
-      ("help", "produce help message")
-      ("round_radius", po::value<float>(), "set radius for corner rounding")
-      ("fillmethod", po::value<int>(), "set fill method (1: wiggle or 2: spiral)")
-  ;
+   // GlobalOptions config = GlobalOptions::getInstance();
 
-  po::variables_map vm;
-  po::store(po::parse_command_line(argc, argv, desc), vm);
-  po::notify(vm);
-
-  if (vm.count("help")) {
-      cout << desc << "\n";
-      return 1;
-  }
-
-  if (vm.count("round_radius")) {
-      cout << "corner rounding was set to " 
-   << vm["round_radius"].as<float>() << ".\n";
-   radius = vm["round_radius"].as<float>();
-  } else {
-      cout << "round_radius was not set.\n";
-  }
-  
-  int fillmethod = 2;
-  if(vm.count("fillmethod")) fillmethod = vm["fillmethod"].as<int>();
+  GlobalOptions::getInstance().init();
+  GlobalOptions::getInstance().parseCommandLine(argc, argv);
+  GlobalOptions::getInstance().printOptions();
 
   ParsedSVG * ps = new ParsedSVG();
-  ps->parseSVGFile("assets/2.svg");
+  ps->parseSVGFile(GlobalOptions::getInstance().filename);
   VectorElementTree * vet = new VectorElementTree();
   vet->createAndSortTree(ps);
+  PreProcessor * ppp = new PreProcessor(vet);
+  ppp->process(
+    GlobalOptions::getInstance().translate_playfield_x,
+    GlobalOptions::getInstance().translate_playfield_y,
+    GlobalOptions::getInstance().field_width,
+    GlobalOptions::getInstance().field_height
+  );
   // SegmentationPreProcessor * spp = new SegmentationPreProcessor(vet);
   // spp->process();
   vet->fillPolys();
   SimpleConnector * sc = new SimpleConnector(vet);
   sc->connect();
-  PostProcessor *  psc = new PostProcessor(vet, radius);
+  PostProcessor *  psc = new PostProcessor(vet);
   psc->process();
   std::string resulting_string = psc->toString();
   std::string json = "var PolyJSON = '" + vet->toJSON();
@@ -182,9 +167,12 @@ int main(int argc, char** argv) {
   of_string << resulting_string;
   vet->writeToFile("out_tree.txt");
 #ifdef WITH_GUI
-  QApplication app(argc, argv);
+  if(GlobalOptions::getInstance().display) {
+    if(GlobalOptions::getInstance().scale_for_disp != 1) {
+      ppp->process(GlobalOptions::getInstance().scale_for_disp);
+    }
+    QApplication app(argc, argv);
  
-  if(argc > 1) {
     View * window = new View();
     window->initWindow();
     window->show();
