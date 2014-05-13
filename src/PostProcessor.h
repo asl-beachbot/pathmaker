@@ -4,12 +4,14 @@
 #include "VectorElementTree.h"
 #include "CGAL_Headers.h"
 #include <cmath>  // sqrt
+#include <boost/format.hpp>
+using boost::format; using boost::str;
 
 
 typedef VectorElementTree::Tree_ElementPtr::iterator TreeIterator;
 typedef VectorElementTree::Tree_ElementPtr Tree_ElementPtr;
 typedef VectorElementTree Tree;
-typedef std::vector<Point_2> PointList;
+typedef PolyLine_P PointList;
 
 
 
@@ -48,6 +50,7 @@ private:
     PointList res;
     unsigned int i;
     int N_SEG = 30;
+    cout << "Creating bezier with " << p1 << " " << c1 << " " << c2 << " " << p2 << endl;
     for (i=0; i <= N_SEG; ++i)
     {
       double t = (double)i / (double)N_SEG;
@@ -86,24 +89,27 @@ private:
     Vector_2 v1_m;
     // code for inside
     Vector_2 rotate_rad;
-    if(el->orientation == CGAL::RIGHT_TURN) {
+    if(el->orientation == CGAL::LEFT_TURN) {
       v1_m = (el->p2 - CGAL::ORIGIN) - (el->v1_n * l_down) - (el->v1_n.transform(rotate_m90) * radius);
       rotate_rad = ((el->p2 - CGAL::ORIGIN) - el->v1_n * l_down) - v1_m;
-    } else if(el->orientation == CGAL::LEFT_TURN) {
+    } else if(el->orientation == CGAL::RIGHT_TURN) {
       v1_m = (el->p2 - CGAL::ORIGIN) - (el->v2_n * l_down) - (el->v2_n.transform(rotate_m90) * radius);
       rotate_rad = ((el->p2 - CGAL::ORIGIN) - el->v2_n * l_down) - v1_m;
     } else {
-      return result; // collinear!
+      return PointList{el->p2}; // collinear!
     }
 
     int len_interpol = floor(counter_angle / angle_interpolation);
     cout << el->angle << " " << counter_angle << " " <<  interpolate_angle << endl;
     // check NaN
-    for(float i = 0; i < counter_angle; i += counter_angle / len_interpol) {
+    for(float i = 0; i <= counter_angle; i += counter_angle / len_interpol) {
       Transformation rot(CGAL::ROTATION, sin(i), cos(i));
       Vector_2 v_temp = rotate_rad.transform(rot);
       result.push_back(CGAL::ORIGIN + (v1_m + v_temp));
-      cout << "Iterating over rounded edge " << v_temp.x() << " " << v_temp.y() << endl;
+      // cout << "Iterating over rounded edge " << v_temp.x() << " " << v_temp.y() << endl;
+    }
+    if(el->orientation == CGAL::RIGHT_TURN) {
+      std::reverse(result.begin(), result.end());
     }
     return result;
   }
@@ -127,7 +133,7 @@ private:
       v1_m = (el->p2 - CGAL::ORIGIN) + (el->v2_n * l_down) + (el->v2_n.transform(rotate_m90) * radius);
       rotate_rad = ((el->p2 - CGAL::ORIGIN) + el->v2_n * l_down) - v1_m;
     } else {
-      return result; // collinear!
+      return PointList{el->p2}  ; // collinear!
     }
 
     int len_interpol = floor(counter_angle / angle_interpolation);
@@ -137,7 +143,7 @@ private:
       Transformation rot(CGAL::ROTATION, sin(-i), cos(-i));
       Vector_2 v_temp = rotate_rad.transform(rot);
       result.push_back(CGAL::ORIGIN + (v1_m + v_temp));
-      cout << "Iterating outside rounded edge " << v_temp.x() << " " << v_temp.y() << endl;
+      // cout << "Iterating outside rounded edge " << v_temp.x() << " " << v_temp.y() << endl;
     }
     result.push_back(el->p2);
     if(el->orientation == CGAL::RIGHT_TURN) {
@@ -165,7 +171,7 @@ private:
     if(filling_element) {
       if(elem_to_round.angle < M_PI/2) {
         *outer = false;
-        //return PointList{p2};
+        // return PointList{p2};
         return round_corner(&elem_to_round);
       }
     } else {
@@ -176,7 +182,7 @@ private:
       }
       else {
         *outer = false;
-        return PointList{p2};
+        // return PointList{p2};
         return round_corner(&elem_to_round);
       }
     }
@@ -184,8 +190,8 @@ private:
   }
 
 public:
-  PointList final_path;
-  RakeVector final_rake;
+  PolyLine_P * final_path;
+  RakeVector * final_rake;
 	PostProcessor(VectorElementTree * tree, float r) : tree(tree) {
     angle_interpolation = 0.2;
     radius = 0.7;
@@ -216,30 +222,36 @@ public:
       case EL_POLYGON:
       case EL_FILLED_POLYGON: {
         // allways clockwise or whatever
+        cout << "Polygon Entry: " << to->entry_point_index << " Size: " << static_cast<PolygonElementPtr * >(to)->element.size() << endl;
         p21 = to->getFromIndex(to->entry_point_index);
         p22 = to->getFromIndex(to->entry_point_index + 1);
       }
       break;
     }
     Segment_2 s = Segment_2(p12, p21);
-    Direction_2 d1 = (p12 - p11).direction();
-    Direction_2 d2 = (p22 - p21).direction();
+    Vector_2 d1 = (p12 - p11) / sqrt((p12 -p11).squared_length());
+    Vector_2 d2 = (p22 - p21) / sqrt((p22 - p21).squared_length());
     double length = sqrt((p12 - p21).squared_length());
+    cout << "Length of connection " << length << endl;
     Transformation cp_scale = Transformation(CGAL::SCALING, length / 4);
-    Point_2 cp1 = p12 - d1.vector().transform(cp_scale);
-    Point_2 cp2 = p21 - d2.vector().transform(cp_scale);
+    Point_2 cp1 = p12 + d1.transform(cp_scale);
+    Point_2 cp2 = p21 - d2.transform(cp_scale);
     return bezierHelper(p12, cp1, cp2, p21);
   }
   void process() {
     // Something to consider: connections have been made, but 
     // the angle of the connection matters so we're finding the
     // right side of entry to the polygon
+
+    auto p0 = Point_2(0, 0);
+
     auto element_tree = &(this->tree->element_tree);
+    auto playfield = *(element_tree->begin());
     auto it = ++element_tree->begin(); // skip playfield
     auto it_end = element_tree->end();
 
-    PolyLine_P * final_polylist_temp = new PolyLine_P();
-    RakeVector * final_rake = new RakeVector();
+    final_path = new PolyLine_P();
+    final_rake = new RakeVector();
 
     for(; it != it_end; ++it) {
       if((*it)->from == NULL) {
@@ -252,9 +264,11 @@ public:
           case EL_POLYLINE: {
           PolyLineElementPtr * polyline_el = static_cast<PolyLineElementPtr * >(*it);
           PolyLine_P * el = &(polyline_el->element);
-          RakeVector * final_rake = new RakeVector();
           int len = el->size();
-          if(len <= 2) continue;
+          // if(len <= 2) { // there is nothing to round here!
+          //   elem = elem->to;
+          //   continue;
+          // }
           bool outer = false;
           PointList res;
           unsigned char rake_state;
@@ -269,15 +283,15 @@ public:
                 rake_state = Rake::RAKE_MEDIUM; // replace with Linewidth
               }
               for(Point_2 p : res) {
-                final_polylist_temp->push_back(p);
+                final_path->push_back(p);
                 final_rake->push_back(rake_state);
               }
             }
-            if(elem->to) {
+            if(elem->to && elem->to != playfield) {
               ++i;
               PointList temp_res = round_connector(el->at(len - 2), el->at(len - 1), elem->to);
               for(Point_2 p: temp_res) {
-                final_polylist_temp->push_back(p);
+                final_path->push_back(p);
                 final_rake->push_back(0);
               }
             }
@@ -292,15 +306,17 @@ public:
                 rake_state = Rake::RAKE_MEDIUM; // replace with Linewidth
               }
               for(Point_2 p : res) {
-                final_polylist_temp->push_back(p);
+                assert(p != p0);
+                final_path->push_back(p);
                 final_rake->push_back(rake_state);
               }
             }
-            if(elem->to) {
+            if(elem->to && elem->to != playfield) {
               --i;
-              PointList temp_res = round_connector(el->at(i), el->at(i + 1), elem->to);
+              PointList temp_res = round_connector(el->at(0), el->at(1), elem->to);
               for(Point_2 p: temp_res) {
-                final_polylist_temp->push_back(p);
+                assert(p != p0);
+                final_path->push_back(p);
                 final_rake->push_back(0);
               }
             }
@@ -308,9 +324,15 @@ public:
           }
         }
         break;
+        case EL_FILLED_POLYGON:
         case EL_POLYGON: {
-          PolygonElementPtr * polygon_el = static_cast<PolygonElementPtr * >(*it);
-          Polygon_2 * el = &(polygon_el->element);
+          Polygon_2 * el;
+          if(elem->get_type() == EL_FILLED_POLYGON) {
+            el = &(static_cast<FilledPolygonElementPtr * >(elem)->element.outer_boundary());
+          } else {
+            PolygonElementPtr * polygon_el = static_cast<PolygonElementPtr * >(elem);
+            el = &(polygon_el->element);
+          }
           int len = el->size();
           int end_index = len;
           int entry_index = 0;
@@ -318,18 +340,30 @@ public:
             end_index = elem->exit_point_index;
             entry_index = elem->entry_point_index;
           }
+
+          bool finished = false;
+          bool circling_started = false;
           for(int i = entry_index; i <= entry_index + len; ++i ) {
+            unsigned char rake_state = 0;
             bool outer = false;
             // A farmers circulator
             int ind = i % len;
+
+            int p1_ind = ind ? ind - 1 : len - 1;
+            int p3_ind = ind + 1 == len ? 0 : ind + 1;
+
             Point_2 p1 = (*el)[ind ? ind - 1 : len - 1];
             Point_2 p2 = (*el)[ind];
             Point_2 p3 = (*el)[ind + 1 == len ? 0 : ind + 1];
-            unsigned char rake_state = 0;
 
+            cout << "P1 index: " << p1_ind << " P2: " << p3_ind << endl;
+            cout << "Ind: " << ind << " end_ind: " << end_index << " entry: " << entry_index << " i: " << i << endl ;
             PointList res;
-            if(ind == end_index) {
+            if(circling_started && ind == end_index && elem->to && elem->to != playfield) {
+              cout << "rounding connector" << endl;
               res = round_connector(p1, p2, elem->to);
+              rake_state = (elem->to->fill_element && elem->fill_element) ? Rake::RAKE_MEDIUM : 0;
+              finished = true; // finished circling
             } else {
               res = decide_action(p1, p2, p3, &outer, elem->fill_element);
               if(outer) {
@@ -339,16 +373,23 @@ public:
               }
             }
             for(Point_2 p : res) {
-              final_polylist_temp->push_back(p);
+              assert(p != p0);
+              final_path->push_back(p);
               final_rake->push_back(rake_state);
               // cout << "Rounding: " << p << endl;
             }
+            if(outer) {
+              final_rake->pop_back();
+              final_rake->push_back(Rake::RAKE_MEDIUM); // replace with Linewidth
+            }
+            circling_started = true;
+            if (finished) break;
           }
           // polygon_el->element = *final_polygon;
           // polygon_el->rake_states = *final_rake;
         }
         break;
-        case EL_FILLED_POLYGON: {
+        // case EL_FILLED_POLYGON: {
           // handle it like a polygon for now.
           // PolygonElementPtr * polygon_el = static_cast<FilledPolygonElementPtr * >(*it);
           // PolygonWithHoles_2 * el = &(polygon_el->element);
@@ -376,13 +417,28 @@ public:
           // }
           // polygon_el->element = *final_polygon;
           // polygon_el->rake_states = *final_rake;
-        }
-        break;
+        // }
+        // break;
       }
       elem = elem->to;
     }
     // Draw it somehow!
-    PolyLineElementPtr * poly_el_ptr = new PolyLineElementPtr(*final_polylist_temp);
+    cout << "size : " << final_path->size();
+    PolyLineElementPtr * poly_el_ptr = new PolyLineElementPtr(*final_path);
+    poly_el_ptr->post_processed_result = true;
+    // this->result = poly_el_ptr;
     tree->element_tree.append_child(tree->element_tree.begin(), poly_el_ptr);
+  }
+  std::string toString() {
+    std::string res;
+    cout << "size : " << final_path->size() << "rake :" << final_rake->size();
+
+    assert(final_path->size() == final_rake->size());
+    for(int i = 0; i < final_path->size(); ++i) {
+      // poor mans circulator
+      cout << "writing" << endl;
+      res += str(format("%1% %2% %3%\n") % final_path->at(i).x() % final_path->at(i).y() % (int)final_rake->at(i));
+    }
+    return res;
   }
 };

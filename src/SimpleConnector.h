@@ -30,6 +30,7 @@ private:
         p2_end = static_cast<FilledPolygonElementPtr * >(p2)->element.outer_boundary().vertices_end();
       }
       auto p2_begin_ref = p2_begin;
+      auto p2_found_iter = p2_begin;
       Point_2 point2 = *p2_begin;
       distance = CGAL::squared_distance(exit_point, *p2_begin);
       for(;p2_begin != p2_end; ++p2_begin) {
@@ -37,12 +38,14 @@ private:
         if(temp_dist < distance) {
           distance = temp_dist;
           point2 = *p2_begin;
+          p2_found_iter = p2_begin;
         }
       }
       if(connect) {
         p2->entry_point = point2;
         p2->exit_point = point2;
-        p2->entry_point_index = std::distance(p2_begin, p2_begin_ref);
+        p2->entry_point_index = std::abs(std::distance(p2_found_iter, p2_begin_ref));
+        p2->exit_point_index = p2->entry_point_index;
       }
       return point2;
     }
@@ -56,6 +59,7 @@ private:
           if(connect) {
             p2->entry_point = p2_end;
             p2->entry_point_index = static_cast<PolyLineElementPtr * >(p2)->element.size();
+            p2->exit_point_index = 0;
             p2->exit_point = p2_begin;
           }
           return p2_end;
@@ -65,6 +69,7 @@ private:
             p2->entry_point = p2_begin;
             p2->exit_point = p2_end;
             p2->entry_point_index = 0;
+            p2->exit_point_index = static_cast<PolyLineElementPtr * >(p2)->element.size();
           }
           return p2_begin;
         }
@@ -169,6 +174,7 @@ private:
     (*node)->visited = true;
     // TODO check if this is correct (leave out first "playfield"!)
     if(node == this->element_tree->begin()) {
+      // (*node)->from->to = NULL;
       (*node)->to = NULL;
       (*node)->from = NULL;
       return 1;

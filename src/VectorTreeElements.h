@@ -32,6 +32,7 @@ class ElementPtr {
 public:
   bool visited;
   bool fill_element = false;
+  bool post_processed_result = false;
   RakeVector rake_states;
 
   #ifdef WITH_GUI
@@ -85,7 +86,7 @@ public:
   }
   #endif
   Point_2 getFromIndex(int i) {
-    return element[i];
+    return element[i % element.size()];
   }
   ElementType get_type() { return EL_POLYGON; }
   void print() {
