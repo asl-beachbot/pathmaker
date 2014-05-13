@@ -139,6 +139,7 @@ int main(int argc, char** argv) {
   desc.add_options()
       ("help", "produce help message")
       ("round_radius", po::value<float>(), "set radius for corner rounding")
+      ("fillmethod", po::value<int>(), "set fill method (1: wiggle or 2: spiral)")
   ;
 
   po::variables_map vm;
@@ -157,15 +158,16 @@ int main(int argc, char** argv) {
   } else {
       cout << "round_radius was not set.\n";
   }
-
-
+  
+  int fillmethod = 2;
+  if(vm.count("fillmethod")) fillmethod = vm["fillmethod"].as<int>();
 
   ParsedSVG * ps = new ParsedSVG();
   ps->parseSVGFile("assets/2.svg");
   VectorElementTree * vet = new VectorElementTree();
   vet->createAndSortTree(ps);
-  SegmentationPreProcessor * spp = new SegmentationPreProcessor(vet);
-  spp->process();
+  // SegmentationPreProcessor * spp = new SegmentationPreProcessor(vet);
+  // spp->process();
   vet->fillPolys();
   SimpleConnector * sc = new SimpleConnector(vet);
   sc->connect();
@@ -189,7 +191,7 @@ int main(int argc, char** argv) {
     return app.exec();
   }
 #endif
-  delete spp;
+  // delete spp;
   delete vet;
   delete sc;
   delete ps;

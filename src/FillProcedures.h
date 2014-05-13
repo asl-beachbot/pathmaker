@@ -36,6 +36,7 @@ public:
       for(std::vector<PolygonWithHolesPtr>::iterator i = offset_poly_wh.begin(); i != offset_poly_wh.end(); ++i) {
         Polygon_2 outer = (**i).outer_boundary();
         ElementPtr * poly_element = new PolygonElementPtr(outer);
+        poly_element->fill_element = true;
         cout << poly_element << endl;
         result.push_back(poly_element);
       }
@@ -148,6 +149,8 @@ private:
     }
 
     ElementPtr * poly_element = new PolyLineElementPtr(intersections);
+    poly_element->fill_element = true;
+
     result.push_back(poly_element);
   }
   Point_2 findStartingPoint(Polygon_2 poly) {

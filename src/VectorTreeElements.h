@@ -31,6 +31,7 @@ enum Rake {
 class ElementPtr {
 public:
   bool visited;
+  bool fill_element = false;
   RakeVector rake_states;
 
   #ifdef WITH_GUI
@@ -306,10 +307,11 @@ public:
   // if inside: Choose as start point!
 
   Point_2 getFromIndex(int i) {
-    if(i == 0) {
-      return element.front();
+    if(i >= 0) {
+      return element[i];
+    } else {
+      return element[element.size() + i];
     }
-    else return element.front();
   }
   ElementType get_type() { return EL_POLYLINE; }
 

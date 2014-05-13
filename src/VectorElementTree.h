@@ -237,7 +237,7 @@ public:
 
   void drawConnections() {
     connect_lines_gi = new PolylinesGraphicsI(&connect_lines);
-    connect_lines_gi->setEdgesPen(QPen(QColor(0,40,60), 2));
+    connect_lines_gi->setEdgesPen(QPen(QColor(0,40,120), 0));
     window->addItem(connect_lines_gi);
     connect_lines_gi->show();
     Tree_ElementPtr::iterator it = ++element_tree.begin();
@@ -319,7 +319,8 @@ public:
   void fillPolys() {
     Tree_ElementPtr::iterator it = element_tree.begin();
     Tree_ElementPtr::iterator it_end = element_tree.end();
-    WiggleFillProcedure * spiral_singleton = &WiggleFillProcedure::getInstance();
+    WiggleFillProcedure * wiggle_singleton = &WiggleFillProcedure::getInstance();
+    SpiralFillProcedure * spiral_singleton = &SpiralFillProcedure::getInstance();
     for(; it != it_end; ++it) {
       if((*it)->get_type() == EL_FILLED_POLYGON) {
         FilledPolygonElementPtr * el_ptr = static_cast<FilledPolygonElementPtr *>((*it));
