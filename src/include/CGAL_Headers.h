@@ -1,5 +1,5 @@
 #pragma once
-
+#ifndef cgal_headers_pathmaker
 #include <boost/shared_ptr.hpp>
 
 #include <CGAL/Exact_predicates_inexact_constructions_kernel.h>
@@ -68,3 +68,5 @@ typedef CGAL::Qt::PolygonGraphicsItem<Polygon_2> PolygonGraphicsI;
 typedef CGAL::Qt::CustomPolylinesGraphicsItem<std::list< PolyLine_P> > PolylinesGraphicsI;
 
 #endif
+#endif
+#define cgal_headers_pathmaker
