@@ -166,7 +166,7 @@ public:
       for(int i = 0; i < element_tree.depth(sib2); ++i)
         cout << " ";
       cout << (*sib2);
-      // (*sib2)->print();
+      (*sib2)->print();
       cout << endl;
       ++sib2;
     }

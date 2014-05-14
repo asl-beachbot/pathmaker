@@ -153,6 +153,7 @@ int main(int argc, char** argv) {
   );
   // SegmentationPreProcessor * spp = new SegmentationPreProcessor(vet);
   // spp->process();
+  vet->print_tree();
   vet->fillPolys();
   SimpleConnector * sc = new SimpleConnector(vet);
   sc->connect();

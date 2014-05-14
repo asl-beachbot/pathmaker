@@ -4,6 +4,7 @@
 #include <cmath>
 // forward declare
 
+#include "GlobalOptions.h"
 #include "VectorTreeElements.h"
 
 typedef std::list<ElementPtr * > ElemList;
@@ -48,7 +49,7 @@ public:
 	Polygon_with_holes_2 * poly;
   float line_distance;
 	ElemList fill(FilledPolygonElementPtr * filled_poly_ptr) {
-    line_distance = 5;
+    line_distance = GlobalOptions::getInstance().line_distance;
     this->poly = &(filled_poly_ptr->element);
     this->run();
     for(ElementPtr * e : result) {
@@ -191,7 +192,7 @@ public:
 
   Polygon_2 p;
   ElemList fill(FilledPolygonElementPtr * filled_poly_ptr) {
-    line_distance = 5;
+    line_distance = GlobalOptions::getInstance().line_distance;
     this->p = filled_poly_ptr->element.outer_boundary();
 
     cout << "Filling element, Segments: " << filled_poly_ptr->segments.size() << endl;

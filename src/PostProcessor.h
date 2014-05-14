@@ -32,6 +32,7 @@ private:
   float radius;
   float angle_interpolation;
   float max_squared_interpol_distance;
+  double threshold_round_angle;
   int number_of_bezier_segs;
   VectorElementTree * tree;
   Transformation rotate_90;
@@ -169,14 +170,14 @@ private:
 
     elem_to_round.orientation = CGAL::orientation(p1, p2, p3);
     if(filling_element) {
-      if(elem_to_round.angle < M_PI/2) {
+      if(elem_to_round.angle < threshold_round_angle) {
         *outer = false;
         // return PointList{p2};
         return round_corner(&elem_to_round);
       }
     } else {
       // only sharp corners: go outside
-      if(elem_to_round.angle < M_PI/2) {
+      if(elem_to_round.angle < threshold_round_angle) {
         *outer = true;
         return round_outer_corner(&elem_to_round);
       }
@@ -189,18 +190,20 @@ private:
     return PointList{p2};
   }
   PointList interpolateDistance(Point_2 p1, Point_2 p2) {
+    int n_elems = floor((p1-p2).squared_length() / max_squared_interpol_distance);
     PointList res;
-    if((p1 - p2).squared_length() > max_squared_interpol_distance) {
-      Vector_2 v_n = (p1-p2) / sqrt((p1 - p2).squared_length());
-      int n_elems = floor((p1-p2).squared_length() / max_squared_interpol_distance);
+    if(n_elems != 0) {
+      Vector_2 v_n = (p2 - p1) / sqrt((p1 - p2).squared_length());
       double len_el = sqrt((p1-p2).squared_length()) / n_elems;
       for(int i = 0; i <= n_elems; i++) {
         res.push_back(p1 + (v_n * len_el * i));
       }
       return res;
     } else {
-      PointList{p1, p2};
+      res.push_back(p1);
+      res.push_back(p2);
     }
+    return res;
   }
 public:
   PolyLine_P * final_path;
@@ -210,6 +213,7 @@ public:
     angle_interpolation = GlobalOptions::getInstance().angle_interpolation_stepsize;
     number_of_bezier_segs = GlobalOptions::getInstance().number_of_bezier_segs;
     max_squared_interpol_distance = GlobalOptions::getInstance().max_squared_point_distance;
+    threshold_round_angle = GlobalOptions::getInstance().threshold_round_angle;
     rotate_90 = Transformation(CGAL::ROTATION, sin(M_PI/2), cos(M_PI/2));
     rotate_m90 =  Transformation(CGAL::ROTATION, sin(-M_PI/2), cos(-M_PI/2));
   }
@@ -339,11 +343,13 @@ public:
         case EL_FILLED_POLYGON:
         case EL_POLYGON: {
           Polygon_2 * el;
+          bool boundary = false;
           if(elem->get_type() == EL_FILLED_POLYGON) {
             el = &(static_cast<FilledPolygonElementPtr * >(elem)->element.outer_boundary());
           } else {
             PolygonElementPtr * polygon_el = static_cast<PolygonElementPtr * >(elem);
             el = &(polygon_el->element);
+            boundary = true;
           }
           int len = el->size();
           int end_index = len;
@@ -373,9 +379,13 @@ public:
             PointList res;
             if(circling_started && ind == end_index && elem->to && elem->to != playfield) {
               cout << "rounding connector" << endl;
+              // elem->to->entry_point_index = elem->to->entry_point_index + 1; // TODO Quick Fix (replace in Connector)
               res = round_connector(p1, p2, elem->to);
               rake_state = (elem->to->fill_element && elem->fill_element) ? Rake::RAKE_MEDIUM : 0;
               finished = true; // finished circling
+            } else if (ind == end_index && boundary) {
+              // this is the end! 
+              finished = true;
             } else {
               res = decide_action(p1, p2, p3, &outer, elem->fill_element);
               if(outer) {
@@ -383,14 +393,6 @@ public:
               } else {
                 rake_state = Rake::RAKE_MEDIUM; // replace with Linewidth
               }
-            }
-
-            PointList interpolation = interpolateDistance(p1, p2);
-            int prev_rake_state = Rake::RAKE_MEDIUM;
-            for(Point_2 p : interpolation) {
-              assert(p != p0);
-              final_path->push_back(p); 
-              final_rake->push_back(prev_rake_state);
             }
             for(Point_2 p : res) {
               assert(p != p0);
@@ -405,8 +407,6 @@ public:
             circling_started = true;
             if (finished) break;
           }
-          // polygon_el->element = *final_polygon;
-          // polygon_el->rake_states = *final_rake;
         }
         break;
         // case EL_FILLED_POLYGON: {
@@ -443,6 +443,29 @@ public:
       elem = elem->to;
     }
     // Draw it somehow!
+    if(final_path->size() > 1) {
+      auto it_fp = ++(final_path->begin());
+      auto it_fp_end = final_path->end();
+      PointList interpolated_vec;
+      RakeVector interpolated_rake_vec;
+      int i = 0;
+      for(; it_fp != it_fp_end; ++it_fp) {
+        PointList temp_list = interpolateDistance(*(it_fp - 1), *it_fp);
+        interpolated_vec.insert(
+          interpolated_vec.end(),
+          temp_list.begin(),
+          temp_list.end()
+        );
+        interpolated_rake_vec.insert(
+          interpolated_rake_vec.end(),
+          temp_list.size(),
+          final_rake->at(i)
+        );
+        ++i;
+      }
+      *final_path = interpolated_vec;
+      *final_rake = interpolated_rake_vec;
+    }
     cout << "size : " << final_path->size();
     PolyLineElementPtr * poly_el_ptr = new PolyLineElementPtr(*final_path);
     poly_el_ptr->post_processed_result = true;
