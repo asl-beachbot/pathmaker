@@ -22,12 +22,15 @@ private:
     if(p2->get_type() != EL_POLYLINE) {
       float distance, temp_dist;
       Polygon_2::Vertex_const_iterator p2_begin, p2_end;
+      Polygon_2 poly;
       if(p2->get_type() == EL_POLYGON) {
         p2_begin = static_cast<PolygonElementPtr * >(p2)->element.vertices_begin();
         p2_end = static_cast<PolygonElementPtr * >(p2)->element.vertices_end();
+        poly = static_cast<PolygonElementPtr * >(p2)->element;
       } else {
         p2_begin = static_cast<FilledPolygonElementPtr * >(p2)->element.outer_boundary().vertices_begin();
         p2_end = static_cast<FilledPolygonElementPtr * >(p2)->element.outer_boundary().vertices_end();
+        poly = static_cast<FilledPolygonElementPtr * >(p2)->element.outer_boundary();
       }
       auto p2_begin_ref = p2_begin;
       auto p2_found_iter = p2_begin;
@@ -42,10 +45,11 @@ private:
         }
       }
       if(connect) {
-        p2->entry_point = point2;
         p2->exit_point = point2;
-        p2->entry_point_index = std::abs(std::distance(p2_found_iter, p2_begin_ref));
-        p2->exit_point_index = p2->entry_point_index;
+        p2->exit_point_index = std::abs(std::distance(p2_found_iter, p2_begin_ref));
+        p2->entry_point = poly[p2->exit_point_index + 1];
+        p2->entry_point_index = p2->exit_point_index + 1; // one more forward!
+        cout << "EntryP: " << p2->entry_point << " " << p2->entry_point_index << " Exit: " << p2->exit_point << " " << p2->exit_point_index << endl;
       }
       return point2;
     }
@@ -100,8 +104,8 @@ private:
       this->connect_recursive(this->element_tree->parent(node), node);
       int entry_point_index;
       Point_2 next_entry = this->find_closest_point_on_element((*connect_from)->exit_point, (*node), true);
-      (*node)->entry_point = next_entry;
-      (*node)->entry_point_index = entry_point_index;
+        // (*node)->entry_point = next_entry;
+        // (*node)->entry_point_index = entry_point_index;
 
       // this->addLine(next_entry, (*connect_from)->entry_point, &this->poly_connector_lines);
 
@@ -140,7 +144,7 @@ private:
       (*node)->from = *connect_from;
       int entry_point_index;
       cout << "Connecting " << *connect_from << " to " << *node << endl;
-      Point_2 next_entry = this->find_closest_point_on_element((*connect_from)->entry_point, (*node), true);
+      Point_2 next_entry = this->find_closest_point_on_element((*connect_from)->exit_point, (*node), true);
       // (*node)->entry_point = next_entry;
       // (*node)->entry_point_index = entry_point_index;
 

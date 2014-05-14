@@ -25,6 +25,7 @@ public:
 public:
   // ElemList result;
 	void run() {
+    cout << "Area smaller than " << max_area_for_deletion << " will get deleted" << endl;
     float lOffset = line_distance;
     int count = 0;
     PolygonWithHolesPtrVector offset_poly_wh =
@@ -36,6 +37,11 @@ public:
       // no more polys
       for(std::vector<PolygonWithHolesPtr>::iterator i = offset_poly_wh.begin(); i != offset_poly_wh.end(); ++i) {
         Polygon_2 outer = (**i).outer_boundary();
+        cout << "Area: " << outer.area() << endl;
+        if(max_area_for_deletion > std::abs(outer.area())) { // area is signed ccw or cw
+          cout << "Skipping / Removing inside poly" << endl;
+          continue;
+        }
         ElementPtr * poly_element = new PolygonElementPtr(outer);
         poly_element->fill_element = true;
         cout << poly_element << endl;
@@ -55,13 +61,16 @@ public:
     for(ElementPtr * e : result) {
       cout << "Element: " << e << endl;
     }
-    return result; // return copy of result 
+    return result; // return copy of result
 	}
   ~SpiralFillProcedure() {
     // delete poly;
   }
 private:
-  SpiralFillProcedure() {};                   // Constructor? (the {} brackets) are needed here.
+  double max_area_for_deletion = 0;
+  SpiralFillProcedure() {
+    this->max_area_for_deletion = GlobalOptions::getInstance().area_deletion_threshold;
+  };                   // Constructor? (the {} brackets) are needed here.
   // Dont forget to declare these two. You want to make sure they
   // are unaccessable otherwise you may accidently get copies of
   // your singleton appearing.

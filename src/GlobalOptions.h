@@ -26,13 +26,14 @@ public:
         ("help,h", "produce help message")
         ("filename,f", po::value<std::string>(), "SVG File for parsing")
         ("round_radius,rr", po::value<double>(), "set radius for corner rounding")
-        ("fill_method,fm", po::value<int>(), "set fill method (1: wiggle or 2: spiral)")
+        ("fill_method,m", po::value<int>(), "set fill method (1: wiggle or 2: spiral)")
         ("scale_for_disp,scale_fd", po::value<double>(), "scale for display")
         ("angle_step", po::value<double>(), "Interpolation stepsize for rounding (e.g. 0.2 * PI)")
         ("max_squared_point_distance,ms", po::value<double>(), "Max distance for points (handmade for Timon)")
         ("display,d", "Open up the QT Window for inspection and modification")
         ("threshold_round_angle,t", po::value<double>(), "Defines from which angle on it should be rounded (or outer rounded)")
         ("line_distance,ld", po::value<double>(), "Line distance inside filled elements")
+        ("area_deletion_threshold", po::value<double>(), "Maximum area of filling elements that will get deleted ")
     ;
   }
 
@@ -79,6 +80,9 @@ public:
     }
     if(vm.count("threshold_round_angle")) {
       this->threshold_round_angle = (double) vm["threshold_round_angle"].as<double>();
+    }
+    if(vm.count("area_deletion_threshold")) {
+      this->area_deletion_threshold = (double) vm["area_deletion_threshold"].as<double>();
     }
     return 0;
   }
@@ -164,6 +168,7 @@ public:
   double translate_playfield_x = 0;
   double translate_playfield_y = 0;
   double angle_interpolation_stepsize = 0.2;
+  double area_deletion_threshold = 0;
   int number_of_bezier_segs = 30;
   double max_squared_point_distance = 0.05;
   double threshold_round_angle = 3.14 / (double)2;
