@@ -1,5 +1,7 @@
 # The repo for the pathmaker
 
+This is part of the software for the [BeachBot](http://beachbot.ch)
+
 ## Requirements
 
 Install `build-essential` and `libboost...`.
