@@ -1,6 +1,6 @@
 // Parsed SVG
 
-#include "python_wrapper.h"
+// #include "python_wrapper.h"
 
 #include <iostream>
 #include <boost/python.hpp>
@@ -15,6 +15,8 @@
 #include "PostProcessor.h"
 #include "PreProcessor.cpp"
 #include "GlobalOptions.h"
+#include "PythonHelpers.h"
+
 
 #ifdef STANDALONE
 #endif

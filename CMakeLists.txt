@@ -117,13 +117,6 @@ include_directories(${JSONCPP_INCLUDE_DIR})
 
 include_directories(src/include)
 
-add_executable(pathfinder
-	src/main.cpp
-	src/polygon_calculate.cpp
-	src/view.cpp
-	${pathfinder_UI_HEADERS}
-	${pathfinder_HEADERS_MOC})
-
 add_executable(svg_parser
     src/SVGParserAdapter.cpp
     src/VectorElementTree.h 
@@ -142,10 +135,6 @@ set_target_properties(svg_parser PROPERTIES COMPILE_DEFINITIONS "WITH_GUI;STANDA
 
 # add_library(BeachbotLibrary )
 
-target_link_libraries(pathfinder ${Boost_LIBRARIES} ${PYTHON_LIBRARIES})
-target_link_libraries(pathfinder ${QT_LIBRARIES})
-target_link_libraries(pathfinder ${CGAL_LIBRARIES} ${CGAL_3RD_PARTY_LIBRARIES})
-set_target_properties(pathfinder PROPERTIES COMPILE_DEFINITIONS WITH_GUI,STANDALONE)
 # cotire(pathfinder) #cant cotire because of python vs qt bug!
 # cotire(svg_parser)
 
@@ -167,7 +156,6 @@ target_link_libraries(beachbot_pathgen ${Boost_LIBRARIES} ${PYTHON_LIBRARIES} ${
 
 message("THANK YOU FOR CHOOSING PATHMAKER: ") 
 message("  CGAL: ${CGAL_USE_FILE}") 
-message("  BOOST: ${CGAL_USE_FILE}") 
-message("  CGAL: ${CGAL_USE_FILE}") 
+message("  BOOST: ${BOOST_USE_FILE}") 
 
 # target_link_libraries(bin/pathfinder BeachbotLibrary)

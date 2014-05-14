@@ -45,12 +45,4 @@ BOOST_PYTHON_MODULE(beachbot_pathgen)
         .def("parse_file", &Generator::parseSVGFile)  // Add invite() as a regular function to the module.
         .def("run_routine", &Generator::run_routine)  // Add invite() as a regular function to the module.
     ;
-    // class_<Test>("Test", init<int>())
-    //     .def("f", &Test::f)  // Add a regular member function.
-    //     .def("parse_file", &Test::parseSVGFile)  // Add invite() as a regular function to the module.
-    // ;
-// def("yay", yay);
-
-
-    // def("invite", invite); // Even better, invite() can also be made a member of module!!!
 }
