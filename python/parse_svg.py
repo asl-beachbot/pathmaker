@@ -184,6 +184,13 @@ class SVGElement():
         container.append(element)
         return container
 
+def signed_area(coords_list):
+    l = len(coords_list)
+    s = 0
+    for i in xrange(len(coords_list) - 1):
+        s += (coords_list[i + 1][0] - coords_list[i][0]) * (coords_list[i + 1][1] + coords_list[i][1])
+    s += (coords_list[0][0] - coords_list[l - 1][0]) * (coords_list[0][1] + coords_list[l - 1][1])
+    return s
 def parse_string(svg_string):
     poly = list()
     svg_element_list = list()
@@ -221,6 +228,9 @@ def parse_string(svg_string):
                         del poly[0]
             else:
                 poly.extend(tuple(map(tuple, e.to_poly())))
+        if el["filled"] and signed_area(poly) > 0:
+            print("Signed area  > 0")
+            poly.reverse()
         # mark_for_deletion = list()
         # for i in xrange(len(poly) - 1):
         #     if((poly[i][0]-poly[i+1][0]) * (poly[i][0]-poly[i+1][0])
