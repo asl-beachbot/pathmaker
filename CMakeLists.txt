@@ -61,12 +61,12 @@ link_directories(${Boost_LIBRARY_DIRS})
 ##
 
 if(NOGUI)
-    set(comps "Core")
+    set(COMPS Core)
 else(NOGUI)
-    set(comps "Core Qt4")
+    set(COMPS Core Qt4)
 endif(NOGUI)
 
-find_package(CGAL COMPONENTS ${comps} PATHS src/include/CGAL)
+find_package(CGAL COMPONENTS ${COMPS} PATHS src/include/CGAL)
 include( ${CGAL_USE_FILE} )
 
 ##
@@ -115,13 +115,14 @@ add_executable(svg_parser
     src/GlobalOptions.h)
 
 if(NOGUI)
-    set(comp_defs "STANDALONE")
+    set(COMP_DEFS STANDALONE)
 else(NOGUI)
-    set(comp_defs "WITH_GUI;STANDALONE")
+    set(COMP_DEFS WITH_GUI STANDALONE)
 endif(NOGUI)
 
+
 target_link_libraries(svg_parser  ${Boost_LIBRARIES} ${PYTHON_LIBRARIES} ${QT_LIBRARIES} ${JSONCPP_LIBRARIES})
-set_target_properties(svg_parser PROPERTIES COMPILE_DEFINITIONS ${comp_defs})
+set_target_properties(svg_parser PROPERTIES COMPILE_DEFINITIONS "${COMP_DEFS}")
 
 ## Adding Python Lib
 add_library(beachbot_pathgen SHARED 
@@ -140,6 +141,7 @@ target_link_libraries(beachbot_pathgen ${Boost_LIBRARIES} ${PYTHON_LIBRARIES} ${
 
 message("THANK YOU FOR CHOOSING PATHMAKER: ") 
 message("  CGAL: ${CGAL_USE_FILE}") 
-message("  BOOST: ${BOOST_USE_FILE}") 
+message("  BOOST: ${Boost_LIBRARY_DIRS}") 
+message("  COMPILE FLAGS: ${COMP_DEFS}")
 
 # target_link_libraries(bin/pathfinder BeachbotLibrary)
