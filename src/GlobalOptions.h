@@ -57,7 +57,7 @@ public:
         ("fill_method,m", po::value<int>(), "set fill method (1: wiggle or 2: spiral)")
         ("scale_for_disp,scale_fd", po::value<double>(), "scale for display")
         ("angle_step", po::value<double>(), "Interpolation stepsize for rounding (e.g. 0.2 * PI)")
-        ("max_squared_point_distance,ms", po::value<double>(), "Max distance for points (handmade for Timon)")
+        ("max_interpol_distance,ms", po::value<double>(), "Max distance for points (handmade for Timon)")
         ("display,d", "Open up the QT Window for inspection and modification")
         ("threshold_round_angle,t", po::value<double>(), "Defines from which angle on it should be rounded (or outer rounded)")
         ("line_distance,ld", po::value<double>(), "Line distance inside filled elements")
@@ -66,17 +66,25 @@ public:
         ("segmentation_on", po::value<bool>(), "Turn on or off segmentation")
         ("text_export_filename", po::value<std::string>(), "Filename for export to textfile")
         ("svg_export_filename", po::value<std::string>(), "Filename for export to SVG File")
+        ("field_width", po::value<double>(), "Width of field")
+        ("field_height", po::value<double>(), "Height of field")
     ;
   }
 
   int parseConfigFile(std::string cfg_filename = "config.cfg") {
+    cout << "Parsing Config: " << cfg_filename << endl;
     std::ifstream ifs(cfg_filename);
     po::store(po::parse_config_file(ifs, desc), vm);
   }
 
   int parseCommandLine(int argc, char ** argv) {
     po::store(po::parse_command_line(argc, argv, desc), vm);
+    if(vm.count("config_file")) {
+      this->parseConfigFile((std::string) vm["config_file"].as<std::string>());
+    }
+    this->parseConfigFile();
     po::notify(vm);
+
     if (vm.count("help")) {
         cout << desc << "\n";
         return 1;
@@ -111,8 +119,8 @@ public:
     if(vm.count("angle_step")) {
       this->angle_interpolation_stepsize = (double) vm["angle_step"].as<double>();
     }
-    if(vm.count("max_squared_point_distance")) {
-      this->max_squared_point_distance = (double) vm["max_squared_point_distance"].as<double>();
+    if(vm.count("max_interpol_distance")) {
+      this->max_interpol_distance = (double) vm["max_interpol_distance"].as<double>();
     }
     if(vm.count("threshold_round_angle")) {
       this->threshold_round_angle = (double) vm["threshold_round_angle"].as<double>();
@@ -129,10 +137,6 @@ public:
     if(vm.count("svg_export_filename")) {
       this->SVG_export_filename = (std::string) vm["svg_export_filename"].as<std::string>();
     }
-    if(vm.count("config_file")) {
-      this->parseConfigFile((std::string) vm["config_file"].as<std::string>());
-    }
-    this->parseConfigFile();
 
     return 0;
   }
@@ -142,58 +146,58 @@ public:
     Color::Modifier def(Color::FG_DEFAULT);
 
     cout << red << 
-"                     `,:                                           \n" <<
-"                  ::::::      :,                                   \n" <<
-"                  ::::::      ::::`                                \n" <<
-"                  `:::::      ::::::                               \n" <<
-"           ::      :::::     `::::::                               \n" <<
-"         .:::      :::::     ::::::                                \n" <<
-"        ::::::     :::::     ::::::                                \n" <<
-"       :::::::.     ::::     :::::       `                         \n" <<
-"        :::::::     ::::    .::::,      ::                         \n" <<
-"         ::::::,    ::::    :::::      ::::                        \n" <<
-"          ::::::    ,:::    ::::`     ::::::                       \n" <<
-"           ::::::    :::    ::::     ::::::::                      \n" <<
-"            :::::    :::   ,:::     :::::::::                      \n" <<
-"   ::        :::::   :::   ::::    ::::::::`                       \n" <<
-"  .::::       ::::.  .::   :::    :::::::,                         \n" <<
-"  ::::::`      ::::   `    ::.   :::::::                 +@@@`     \n" <<
-"  ::::::::      :::,            ::::::                  @@ @@@     \n" <<
-" :::::::::::     :             :::::.                  #@: #@@     \n" <<
-" ::::::::::::,          #@#    ::::                    +@@ #@@     \n" <<
-"    ,::::::::::       @@@@@@    :                        . @@@     \n" <<
-"        ,:::::::     @+  '@@         #@`   +@@      :@@@   @@:     \n" <<
-"           `::::    @`    @@       @@@@@  #@@@#    @@#'@@  @@` @@@ \n" <<
-"                   @+  + `@@.     #@@ @@  @@@   ; ,@@ :@@ ,@@@@@@@@\n" <<
-"                  @@ `@  @@@@@@   @@.#@@ @@@  #@@ @@@ @@# @@@   @@@\n" <<
-"                 `@# @@     @@@@ #@@ @@  @@@  @@. @@, '`  @@#  ,@@@\n" <<
-":::::::::::::::  @@ @@#      @@@ @@@@:  .@@+ ,@@ '@@     @@@   @@@;\n" <<
-",::::::::::::::  `  @@.      @@@ @@'    @@@. @@@ #@@   `@'@@   @@@ \n" <<
-"`:::::::::::::,    `@@      `@@@@@@   .@:@@:'@@.`@@@. @@ @@@  '@@' \n" <<
-" ::::::::::`       #@@      @@@ .@@  @@  @@@:@@@# @@@@,  @@   @@@  \n" <<
-" ::::::.        .  @@@    #@@@   @@@@        `:    ,    ,@    @@'  \n" <<
-" ::,          `::  @@; ;@@@#                                  @@   \n" <<
-"             :::::`@@                              +@#         @@  \n" <<
-"           :::::: +@@          @@                @@`@@@         +@ \n" <<
-"         .::::::  @@@:        @@@@@@            @@  +@@            \n" <<
-"        :::::::   @@::      .@@@`@@@,           @@  @@@            \n" <<
-"      ::::::::   #@;::     @@@@#  @@+           `@+ @@#            \n" <<
-"    ,::::::::   `@:::.    @'#@@` `@@                @@ @           \n" <<
-"    ::::::::   .@::::    @@ @@@  @@@#     +` +@@   @@@@;           \n" <<
-"     ::::::      ::::   @@  @@# `@@@@@#  @@@@#@@   @@@    .@       \n" <<
-"     .::::      :::::   @@ ;@@      @@@ ;@@#@#@@`'@@@    @@@       \n" <<
-"      :::      .::::.  ,   @@@      @@@ @@@   @@: @@@   `@@,       \n" <<
-"       :       :::::       @@#      @@@.@@#  '@`  @@'   @@@        \n" <<
-"              ,:::::      ,@@      @@@ #@@   @@  :@@    @@`        \n" <<
-"              ::::::      @@@     #@@' @@@  @@   #@@   @@.         \n" <<
-"             ::::::`   @  @@    .@@@:  +@@ @@    ;@@@@@@           \n" <<
-"             ::::::   @@ #@@  @@@@#     #@@+       ..              \n" <<
-"              :::::   @; @@                   .@@@                 \n" <<
-"                `::   @;@@                 ;@@@@@@;                \n" <<
-"                      :@;           @   +@@@@@@@@@                 \n" <<
-"                                    @@@@@@@@@;   @                 \n\n\n\n" << def <<
-      "#############################################\n\n" <<
-      "#  Options for PathFinder\n\n" << 
+      "                     `,:                                           \n" <<
+      "                  ::::::      :,                                   \n" <<
+      "                  ::::::      ::::`                                \n" <<
+      "                  `:::::      ::::::                               \n" <<
+      "           ::      :::::     `::::::                               \n" <<
+      "         .:::      :::::     ::::::                                \n" <<
+      "        ::::::     :::::     ::::::                                \n" <<
+      "       :::::::.     ::::     :::::       `                         \n" <<
+      "        :::::::     ::::    .::::,      ::                         \n" <<
+      "         ::::::,    ::::    :::::      ::::                        \n" <<
+      "          ::::::    ,:::    ::::`     ::::::                       \n" <<
+      "           ::::::    :::    ::::     ::::::::                      \n" <<
+      "            :::::    :::   ,:::     :::::::::                      \n" <<
+      "   ::        :::::   :::   ::::    ::::::::`                       \n" <<
+      "  .::::       ::::.  .::   :::    :::::::,                         \n" <<
+      "  ::::::`      ::::   `    ::.   :::::::                 +@@@`     \n" <<
+      "  ::::::::      :::,            ::::::                  @@ @@@     \n" <<
+      " :::::::::::     :             :::::.                  #@: #@@     \n" <<
+      " ::::::::::::,          #@#    ::::                    +@@ #@@     \n" <<
+      "    ,::::::::::       @@@@@@    :                        . @@@     \n" <<
+      "        ,:::::::     @+  '@@         #@`   +@@      :@@@   @@:     \n" <<
+      "           `::::    @`    @@       @@@@@  #@@@#    @@#'@@  @@` @@@ \n" <<
+      "                   @+  + `@@.     #@@ @@  @@@   ; ,@@ :@@ ,@@@@@@@@\n" <<
+      "                  @@ `@  @@@@@@   @@.#@@ @@@  #@@ @@@ @@# @@@   @@@\n" <<
+      "                 `@# @@     @@@@ #@@ @@  @@@  @@. @@, '`  @@#  ,@@@\n" <<
+      ":::::::::::::::  @@ @@#      @@@ @@@@:  .@@+ ,@@ '@@     @@@   @@@;\n" <<
+      ",::::::::::::::  `  @@.      @@@ @@'    @@@. @@@ #@@   `@'@@   @@@ \n" <<
+      "`:::::::::::::,    `@@      `@@@@@@   .@:@@:'@@.`@@@. @@ @@@  '@@' \n" <<
+      " ::::::::::`       #@@      @@@ .@@  @@  @@@:@@@# @@@@,  @@   @@@  \n" <<
+      " ::::::.        .  @@@    #@@@   @@@@        `:    ,    ,@    @@'  \n" <<
+      " ::,          `::  @@; ;@@@#                                  @@   \n" <<
+      "             :::::`@@                              +@#         @@  \n" <<
+      "           :::::: +@@          @@                @@`@@@         +@ \n" <<
+      "         .::::::  @@@:        @@@@@@            @@  +@@            \n" <<
+      "        :::::::   @@::      .@@@`@@@,           @@  @@@            \n" <<
+      "      ::::::::   #@;::     @@@@#  @@+           `@+ @@#            \n" <<
+      "    ,::::::::   `@:::.    @'#@@` `@@                @@ @           \n" <<
+      "    ::::::::   .@::::    @@ @@@  @@@#     +` +@@   @@@@;           \n" <<
+      "     ::::::      ::::   @@  @@# `@@@@@#  @@@@#@@   @@@    .@       \n" <<
+      "     .::::      :::::   @@ ;@@      @@@ ;@@#@#@@`'@@@    @@@       \n" <<
+      "      :::      .::::.  ,   @@@      @@@ @@@   @@: @@@   `@@,       \n" <<
+      "       :       :::::       @@#      @@@.@@#  '@`  @@'   @@@        \n" <<
+      "              ,:::::      ,@@      @@@ #@@   @@  :@@    @@`        \n" <<
+      "              ::::::      @@@     #@@' @@@  @@   #@@   @@.         \n" <<
+      "             ::::::`   @  @@    .@@@:  +@@ @@    ;@@@@@@           \n" <<
+      "             ::::::   @@ #@@  @@@@#     #@@+       ..              \n" <<
+      "              :::::   @; @@                   .@@@                 \n" <<
+      "                `::   @;@@                 ;@@@@@@;                \n" <<
+      "                      :@;           @   +@@@@@@@@@                 \n" <<
+      "                                    @@@@@@@@@;   @                 \n\n\n\n" << def <<
+      "#############################################\n#\n" <<
+      "#  Options for PathFinder\n#\n" << 
       "#  Filename: " << filename << endl <<
       "#  Field Size: " << field_width << " x " << field_height << endl <<
       "#  Fill Method: " << fill_method << endl <<
@@ -202,7 +206,7 @@ public:
       "#  BeachBot Size: " << rounding_radius << endl <<
       "#  Rounding Radius: " << rounding_radius << endl <<
       "#  Segmentation: " << segmentation_on << endl <<
-      "#  Translate Playfield: " << translate_playfield << endl <<
+      "#  Translate Playfield: " << translate_playfield << "\n#\n" <<
       "#############################################" << 
       endl;
 
@@ -223,7 +227,7 @@ public:
   double angle_interpolation_stepsize;
   double area_deletion_threshold;
   int number_of_bezier_segs;
-  double max_squared_point_distance;
+  double max_interpol_distance;
   double threshold_round_angle;
   int fill_method;// spiral: 2, wiggle: 1
   std::string TXT_export_filename;
@@ -251,11 +255,10 @@ private:
     angle_interpolation_stepsize(0.2),
     area_deletion_threshold(0),
     number_of_bezier_segs(30),
-    max_squared_point_distance(0.05),
+    max_interpol_distance(0.05),
     threshold_round_angle(3.14 / (double)2),
     fill_method(2) // spiral: 2, wiggle: 1
-  {
-  };
+  {};
 
    
   // Don't implement below

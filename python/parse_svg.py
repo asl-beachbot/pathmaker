@@ -100,10 +100,23 @@ class SVGElement():
         element = dict()
         css = re.findall(css_re, path['style'])
         fill = False
+        stroke = False
+        stroke_width = 0
         for c in css:
             if c[0].lower() == 'fill'\
                 and c[1].lower() not in ["none", "#ffffff", "#fff"]:
                 fill = True
+            if c[0].lower() == "stroke"\
+                and c[1].lower() not in ["none", "#ffffff", "#fff"]:
+                stroke = True;
+            if c[0].lower() == "stroke-width":
+                stroke_width = int(c[1])
+
+        if stroke and stroke_width:
+            element["stroke"] = stroke_width
+        else:
+            element["stroke"] = None
+
         if path.has_attr("fill") and path["fill"].lower() != "none" or fill:
             element['filled'] = True
         else:
@@ -112,6 +125,14 @@ class SVGElement():
             element['closed'] = True
         else:
             element['closed'] = False
+        if path.has_attr("rake_info"):
+            element["rake_info"] = [i for i in path["rake_info"].split(" ")]
+        else:
+            element["rake_info"] = None
+
+        element["manually_modified"] = False
+        if path.has_attr("manually_modified"):
+            element["manually_modified"] = (path["manually_modified"].lower() == "true")
 
         m = re.findall(r, d)
         element['svg_elems'] = list()
@@ -200,13 +221,13 @@ def parse_string(svg_string):
                         del poly[0]
             else:
                 poly.extend(tuple(map(tuple, e.to_poly())))
-        mark_for_deletion = list()
-        for i in xrange(len(poly) - 1):
-            if((poly[i][0]-poly[i+1][0]) * (poly[i][0]-poly[i+1][0])
-                + (poly[i][0]-poly[i+1][0]) * (poly[i][0]-poly[i+1][0]) < 0.001):
-                mark_for_deletion.append(i)
-        for i in reversed(mark_for_deletion): # delete from the back to not kill enumerator
-            del poly[i]
+        # mark_for_deletion = list()
+        # for i in xrange(len(poly) - 1):
+        #     if((poly[i][0]-poly[i+1][0]) * (poly[i][0]-poly[i+1][0])
+        #         + (poly[i][0]-poly[i+1][0]) * (poly[i][0]-poly[i+1][0]) < 0.001):
+        #         mark_for_deletion.append(i)
+        # for i in reversed(mark_for_deletion): # delete from the back to not kill enumerator
+        #     del poly[i]
         holes = list()
         for hole in el["holes"]:
             hole_poly = list()
@@ -220,15 +241,32 @@ def parse_string(svg_string):
                 else:
                     hole_poly.extend(tuple(map(tuple, h.to_poly())))
             holes.append(hole_poly)
-        poly.reverse()
+        #poly.reverse()
         polys.append(poly)
         res["elements"].append({
             "closed": el["closed"],
             "filled": el["filled"],
+            "stroke": el["stroke"],
+            "manually_modified": el["manually_modified"],
+            "stroke_width": el["stroke"],
+            "rake_states": el["rake_info"],
             "coords": poly,
             "holes" : holes
             })
     return res
+
+# def scale (c, s):
+#     return (c[0] * s, c[1] * s)
+
+# def export_to_timon(e):
+#     f = open("export_2.txt", "w+")
+
+#     if(len(el["elements"]) > 1):
+#         print "WTF"
+#     for i in enumerate(el['coords']):
+#         scl = scale (el['coords'][i], s)
+#         f.write("{0} {1} {2}\n".format(scl[0], scl[1], rake_info[i])
+
 
 def parse_file(filename):
     # return {

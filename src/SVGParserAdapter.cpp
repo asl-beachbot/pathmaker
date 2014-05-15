@@ -63,6 +63,17 @@ void ParsedSVG::extractPython(bp::dict result) {
     VectorElement ve;
     ve.filled = bp::extract<bool>(elem_list[i]["filled"]);
     ve.closed = bp::extract<bool>(elem_list[i]["closed"]);
+    ve.manually_modified = bp::extract<bool>(elem_list[i]["manually_modified"]);
+    if(!elem_list[i]["stroke_width"] == bp::object()) {
+      ve.stroke_width = bp::extract<double>(elem_list[i]["stroke_width"]);
+    } else {
+      ve.stroke_width = 0;
+    }
+    if(!elem_list[i]["rake_states"] == bp::object()) {
+      for(int j = 0; j < bp::len(elem_list[i]["rake_states"]); ++j) {
+        ve.rake_states.push_back(bp::extract<char>(elem_list[i]["rake_states"][j]));
+      }
+    }
     bp::list coords_list = bp::extract<bp::list>(elem_list[i]["coords"]);
     int coords_len = bp::len(coords_list);
     for(int j = 0; j < coords_len; ++j) {
@@ -165,7 +176,7 @@ int main(int argc, char** argv) {
     SegmentationPreProcessor * spp = new SegmentationPreProcessor(vet);
     spp->process();
   }
-  vet->print_tree();
+  // vet->print_tree();
   vet->fillPolys();
   SimpleConnector * sc = new SimpleConnector(vet);
   sc->connect();

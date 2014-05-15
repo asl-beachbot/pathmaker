@@ -70,6 +70,9 @@ class VectorElement {
 public:
   bool closed;
   bool filled;
+  bool manually_modified;
+  vector<char> rake_states;
+  double stroke_width;
   list<Point_2> vertices;
   list< list<Point_2> >holes;
   void repr();

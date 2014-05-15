@@ -39,6 +39,8 @@ public:
   bool visited;
   bool fill_element;
   bool post_processed_result;
+  bool manually_modified;
+  int line_width;
   RakeVector rake_states;
 
   #ifdef WITH_GUI
@@ -84,9 +86,9 @@ class PolygonElementPtr : public ElementPtr {
 public:
   Polygon_2 element;
   // int visited_vertices[];
-  PolygonElementPtr(Polygon_2 poly, int linewidth = Rake::RAKE_MEDIUM) {
+  PolygonElementPtr(Polygon_2 poly, int line_width = Rake::RAKE_MEDIUM) {
     this->element = poly;
-    this->rake_states = RakeVector(poly.size(), linewidth);
+    this->rake_states = RakeVector(poly.size(), line_width);
     this->visited = false;
   };
   #ifdef WITH_GUI
@@ -152,12 +154,12 @@ public:
   int fill_method; // fill type: 1 = Skeleton, 2 = wiggle
   Direction_2 direction; // only for wiggle fill
 
-  FilledPolygonElementPtr(Polygon_with_holes_2 poly, int linewidth = Rake::RAKE_MEDIUM) :
+  FilledPolygonElementPtr(Polygon_with_holes_2 poly, int line_width = Rake::RAKE_MEDIUM) :
     element(poly) {
 
       fill_method = GlobalOptions::getInstance().fill_method;
     // This probably will have to be a bit more complicated!
-    // this->rake_states = RakeVector(poly.size(), linewidth);
+    // this->rake_states = RakeVector(poly.size(), line_width);
 
     // convex_hull = 
     // std::list<Point_2> convex_hull_list;
@@ -297,13 +299,13 @@ public:
   PolyLine_P  element;
   std::list< PolyLine_P > graphx_elem;
   // int visited_vertices[];
-  PolyLineElementPtr(PolyLine_P polyline, int linewidth = Rake::RAKE_MEDIUM) : element(polyline) {
-    this->rake_states = RakeVector(polyline.size(), linewidth);
+  PolyLineElementPtr(PolyLine_P polyline, int line_width = Rake::RAKE_MEDIUM) : element(polyline) {
+    this->rake_states = RakeVector(polyline.size(), line_width);
   };
-  PolyLineElementPtr(std::list<Point_2> polyline, int linewidth = Rake::RAKE_MEDIUM) {
+  PolyLineElementPtr(std::list<Point_2> polyline, int line_width = Rake::RAKE_MEDIUM) {
     this->element = PolyLine_P{std::begin(polyline),
                                std::end(polyline)};
-    this->rake_states = RakeVector(polyline.size(), linewidth);
+    this->rake_states = RakeVector(polyline.size(), line_width);
 
   };
   #ifdef WITH_GUI
@@ -345,6 +347,9 @@ public:
     Json::Value val;
     val["type"] = "POLYLINE";
     val["type_int"] = EL_POLYLINE;
+    val["manually_modified"] = manually_modified;
+    val["stroke_width"] = line_width;
+    
     val["id"] = id;
     auto it = element.begin();
     auto it_end = element.end();

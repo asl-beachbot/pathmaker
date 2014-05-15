@@ -135,6 +135,7 @@ private:
     return NULL;
   }
   ElementPtr * getElementRepresentation(VectorElement * ve) {
+    ElementPtr * res;
     if(ve->closed && ve->filled) {
       Polygon_2 outer = Polygon_2(ve->vertices.begin(), ve->vertices.end());
       std::list<Polygon_2> holes;
@@ -143,17 +144,23 @@ private:
       }
       Polygon_with_holes_2 polygon_with_holes = Polygon_with_holes_2(outer, holes.begin(), holes.end());
       cout << "Polygon With Holes "<< polygon_with_holes << endl;
-      return new FilledPolygonElementPtr(polygon_with_holes);
+      res = new FilledPolygonElementPtr(polygon_with_holes);
     }
     else if (ve->closed) {
       Polygon_2 polygon = Polygon_2(ve->vertices.begin(), ve->vertices.end());
       cout << "Polygon " << polygon << endl;
-      return new PolygonElementPtr(polygon);
+      res =  new PolygonElementPtr(polygon);
     }
     else {
       cout << "Polyline" << endl;
-      return new PolyLineElementPtr(ve->vertices);
+      res =  new PolyLineElementPtr(ve->vertices);
     }
+    res->manually_modified = ve->manually_modified;\
+    if(ve->rake_states.size()) {
+      assert(ve->rake_states.size() == ve->vertices.size());
+      res->rake_states = RakeVector(ve->rake_states.begin(), ve->rake_states.end());
+    }
+    res->line_width = ve->stroke_width;
   }
 public:
   Tree_ElementPtr element_tree;
