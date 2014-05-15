@@ -6,6 +6,7 @@
 #include <cmath>  // sqrt
 #include <boost/format.hpp>
 #include "GlobalOptions.h"
+#include "Exporter.h"
 using boost::format; using boost::str;
 
 
@@ -37,7 +38,7 @@ private:
   VectorElementTree * tree;
   Transformation rotate_90;
   Transformation rotate_m90;
-
+  PolyLineElementPtr * final_element;
   float calc_angle(Vector_2 v1, Vector_2 v2) {
     cout << "Angle " << v1*v2 << " deg " << acos(v1 * v2) << endl;
     return acos(v1 * v2);
@@ -77,6 +78,7 @@ private:
     // 1.  Circle with radius at corner (at the moment implemented)
     // 2.  Interprete corner as spline control point
     //     And use 2 other points on edge as origin points
+
     PointList result;
 
     float counter_angle = M_PI - el->angle;
@@ -469,17 +471,13 @@ public:
     cout << "size : " << final_path->size();
     PolyLineElementPtr * poly_el_ptr = new PolyLineElementPtr(*final_path);
     poly_el_ptr->post_processed_result = true;
-    // this->result = poly_el_ptr;
-    tree->element_tree.append_child(tree->element_tree.begin(), poly_el_ptr);
-  }
-  std::string toString() {
-    std::string res;
-    cout << "size : " << final_path->size() << "rake :" << final_rake->size();
+    poly_el_ptr->rake_states = *final_rake;
+    this->final_element = poly_el_ptr;
 
-    assert(final_path->size() == final_rake->size());
-    for(int i = 0; i < final_path->size(); ++i) {
-      res += str(format("%1% %2% %3%\n") % final_path->at(i).x() % final_path->at(i).y() % (int)final_rake->at(i));
-    }
-    return res;
+    Exporter e = Exporter(final_path, final_rake);
+    e.export_result();
+
+
+    tree->element_tree.append_child(tree->element_tree.begin(), poly_el_ptr);
   }
 };

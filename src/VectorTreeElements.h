@@ -24,15 +24,21 @@ enum Rake {
   RAKE_ZERO = 0,
   RAKE_SMALL = 0 | 1 << 3,
   RAKE_MEDIUM = 0x1c,
-  RAKE_LARGE = 0x3e,
+  RAKE_LARGE = 0x3e, 
   RAKE_FULL = 0x7f
 };
+
+enum FillMethods {
+  WIGGLE_FILL = 1,
+  SPIRAL_FILL = 2
+};
+
 
 class ElementPtr {
 public:
   bool visited;
-  bool fill_element = false;
-  bool post_processed_result = false;
+  bool fill_element;
+  bool post_processed_result;
   RakeVector rake_states;
 
   #ifdef WITH_GUI
@@ -51,7 +57,13 @@ public:
   ElementPtr * to;
   ElementPtr * from;
   unsigned int id;
-  ElementPtr() :  visited(false), to(NULL), from(NULL) {
+  ElementPtr() :  
+    visited(false), 
+    to(NULL), 
+    from(NULL), 
+    fill_element(false), 
+    post_processed_result(false)
+  {
     id = rand() % 10000000;
   };
   ~ElementPtr() {cout << "delete called" << endl;};
@@ -127,7 +139,7 @@ public:
 class FilledSegment {
 public:
   Polygon_2 poly;
-  int fill_type; // fill type: 1 = Skeleton, 2 = wiggle
+  int fill_method; // fill type: 1 = Skeleton, 2 = wiggle
   Direction_2 direction; // only for wiggle fill
 };
 
@@ -137,10 +149,13 @@ public:
   // int visited_vertices[];
   Polygon_with_holes_2 element;
   std::list<FilledSegment> segments;
-  int fill_type; // fill type: 1 = Skeleton, 2 = wiggle
+  int fill_method; // fill type: 1 = Skeleton, 2 = wiggle
   Direction_2 direction; // only for wiggle fill
 
-  FilledPolygonElementPtr(Polygon_with_holes_2 poly, int linewidth = Rake::RAKE_MEDIUM) : element(poly) {
+  FilledPolygonElementPtr(Polygon_with_holes_2 poly, int linewidth = Rake::RAKE_MEDIUM) :
+    element(poly) {
+
+      fill_method = GlobalOptions::getInstance().fill_method;
     // This probably will have to be a bit more complicated!
     // this->rake_states = RakeVector(poly.size(), linewidth);
 
@@ -253,7 +268,7 @@ public:
         segment_coords.append(c);
       }
       Json::Value segment_value;
-      segment_value["fill_type"] = it_segments->fill_type;
+      segment_value["fill_method"] = it_segments->fill_method;
       segment_value["direction_dx"] = it_segments->direction.dx();
       segment_value["direction_dy"] = it_segments->direction.dy();
       segment_value["coords"] = segment_coords;

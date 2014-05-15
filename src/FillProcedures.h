@@ -67,8 +67,8 @@ public:
     // delete poly;
   }
 private:
-  double max_area_for_deletion = 0;
-  SpiralFillProcedure() {
+  double max_area_for_deletion;
+  SpiralFillProcedure() : max_area_for_deletion(0) {
     this->max_area_for_deletion = GlobalOptions::getInstance().area_deletion_threshold;
   };                   // Constructor? (the {} brackets) are needed here.
   // Dont forget to declare these two. You want to make sure they

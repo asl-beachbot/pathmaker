@@ -21,6 +21,7 @@
 #include <QPen>
 #endif
 
+
 class VectorElementTree {
 public:
   typedef tree < ElementPtr * > Tree_ElementPtr;
@@ -324,7 +325,11 @@ public:
     for(; it != it_end; ++it) {
       if((*it)->get_type() == EL_FILLED_POLYGON) {
         FilledPolygonElementPtr * el_ptr = static_cast<FilledPolygonElementPtr *>((*it));
-        el_ptr->fill_elements = spiral_singleton->fill(el_ptr);
+        if(el_ptr->fill_method == SPIRAL_FILL) {
+          el_ptr->fill_elements = spiral_singleton->fill(el_ptr);
+        } else {
+          el_ptr->fill_elements = wiggle_singleton->fill(el_ptr);
+        }
         for(ElementPtr * e : el_ptr->fill_elements) {
           cout << "Finding Spot for element: " << e << endl;
           if(!e) {cout << "Error null pointer!" << endl; continue;}
