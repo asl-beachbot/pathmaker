@@ -10,6 +10,31 @@ using namespace std;
 #ifdef STANDALONE
 #include <boost/program_options.hpp>
 namespace po = boost::program_options;
+
+#include <ostream>
+
+namespace Color {
+    enum Code {
+        FG_RED      = 31,
+        FG_GREEN    = 32,
+        FG_BLUE     = 34,
+        FG_DEFAULT  = 39,
+        BG_RED      = 41,
+        BG_GREEN    = 42,
+        BG_BLUE     = 44,
+        BG_DEFAULT  = 49
+    };
+    class Modifier {
+        Code code;
+    public:
+        Modifier(Code pCode) : code(pCode) {}
+        friend std::ostream&
+        operator<<(std::ostream& os, const Modifier& mod) {
+            return os << "\033[" << mod.code << "m";
+        }
+    };
+}
+
 #endif
 
 class GlobalOptions
@@ -50,15 +75,11 @@ public:
   }
 
   int parseCommandLine(int argc, char ** argv) {
-    this->parseConfigFile();
     po::store(po::parse_command_line(argc, argv, desc), vm);
     po::notify(vm);
     if (vm.count("help")) {
         cout << desc << "\n";
         return 1;
-    }
-    if(vm.count("config_file")) {
-      this->parseConfigFile((std::string) vm["config_file"].as<std::string>());
     }
     if (vm.count("display")) {
       this->display = true;
@@ -108,11 +129,19 @@ public:
     if(vm.count("svg_export_filename")) {
       this->SVG_export_filename = (std::string) vm["svg_export_filename"].as<std::string>();
     }
+    if(vm.count("config_file")) {
+      this->parseConfigFile((std::string) vm["config_file"].as<std::string>());
+    }
+    this->parseConfigFile();
+
     return 0;
   }
 #endif
   void printOptions() {
-    cout << 
+    Color::Modifier red(Color::FG_RED);
+    Color::Modifier def(Color::FG_DEFAULT);
+
+    cout << red << 
 "                     `,:                                           \n" <<
 "                  ::::::      :,                                   \n" <<
 "                  ::::::      ::::`                                \n" <<
@@ -162,7 +191,7 @@ public:
 "              :::::   @; @@                   .@@@                 \n" <<
 "                `::   @;@@                 ;@@@@@@;                \n" <<
 "                      :@;           @   +@@@@@@@@@                 \n" <<
-"                                    @@@@@@@@@;   @                 \n\n\n\n" <<
+"                                    @@@@@@@@@;   @                 \n\n\n\n" << def <<
       "#############################################\n\n" <<
       "#  Options for PathFinder\n\n" << 
       "#  Filename: " << filename << endl <<

@@ -3,6 +3,8 @@
 // Python Interface
 // https://wiki.python.org/moin/boost.python/EmbeddingPython
 #pragma once
+// ignore const char * errors
+#pragma GCC diagnostic ignored "-Wwrite-strings"
 
 #include <iostream>
 #include <boost/python.hpp>
@@ -34,7 +36,7 @@ int initializePython() {
   cout << "Init Python" << endl;
   Py_Initialize();
   boost::filesystem::path workingDir = boost::filesystem::absolute("./python/").normalize();
-  PyObject* sysPath = PySys_GetObject("path");
+  PyObject* sysPath = PySys_GetObject((char*)"path");
   PyList_Insert( sysPath, 0, PyUnicode_FromString(workingDir.string().c_str()));
 }
 

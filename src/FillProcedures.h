@@ -122,6 +122,7 @@ private:
       Point_2 p2 = poly[i];
       poly_lines.push_back(Segment_2(p1, p2));
     }
+    Point_2 prev_line_endpoint; // used for calculating next connection point
 
     std::list<Point_2> intersections;
     std::vector<Point_2> temp_intersect;
@@ -139,13 +140,32 @@ private:
         }
       }
       if(temp_intersect.size() >= 2) {
-        if(i % 2) {
+        int new_index = 0;
+        if(i > 0) {
+          double temp_dist = (prev_line_endpoint - temp_intersect[0]).squared_length();
+          for(int j = 1; j < temp_intersect.size(); ++j) {
+            if((prev_line_endpoint - temp_intersect[j]).squared_length() < temp_dist) {
+              new_index = j;
+            }
+          }
+        }
+        if(new_index == 0) {
           intersections.push_back(temp_intersect[1]);
           intersections.push_back(temp_intersect[0]);
+          prev_line_endpoint = temp_intersect[1];
         } else {
           intersections.push_back(temp_intersect[0]);
           intersections.push_back(temp_intersect[1]);
+          prev_line_endpoint = temp_intersect[0];
         }
+        // if(i % 2) { // apparently this doesn't work reliable?! Maybe it changes where polygon is 
+        //             // changing direction   <-<-<-<
+        //   intersections.push_back(temp_intersect[1]);
+        //   intersections.push_back(temp_intersect[0]);
+        // } else {
+        //   intersections.push_back(temp_intersect[0]);
+        //   intersections.push_back(temp_intersect[1]);
+        // }
         temp_intersect.clear();
       }  else  {
         done = true;

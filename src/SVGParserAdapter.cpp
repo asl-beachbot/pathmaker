@@ -91,7 +91,7 @@ void ParsedSVG::extractPython(bp::dict result) {
   this->repr();
 }
 
-void ParsedSVG::parseSVGFile(std::string filename) {
+int ParsedSVG::parseSVGFile(std::string filename) {
   initializePython();
   try {
     bp::object svg_parser = bp::import("parse_svg");
@@ -107,11 +107,13 @@ void ParsedSVG::parseSVGFile(std::string filename) {
     bp::handle_exception();
     PyErr_Clear();
     cout << "::: ERROR ::: "<< endl << msg << endl;
-    // return "ERROR";
+    cout << "\n\nMAYBE THE SVG FILE WAS EMPTY OR DOES NOT EXIST?" << endl;
+    return 1;
   }
+  return 0;
 }
 
-void ParsedSVG::parseSVGString(std::string svg_xml_string) {
+int ParsedSVG::parseSVGString(std::string svg_xml_string) {
   initializePython();
   try {
     bp::object svg_parser = bp::import("parse_svg");
@@ -127,8 +129,10 @@ void ParsedSVG::parseSVGString(std::string svg_xml_string) {
     bp::handle_exception();
     PyErr_Clear();
     cout << "::: ERROR ::: "<< endl << msg << endl;
-    // return "ERROR";
+    cout << "\n\nMAYBE THE SVG FILE WAS EMPTY OR DOES NOT EXIST?" << endl;
+    return 1;
   }
+  return 0;
 }
 
 #ifdef STANDALONE
@@ -140,13 +144,14 @@ int main(int argc, char** argv) {
 
   GlobalOptions::getInstance().init();
   int quit = GlobalOptions::getInstance().parseCommandLine(argc, argv);
-  if(quit) {
-    return quit;
-  }
+  if(quit) return quit;
+
   GlobalOptions::getInstance().printOptions();
 
   ParsedSVG * ps = new ParsedSVG();
-  ps->parseSVGFile(GlobalOptions::getInstance().filename);
+  quit = ps->parseSVGFile(GlobalOptions::getInstance().filename);
+  if(quit) return quit;
+
   VectorElementTree * vet = new VectorElementTree();
   vet->createAndSortTree(ps);
   PreProcessor * ppp = new PreProcessor(vet);
@@ -156,8 +161,10 @@ int main(int argc, char** argv) {
     GlobalOptions::getInstance().field_width,
     GlobalOptions::getInstance().field_height
   );
-  // SegmentationPreProcessor * spp = new SegmentationPreProcessor(vet);
-  // spp->process();
+  if(GlobalOptions::getInstance().segmentation_on) {
+    SegmentationPreProcessor * spp = new SegmentationPreProcessor(vet);
+    spp->process();
+  }
   vet->print_tree();
   vet->fillPolys();
   SimpleConnector * sc = new SimpleConnector(vet);

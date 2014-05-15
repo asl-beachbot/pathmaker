@@ -85,7 +85,7 @@ public:
   ParsedSVG() {
 
   };
-  void parseSVGFile(string filename);
-  void parseSVGString(string svg_xml_string);
+  int parseSVGFile(string filename);
+  int parseSVGString(string svg_xml_string);
 };
 
