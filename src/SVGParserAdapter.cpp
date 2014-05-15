@@ -139,7 +139,10 @@ int main(int argc, char** argv) {
    // GlobalOptions config = GlobalOptions::getInstance();
 
   GlobalOptions::getInstance().init();
-  GlobalOptions::getInstance().parseCommandLine(argc, argv);
+  int quit = GlobalOptions::getInstance().parseCommandLine(argc, argv);
+  if(quit) {
+    return quit;
+  }
   GlobalOptions::getInstance().printOptions();
 
   ParsedSVG * ps = new ParsedSVG();

@@ -2,6 +2,8 @@
 #pragma once
 
 #include <cmath>
+#include <iostream>
+#include <fstream>
 using namespace std;
 
 #ifdef STANDALONE
@@ -23,21 +25,26 @@ public:
 
   void init() {
     desc.add_options()
-        ("help,h", "produce help message")
-        ("filename,f", po::value<std::string>(), "SVG File for parsing")
-        ("round_radius,rr", po::value<double>(), "set radius for corner rounding")
-        ("fill_method,m", po::value<int>(), "set fill method (1: wiggle or 2: spiral)")
-        ("scale_for_disp,scale_fd", po::value<double>(), "scale for display")
-        ("angle_step", po::value<double>(), "Interpolation stepsize for rounding (e.g. 0.2 * PI)")
-        ("max_squared_point_distance,ms", po::value<double>(), "Max distance for points (handmade for Timon)")
-        ("display,d", "Open up the QT Window for inspection and modification")
-        ("threshold_round_angle,t", po::value<double>(), "Defines from which angle on it should be rounded (or outer rounded)")
-        ("line_distance,ld", po::value<double>(), "Line distance inside filled elements")
-        ("area_deletion_threshold", po::value<double>(), "Maximum area of filling elements that will get deleted ")
+      ("help,h", "produce help message")
+      ("filename,f", po::value<std::string>(), "SVG File for parsing")
+      ("round_radius,rr", po::value<double>(), "set radius for corner rounding")
+      ("fill_method,m", po::value<int>(), "set fill method (1: wiggle or 2: spiral)")
+      ("scale_for_disp,scale_fd", po::value<double>(), "scale for display")
+      ("angle_step", po::value<double>(), "Interpolation stepsize for rounding (e.g. 0.2 * PI)")
+      ("max_squared_point_distance,ms", po::value<double>(), "Max distance for points (handmade for Timon)")
+      ("display,d", "Open up the QT Window for inspection and modification")
+      ("threshold_round_angle,t", po::value<double>(), "Defines from which angle on it should be rounded (or outer rounded)")
+      ("line_distance,ld", po::value<double>(), "Line distance inside filled elements")
+      ("area_deletion_threshold", po::value<double>(), "Maximum area of filling elements that will get deleted ")
+      ("config_file,c", po::value<std::string>(), "Use a different config file")
     ;
   }
-
+  int parseConfigFile(std::string cfg_filename = "config.cfg") {
+    std::ifstream ifs = std::ifstream(cfg_filename);
+    po::store(po::parse_config_file(ifs), vm);
+  }
   int parseCommandLine(int argc, char ** argv) {
+    this->parseConfigFile();
     po::store(po::parse_command_line(argc, argv, desc), vm);
     po::notify(vm);
     if (vm.count("help")) {
@@ -83,6 +90,9 @@ public:
     }
     if(vm.count("area_deletion_threshold")) {
       this->area_deletion_threshold = (double) vm["area_deletion_threshold"].as<double>();
+    }
+    if(vm.count("config_file")) {
+      this->parseConfigFile((std::string) vm["config_file"]);
     }
     return 0;
   }
