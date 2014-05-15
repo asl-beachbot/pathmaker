@@ -164,13 +164,12 @@ int main(int argc, char** argv) {
   sc->connect();
   PostProcessor *  psc = new PostProcessor(vet);
   psc->process();
-  std::string resulting_string = psc->toString();
+  // psc->export_result();
+  
   std::string json = "var PolyJSON = '" + vet->toJSON();
   json += "'";
   std::ofstream of("PolyJSON.js");
   of << json;
-  std::ofstream of_string("out_path.txt");
-  of_string << resulting_string;
   vet->writeToFile("out_tree.txt");
 #ifdef WITH_GUI
   if(GlobalOptions::getInstance().display) {
