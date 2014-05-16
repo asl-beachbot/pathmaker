@@ -68,6 +68,7 @@ public:
         ("svg_export_filename", po::value<std::string>(), "Filename for export to SVG File")
         ("field_width", po::value<double>(), "Width of field")
         ("field_height", po::value<double>(), "Height of field")
+        ("segment_offset", po::value<double>(), "Offset of Segment (from partitioning)")
     ;
   }
 
@@ -136,6 +137,10 @@ public:
     }
     if(vm.count("svg_export_filename")) {
       this->SVG_export_filename = (std::string) vm["svg_export_filename"].as<std::string>();
+    }
+
+    if(vm.count("segment_offset")) {
+      this->segment_offset = (double) vm["segment_offset"].as<double>();
     }
 
     return 0;
@@ -226,6 +231,7 @@ public:
   double translate_playfield_y;
   double angle_interpolation_stepsize;
   double area_deletion_threshold;
+  double segment_offset;
   int number_of_bezier_segs;
   double max_interpol_distance;
   double threshold_round_angle;
@@ -257,6 +263,7 @@ private:
     number_of_bezier_segs(30),
     max_interpol_distance(0.05),
     threshold_round_angle(3.14 / (double)2),
+    segment_offset(1),
     fill_method(2) // spiral: 2, wiggle: 1
   {};
 

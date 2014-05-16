@@ -18,6 +18,7 @@ private:
   Tree * tree;
   Tree_ElementPtr * element_tree;
   Traits partition_traits;
+  double segment_offset;
   void segment(FilledPolygonElementPtr * poly_element_ptr) {
     std::list<Traits_Polygon_2> partition_polys;
     Polygon_2 outer = poly_element_ptr->element.outer_boundary();
@@ -31,12 +32,17 @@ private:
       f.direction = Direction_2(0, 1);
       f.fill_method = 1;
 
+      // PolygonPtrVector offset_polygons = CGAL::create_interior_skeleton_and_offset_polygons_2<Polygon_2>(segment_offset);
+      // for(auto p_ptr : offset_polygons) {
+      //   f.poly = *p_ptr;
+      // }
       poly_element_ptr->segments.push_back(f);
     }
     // = partition_polys;
   }
 public:
   SegmentationPreProcessor(VectorElementTree * vet) {
+    this->segment_offset = GlobalOptions::getInstance().segment_offset;
     this->tree = vet;
   }
   void process() {

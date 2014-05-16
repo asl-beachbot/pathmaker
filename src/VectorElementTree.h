@@ -160,7 +160,25 @@ private:
       assert(ve->rake_states.size() == ve->vertices.size());
       res->rake_states = RakeVector(ve->rake_states.begin(), ve->rake_states.end());
     }
-    res->line_width = ve->stroke_width;
+    // RAKE_ZERO = 0,
+    // RAKE_SMALL = 0 | 1 << 3,
+    // RAKE_MEDIUM = 0x1c,
+    // RAKE_LARGE = 0x3e, 
+    // RAKE_FULL = 0x7f
+
+    if(ve->stroke_width <= 0) {
+      res->line_width = Rake::RAKE_ZERO;
+    } else if(ve->stroke_width <= 1) {
+      res->line_width = Rake::RAKE_SMALL;
+    } else if(ve->stroke_width <= 3) {
+      res->line_width = Rake::RAKE_MEDIUM;
+    } else if(ve->stroke_width <= 5) {
+      res->line_width = Rake::RAKE_LARGE;
+    } else if(ve->stroke_width > 5) {
+      res->line_width = Rake::RAKE_FULL;
+    }
+    cout << "Line Width: " << res->line_width << endl;
+    return res;
   }
 public:
   Tree_ElementPtr element_tree;

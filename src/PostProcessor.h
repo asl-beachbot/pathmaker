@@ -302,14 +302,14 @@ public:
             unsigned char rake_state;
             if(polyline_el->entry_point_index == 0) {
               // forward
-              if(len > 2) {                
+              if(len > 2) {
                 int i = 1;
                 for(; i < len - 2; ++i) {
                   res = decide_action(el->at(i - 1), el->at(i), el->at(i + 1), &outer);
                   if(outer) {
                     rake_state = 0;
                   } else {
-                    rake_state = Rake::RAKE_MEDIUM; // replace with Linewidth
+                    rake_state = polyline_el->line_width; // replace with Linewidth
                   }
                   for(Point_2 p : res) {
                     final_path->push_back(p);
@@ -333,7 +333,7 @@ public:
                   if(outer) {
                     rake_state = 0;
                   } else {
-                    rake_state = Rake::RAKE_MEDIUM; // replace with Linewidth
+                    rake_state = polyline_el->line_width; // replace with Linewidth
                   }
                   for(Point_2 p : res) {
                     assert(p != p0);
@@ -397,7 +397,7 @@ public:
               res = round_connector(p1, p2, elem->to);
               rake_state = (elem->to->fill_element && elem->fill_element) ? Rake::RAKE_MEDIUM : 0;
               finished = true; // finished circling
-            } else if (ind == end_index && boundary) {
+            } else if (circling_started && ind == end_index && boundary) {
               // this is the end! 
               finished = true;
             } else {

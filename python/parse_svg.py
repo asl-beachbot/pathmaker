@@ -31,10 +31,10 @@ from math import *
 from numpy import linspace
 
 r = re.compile(r"([a-z])([^a-z]*)", flags=re.IGNORECASE)
-css_re = re.compile(r"([\w]+):(.+?);")
+css_re = re.compile(r"([\w\-]+):(.+?);")
 
-t = linspace(1/10, 1, 10-1)
-
+t = linspace(1/10, 1 - 1/10, num = 8)
+t = linspace(0.1, 0.9, 9)
 
 class SVGElement():
     def __init__(self, t, c, prev_el=None, relative_to=None):
@@ -103,19 +103,20 @@ class SVGElement():
         stroke = False
         stroke_width = 0
         for c in css:
+            print(c)
             if c[0].lower() == 'fill'\
                 and c[1].lower() not in ["none", "#ffffff", "#fff"]:
                 fill = True
             if c[0].lower() == "stroke"\
-                and c[1].lower() not in ["none", "#ffffff", "#fff"]:
+                and c[1].lower() not in ["none", "#ffffff", "#fff", "#ff0000"]:
                 stroke = True;
             if c[0].lower() == "stroke-width":
-                stroke_width = int(c[1])
+                stroke_width = float(c[1])
 
         if stroke and stroke_width:
             element["stroke"] = stroke_width
         else:
-            element["stroke"] = None
+            element["stroke"] = -1
 
         if path.has_attr("fill") and path["fill"].lower() != "none" or fill:
             element['filled'] = True
