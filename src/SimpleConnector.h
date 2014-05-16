@@ -191,10 +191,26 @@ public:
   SimpleConnector(VectorElementTree * vet) {
     this->tree = vet;
   }
+  void print_connections() {
+    cout << "The Connections are: " << endl;
+    auto it = ++element_tree->begin();
+    auto it_end = element_tree->end();
+    for(; it != it_end; ++it) {
+      if((*it)->from == NULL) {
+        break; // it = start iterator
+      }
+    }
+    ElementPtr * elem = (*it);
+    while(elem->to != NULL) {
+      cout << "Connection from " << elem << " to " << (elem->to) << endl;
+      elem = elem->to;
+    }  
+  }
 	void connect() {
     element_tree = &(this->tree->element_tree);
     cout << (*element_tree->begin()) << endl;
     Tree_ElementPtr::post_order_iterator test_node = element_tree->begin_post();
     connect_recursive(test_node, NULL);
+    print_connections();
   }
 };

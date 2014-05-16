@@ -281,7 +281,7 @@ public:
     while(elem->to != NULL) {
       switch(elem->get_type()) {
         case EL_POLYLINE: {
-          PolyLineElementPtr * polyline_el = static_cast<PolyLineElementPtr * >(*it);
+          PolyLineElementPtr * polyline_el = static_cast<PolyLineElementPtr * >(elem);
           PolyLine_P * el = &(polyline_el->element);
           if(elem->manually_modified) {
             cout << "Elem manually modified!" << endl;
@@ -302,21 +302,22 @@ public:
             unsigned char rake_state;
             if(polyline_el->entry_point_index == 0) {
               // forward
-              int i = 1;
-              for(; i < len - 1; ++i) {
-                res = decide_action(el->at(i - 1), el->at(i), el->at(i + 1), &outer);
-                if(outer) {
-                  rake_state = 0;
-                } else {
-                  rake_state = Rake::RAKE_MEDIUM; // replace with Linewidth
-                }
-                for(Point_2 p : res) {
-                  final_path->push_back(p);
-                  final_rake->push_back(rake_state);
+              if(len > 2) {                
+                int i = 1;
+                for(; i < len - 2; ++i) {
+                  res = decide_action(el->at(i - 1), el->at(i), el->at(i + 1), &outer);
+                  if(outer) {
+                    rake_state = 0;
+                  } else {
+                    rake_state = Rake::RAKE_MEDIUM; // replace with Linewidth
+                  }
+                  for(Point_2 p : res) {
+                    final_path->push_back(p);
+                    final_rake->push_back(rake_state);
+                  }
                 }
               }
               if(elem->to && elem->to != playfield) {
-                ++i;
                 PointList temp_res = round_connector(el->at(len - 2), el->at(len - 1), elem->to);
                 for(Point_2 p: temp_res) {
                   final_path->push_back(p);
@@ -325,22 +326,23 @@ public:
               }
             }
             else {
-              int i = len - 1;
-              for(; i > 0; --i) {
-                res = decide_action(el->at(i + 1), el->at(i), el->at(i - 1), &outer);
-                if(outer) {
-                  rake_state = 0;
-                } else {
-                  rake_state = Rake::RAKE_MEDIUM; // replace with Linewidth
-                }
-                for(Point_2 p : res) {
-                  assert(p != p0);
-                  final_path->push_back(p);
-                  final_rake->push_back(rake_state);
+              if(len > 2) {
+                int i = len - 2;
+                for(; i > 0; --i) {
+                  res = decide_action(el->at(i + 1), el->at(i), el->at(i - 1), &outer);
+                  if(outer) {
+                    rake_state = 0;
+                  } else {
+                    rake_state = Rake::RAKE_MEDIUM; // replace with Linewidth
+                  }
+                  for(Point_2 p : res) {
+                    assert(p != p0);
+                    final_path->push_back(p);
+                    final_rake->push_back(rake_state);
+                  }
                 }
               }
               if(elem->to && elem->to != playfield) {
-                --i;
                 PointList temp_res = round_connector(el->at(0), el->at(1), elem->to);
                 for(Point_2 p: temp_res) {
                   assert(p != p0);
@@ -390,7 +392,7 @@ public:
             cout << "Ind: " << ind << " end_ind: " << end_index << " entry: " << entry_index << " i: " << i << endl ;
             PointList res;
             if(circling_started && ind == end_index && elem->to && elem->to != playfield) {
-              cout << "rounding connector" << endl;
+              cout << "rounding connector " << elem << " " << elem->to << endl;
               // elem->to->entry_point_index = elem->to->entry_point_index + 1; // TODO Quick Fix (replace in Connector)
               res = round_connector(p1, p2, elem->to);
               rake_state = (elem->to->fill_element && elem->fill_element) ? Rake::RAKE_MEDIUM : 0;
@@ -452,7 +454,11 @@ public:
         // }
         // break;
       }
-      elem = elem->to;
+      if(elem->to != playfield) {
+        cout << elem->to << " " << playfield << endl;
+        elem = elem->to;
+      }
+      else { break; }
     }
     // Draw it somehow!
     if(final_path->size() > 1) {
