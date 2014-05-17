@@ -30,7 +30,7 @@ ADD_DEFINITIONS(
     -std=c++0x
     -frounding-math
     -O0
-    -H
+    # -H
 )
 
 ##
@@ -109,6 +109,7 @@ add_executable(svg_parser
     src/SVGParserAdapter.cpp
     src/PostProcessor.cpp
     src/PreProcessor.cpp
+    src/SimpleConnector.cpp
     src/View.cpp
 )
 
@@ -126,6 +127,9 @@ set_target_properties(svg_parser PROPERTIES COMPILE_DEFINITIONS "${COMP_DEFS}")
 add_library(beachbot_pathgen SHARED 
     src/PythonBindings.cpp
     src/SVGParserAdapter.cpp
+    src/PreProcessor.cpp
+    src/SimpleConnector.cpp
+
 )
 
 if(32BIT)

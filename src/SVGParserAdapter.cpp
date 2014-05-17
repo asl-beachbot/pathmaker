@@ -63,6 +63,7 @@ void ParsedSVG::extractPython(bp::dict result) {
     VectorElement ve;
     ve.filled = bp::extract<bool>(elem_list[i]["filled"]);
     ve.closed = bp::extract<bool>(elem_list[i]["closed"]);
+    ve.startpoint = bp::extract<bool>(elem_list[i]["startpoint"]);
     ve.manually_modified = bp::extract<bool>(elem_list[i]["manually_modified"]);
     ve.stroke_width = bp::extract<double>(elem_list[i]["stroke_width"]);
     if(!(elem_list[i]["rake_states"]) == boost::python::api::object() ) {

@@ -15,6 +15,7 @@ class VectorElement {
 public:
   bool closed;
   bool filled;
+  bool startpoint;
   bool manually_modified;
   vector<char> rake_states;
   double stroke_width;

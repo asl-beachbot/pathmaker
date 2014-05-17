@@ -69,6 +69,7 @@ public:
         ("field_width", po::value<double>(), "Width of field")
         ("field_height", po::value<double>(), "Height of field")
         ("segment_offset", po::value<double>(), "Offset of Segment (from partitioning)")
+        ("no_tree_ordering", "Disables ordering of the tree (Useful when manual image from Timo!)")
     ;
   }
 
@@ -92,6 +93,9 @@ public:
     }
     if (vm.count("display")) {
       this->display = true;
+    }
+    if (vm.count("no_tree_ordering")) {
+      this->no_tree_ordering = true;
     }
     if (vm.count("filename")) {
       this->filename = (std::string) vm["filename"].as<std::string>();
@@ -238,7 +242,7 @@ public:
   int fill_method;// spiral: 2, wiggle: 1
   std::string TXT_export_filename;
   std::string SVG_export_filename;
-
+  bool no_tree_ordering;
 
 private:
   
@@ -264,7 +268,8 @@ private:
     max_interpol_distance(0.05),
     threshold_round_angle(3.14 / (double)2),
     segment_offset(1),
-    fill_method(2) // spiral: 2, wiggle: 1
+    fill_method(2), // spiral: 2, wiggle: 1
+    no_tree_ordering(false)
   {};
 
    

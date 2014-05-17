@@ -184,6 +184,7 @@ private:
 public:
   Tree_ElementPtr element_tree;
   PolyLineElementPtr * playfield;
+  ElementPtr * startpoint_elem;
   VectorElementTree() {
   };
   void print_tree() {
@@ -292,6 +293,7 @@ public:
     cout << "Looping" << element_tree.size() << endl;
     Tree_ElementPtr::iterator top = element_tree.begin();
     std::list<Point_2> playfield_list;
+    startpoint_elem = nullptr;
     playfield_list.push_back(Point_2(0, 0));
     playfield = new PolyLineElementPtr(playfield_list);
     playfield->print();
@@ -299,7 +301,9 @@ public:
     for(VectorElement ve : ps->elements) {
       ElementPtr * elem_ptr = this->getElementRepresentation(&ve);
       // find parent tree iter if possible
-      elem_ptr->print();
+      if(ve.startpoint) {
+        this->startpoint_elem = elem_ptr;
+      }
       findSpot(elem_ptr);
       cout << "Looping" << element_tree.size() << endl;
     }
