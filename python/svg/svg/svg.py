@@ -189,39 +189,56 @@ class Transformable:
             x.rotate(angle)
         return self
 
-class Stylable:
-    css_regex = re.compile(r'([\w\-]+):(.+?)(?:;|$)')
-    class CSSUnit():
-        # Todo check for default unit!
-        unit_re = re.compile(r"([\d\.]+).?([a-z]*)", flags=re.IGNORECASE)
-        def __init__(self, unit_str):
+class CSSUnit():
+    # Todo check for default unit!
+    def __init__(self, elem_type, unit_str):
+        self.val = None
+        self.unit = None
+        if elem_type in ["stroke-width"]:
+            unit_re = re.compile(r"([\d\.]+).*?([a-zA-Z]*)(?:;|$)", flags=re.IGNORECASE)
             unit_match = unit_re.match(unit_str)
             if unit_match:
-                self.val = unit_match[0]
-                self.unit = unit_match[1]
-            else return False
-        def normalized(self, to_unit = "px"):
-            # needs to be implemented
-            if(self.unit == None):
-                return self.val
-            else:
-                return self.val * unit_convert[self.unit] / unit_convert[to_unit]
+                self.val = float(unit_match.group(1))
+                self.unit = unit_match.group(2)
+        else:
+            self.val = unit_str
+        return None
+        # else return False
+
+    def __repr__(self):
+        if self.val is not None and self.unit is None:
+            return "<CSSUnit " + self.val.__str__() + ">"
+        elif self.unit is not None:
+            return "<CSSUnit " + self.val.__str__() + " " + self.unit.__str__() + ">"
+        else: return "<CSSUnit None>"
+
+
+    def __getitem__(self, index):
+        return self.normalized()
+
+    def normalized(self, to_unit = "px"):
+        # needs to be implemented
+        if(self.unit == None):
+            return self.val
+        else:
+            return self.val * unit_convert[self.unit] / unit_convert[to_unit]
+
+class Stylable:
+    css_regex = re.compile(r'([\w\-]+):(.+?)(?:;|$)')
 
     def __init__(self, elt=None):
-        if elt is not None:
+        if not hasattr(self, "style"):
+            self.style = dict()
+        if elt is not None and elt.get("style"):
             style_attr = elt.get("style").lower()
             # replace all whitespace and match against regex
             style_match = self.css_regex.findall(style_attr)
-            if not hasattr(self, "style"):
-                self.style = dict()
             for m in style_match:
-                self.style[m[0]] = CSSUnit(m[1])
+                if m is not None:
+                    self.style[m[0]] = CSSUnit(m[0], m[1])
 
-    def get_style(which):
-        if(self.style[which]):
-            return self.style[which]
-        else:
-            return None
+    def get_style(self, which):
+        return self.style.get(which)
 
 class Svg(Transformable, Stylable):
     '''SVG class: use parse to parse a file'''

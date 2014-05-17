@@ -106,6 +106,13 @@ class Point:
     def __str__(self):
         return self.__repr__();
 
+    def __getitem__(self, index):
+        if index == 0:
+            return self.x
+        elif index == 1:
+            return self.y
+        return NotImplemented
+
     def coord(self):
         '''Return the point tuple (x,y)'''
         return (self.x, self.y)
