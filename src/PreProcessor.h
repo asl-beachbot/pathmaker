@@ -1,7 +1,7 @@
 #pragma once
 #include "CGAL_Headers.h"
 #include <CGAL/bounding_box.h>
-
+#include "VectorElementTree.h"
 // This class is mainly used for scaling all the polys to 
 // a certain bounding box!
 class PreProcessor {

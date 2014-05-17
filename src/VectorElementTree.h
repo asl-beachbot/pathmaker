@@ -4,6 +4,7 @@
 #pragma once
 
 #include "SVGParserAdapter.h"
+#include "View.h"
 #include "tree.h"
 #include <iterator>
 #include <ostream>

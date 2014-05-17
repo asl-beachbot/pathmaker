@@ -19,6 +19,7 @@
 
 import argparse
 import pprint
+import copy
 pp = pprint.PrettyPrinter(indent=4)
 
 from bs4 import BeautifulSoup
@@ -144,9 +145,13 @@ class SVGElement():
             for match in m:
                 if match[0] in ('M', 'm') and i != 0:
                     # This is a hole?
-                    print('a hole')
-                    curr_el = list()
-                    element['holes'].append(curr_el)
+                    if(d[-1:] in ["z", "Z"]):
+                        print('a hole')
+                        curr_el = list()
+                        element['holes'].append(curr_el)
+                    else:
+                        container.append(copy.deepcopy(element))
+                        element["svg_elems"] = list()
                 # print("Match: ")
                 # print(match)
                 coords = match[1]
@@ -252,6 +257,7 @@ def parse_string(svg_string):
                 else:
                     hole_poly.extend(tuple(map(tuple, h.to_poly())))
             holes.append(hole_poly)
+
         #poly.reverse()
         polys.append(poly)
         res["elements"].append({

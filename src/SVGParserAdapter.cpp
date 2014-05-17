@@ -13,7 +13,7 @@
 #include "FillProcedures.h"
 #include "SegmentationPreProcessor.h"
 #include "PostProcessor.h"
-#include "PreProcessor.cpp"
+#include "PreProcessor.h"
 #include "GlobalOptions.h"
 #include "PythonHelpers.h"
 
