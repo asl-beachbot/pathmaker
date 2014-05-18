@@ -34,7 +34,6 @@ namespace Color {
         }
     };
 }
-
 #endif
 
 class GlobalOptions
@@ -149,7 +148,6 @@ public:
 
     return 0;
   }
-#endif
   void printOptions() {
     Color::Modifier red(Color::FG_RED);
     Color::Modifier def(Color::FG_DEFAULT);
@@ -220,7 +218,7 @@ public:
       endl;
 
   }
-
+#endif
   std::string filename;
   bool display;
   double field_width;
@@ -249,8 +247,10 @@ private:
 // options
 
   GlobalOptions() : 
-    filename("assets/test.svg"),
+#ifdef STANDALONE
     desc(po::options_description("Allowed options")),
+#endif
+    filename("assets/test.svg"),
     display(false),
     field_width(5),
     field_height(5),
