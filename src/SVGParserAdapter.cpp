@@ -13,7 +13,7 @@
 #include "FillProcedures.h"
 #include "SegmentationPreProcessor.h"
 #include "PostProcessor.h"
-#include "PreProcessor.cpp"
+#include "PreProcessor.h"
 #include "GlobalOptions.h"
 #include "PythonHelpers.h"
 
@@ -63,13 +63,11 @@ void ParsedSVG::extractPython(bp::dict result) {
     VectorElement ve;
     ve.filled = bp::extract<bool>(elem_list[i]["filled"]);
     ve.closed = bp::extract<bool>(elem_list[i]["closed"]);
+    ve.startpoint = bp::extract<bool>(elem_list[i]["startpoint"]);
     ve.manually_modified = bp::extract<bool>(elem_list[i]["manually_modified"]);
-    if(!elem_list[i]["stroke_width"] == bp::object()) {
-      ve.stroke_width = bp::extract<double>(elem_list[i]["stroke_width"]);
-    } else {
-      ve.stroke_width = 0;
-    }
-    if(!elem_list[i]["rake_states"] == bp::object()) {
+    ve.stroke_width = bp::extract<double>(elem_list[i]["stroke_width"]);
+    if(!(elem_list[i]["rake_states"]) == boost::python::api::object() ) {
+      cout << "Reading Rake States" << endl;
       for(int j = 0; j < bp::len(elem_list[i]["rake_states"]); ++j) {
         ve.rake_states.push_back(bp::extract<char>(elem_list[i]["rake_states"][j]));
       }

@@ -67,6 +67,8 @@ public:
         ("svg_export_filename", po::value<std::string>(), "Filename for export to SVG File")
         ("field_width", po::value<double>(), "Width of field")
         ("field_height", po::value<double>(), "Height of field")
+        ("segment_offset", po::value<double>(), "Offset of Segment (from partitioning)")
+        ("no_tree_ordering", "Disables ordering of the tree (Useful when manual image from Timo!)")
     ;
   }
 
@@ -90,6 +92,9 @@ public:
     }
     if (vm.count("display")) {
       this->display = true;
+    }
+    if (vm.count("no_tree_ordering")) {
+      this->no_tree_ordering = true;
     }
     if (vm.count("filename")) {
       this->filename = (std::string) vm["filename"].as<std::string>();
@@ -135,6 +140,10 @@ public:
     }
     if(vm.count("svg_export_filename")) {
       this->SVG_export_filename = (std::string) vm["svg_export_filename"].as<std::string>();
+    }
+
+    if(vm.count("segment_offset")) {
+      this->segment_offset = (double) vm["segment_offset"].as<double>();
     }
 
     return 0;
@@ -224,13 +233,14 @@ public:
   double translate_playfield_y;
   double angle_interpolation_stepsize;
   double area_deletion_threshold;
+  double segment_offset;
   int number_of_bezier_segs;
   double max_interpol_distance;
   double threshold_round_angle;
   int fill_method;// spiral: 2, wiggle: 1
   std::string TXT_export_filename;
   std::string SVG_export_filename;
-
+  bool no_tree_ordering;
 
 private:
   
@@ -257,7 +267,9 @@ private:
     number_of_bezier_segs(30),
     max_interpol_distance(0.05),
     threshold_round_angle(3.14 / (double)2),
-    fill_method(2) // spiral: 2, wiggle: 1
+    segment_offset(1),
+    fill_method(2), // spiral: 2, wiggle: 1
+    no_tree_ordering(false)
   {};
 
    

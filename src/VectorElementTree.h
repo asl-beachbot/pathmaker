@@ -4,6 +4,7 @@
 #pragma once
 
 #include "SVGParserAdapter.h"
+#include "View.h"
 #include "tree.h"
 #include <iterator>
 #include <ostream>
@@ -160,11 +161,30 @@ private:
       assert(ve->rake_states.size() == ve->vertices.size());
       res->rake_states = RakeVector(ve->rake_states.begin(), ve->rake_states.end());
     }
-    res->line_width = ve->stroke_width;
+    // RAKE_ZERO = 0,
+    // RAKE_SMALL = 0 | 1 << 3,
+    // RAKE_MEDIUM = 0x1c,
+    // RAKE_LARGE = 0x3e, 
+    // RAKE_FULL = 0x7f
+
+    if(ve->stroke_width <= 0) {
+      res->line_width = Rake::RAKE_ZERO;
+    } else if(ve->stroke_width <= 1) {
+      res->line_width = Rake::RAKE_SMALL;
+    } else if(ve->stroke_width <= 3) {
+      res->line_width = Rake::RAKE_MEDIUM;
+    } else if(ve->stroke_width <= 5) {
+      res->line_width = Rake::RAKE_LARGE;
+    } else if(ve->stroke_width > 5) {
+      res->line_width = Rake::RAKE_FULL;
+    }
+    cout << "Line Width: " << res->line_width << endl;
+    return res;
   }
 public:
   Tree_ElementPtr element_tree;
   PolyLineElementPtr * playfield;
+  ElementPtr * startpoint_elem;
   VectorElementTree() {
   };
   void print_tree() {
@@ -273,6 +293,7 @@ public:
     cout << "Looping" << element_tree.size() << endl;
     Tree_ElementPtr::iterator top = element_tree.begin();
     std::list<Point_2> playfield_list;
+    startpoint_elem = nullptr;
     playfield_list.push_back(Point_2(0, 0));
     playfield = new PolyLineElementPtr(playfield_list);
     playfield->print();
@@ -280,7 +301,9 @@ public:
     for(VectorElement ve : ps->elements) {
       ElementPtr * elem_ptr = this->getElementRepresentation(&ve);
       // find parent tree iter if possible
-      elem_ptr->print();
+      if(ve.startpoint) {
+        this->startpoint_elem = elem_ptr;
+      }
       findSpot(elem_ptr);
       cout << "Looping" << element_tree.size() << endl;
     }

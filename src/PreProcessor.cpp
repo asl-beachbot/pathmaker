@@ -38,7 +38,7 @@ void PreProcessor::process(double xmin_target, double ymin_target, double width_
 	double hs = (double)height_target / (double)h;
 	double s = (ws > hs) ? ws : hs;
 	cout << "Scale: " << s << endl;
-	this->process(s); // -bb_final.xmin() -bb_final.ymin();
+	this->process(s, bb_final.xmin(), bb_final.ymin()); // -bb_final.xmin() -bb_final.ymin();
 }
 
 void PreProcessor::process(double scale, double trans_x, double trans_y) {

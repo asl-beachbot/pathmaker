@@ -19,6 +19,8 @@
 
 import argparse
 import pprint
+import copy
+import svg
 pp = pprint.PrettyPrinter(indent=4)
 
 from bs4 import BeautifulSoup
@@ -31,10 +33,10 @@ from math import *
 from numpy import linspace
 
 r = re.compile(r"([a-z])([^a-z]*)", flags=re.IGNORECASE)
-css_re = re.compile(r"([\w]+):(.+?);")
+css_re = re.compile(r"([\w\-]+):(.+?);")
+unit_re = re.compile(r"([\d\.]+).?([a-z]*)", flags=re.IGNORECASE)
 
-t = linspace(1/10, 1, 10-1)
-
+xt = linspace(0.1, 1, 10) # first point is included from last M or L command!
 
 class SVGElement():
     def __init__(self, t, c, prev_el=None, relative_to=None):
@@ -98,24 +100,31 @@ class SVGElement():
         print(path)
         d = path['d']
         element = dict()
-        css = re.findall(css_re, path['style'])
+        css = re.findall(css_re, path['style'].replace(" ", ""))
         fill = False
         stroke = False
         stroke_width = 0
+        startpoint = False
         for c in css:
+            print(c)
             if c[0].lower() == 'fill'\
                 and c[1].lower() not in ["none", "#ffffff", "#fff"]:
                 fill = True
             if c[0].lower() == "stroke"\
-                and c[1].lower() not in ["none", "#ffffff", "#fff"]:
+                and c[1].lower() not in ["none", "#ffffff", "#fff", "#ff0000", "#00ff00"]:
                 stroke = True;
+                if c[1].lower == "#00ff00":
+                    startpoint = true
             if c[0].lower() == "stroke-width":
-                stroke_width = int(c[1])
+                temp_w = unit_re.match(c[1])
+                stroke_width = float(temp_w.group(1))
+
+        element["startpoint"] = startpoint
 
         if stroke and stroke_width:
             element["stroke"] = stroke_width
         else:
-            element["stroke"] = None
+            element["stroke"] = -1
 
         if path.has_attr("fill") and path["fill"].lower() != "none" or fill:
             element['filled'] = True
@@ -143,11 +152,18 @@ class SVGElement():
             for match in m:
                 if match[0] in ('M', 'm') and i != 0:
                     # This is a hole?
-                    print('a hole')
-                    curr_el = list()
-                    element['holes'].append(curr_el)
-                # print("Match: ")
-                # print(match)
+                    print("A new M")
+                    if(d[-1:] in ["z", "Z"]):
+                        print('a hole')
+                        curr_el = list()
+                        element['holes'].append(curr_el)
+                    else:
+                        print(container)
+                        container.append(copy.copy(element))
+                        element = copy.copy(element)
+                        element["svg_elems"] = list()
+                        curr_el = element["svg_elems"]
+
                 coords = match[1]
                 coords = coords.lstrip().rstrip()
                 coords_list = re.split("[^\d\-.]*", coords)
@@ -177,9 +193,9 @@ class SVGElement():
                     inst = SVGElement(match[0], inst_coords, prev_el, rel_el)
                     print (inst)
                     curr_el.append(inst)
-
+                print (curr_el)
                 # curr_el.append(inst)
-                i = i + 1
+                i += 1
         # pp.pprint(element)
         container.append(element)
         return container
@@ -191,6 +207,7 @@ def signed_area(coords_list):
         s += (coords_list[i + 1][0] - coords_list[i][0]) * (coords_list[i + 1][1] + coords_list[i][1])
     s += (coords_list[0][0] - coords_list[l - 1][0]) * (coords_list[0][1] + coords_list[l - 1][1])
     return s
+
 def parse_string(svg_string):
     poly = list()
     svg_element_list = list()
@@ -251,12 +268,14 @@ def parse_string(svg_string):
                 else:
                     hole_poly.extend(tuple(map(tuple, h.to_poly())))
             holes.append(hole_poly)
+
         #poly.reverse()
         polys.append(poly)
         res["elements"].append({
             "closed": el["closed"],
             "filled": el["filled"],
             "stroke": el["stroke"],
+            "startpoint": el["startpoint"],
             "manually_modified": el["manually_modified"],
             "stroke_width": el["stroke"],
             "rake_states": el["rake_info"],
@@ -317,7 +336,43 @@ def run():
     except:
         print("Illegal Filename")
         return False
+    res = dict()
+    s = svg.parse(ns.filename)
+    # for i in s.items:
+    #     print(i)
+    #     print(i.items)
+    #     if hasattr(i, "style"): print(i.style)
+    res["elements"] = list()
+    for i in s.flatten():
+        if hasattr(i, "segments"):
+            fill = False
+            stroke = False
+            startpoint = False
 
+            if(i.get_style("fill")):
+                fill = True
+            if(i.get_style("stroke-width") and i.get_style("stroke") != "none"):
+                i.get_style("stroke") not in ["none", "#ffffff", "#fff", "#ff0000", "#00ff00"]:
+                stroke = True;
+                stroke_width = i.get_style("stroke-width")[0]
+
+            if i.get_style("stroke" == "#00ff00":
+                startpoint = true
+
+            res["elements"].append({
+                "closed": i["closed"],
+                "filled": i.get_style("filled") if i.get_style("filled") else False,
+                "stroke": stroke,
+                "startpoint": startpoint,
+                "manually_modified": "manually_modified" in el.attributes,
+                "stroke_width": stroke,
+                "rake_states": el["rake_info"],
+                "coords": poly,
+                "holes" : holes
+                })
+
+
+    return
     poly = list()
 
     if ns.filename.endswith("dat"):
@@ -342,25 +397,7 @@ def run():
 
         path = soup.find_all("path")
 
-        for p in path:
-            SVGElement.parse_path(p, svg_element_list)
-
-        polys = list()
-        for el in svg_element_list:
-            poly = list()
-            for e in el:
-                poly.extend(e.to_poly())
-
-                # print(e.element_type.__repr__() + e.to_poly().__str__())
-
-                if e.element_type == "z":
-                    if len(e.coords) == 0:
-                        pass
-                    else:
-                        del poly[0]
-
-            poly.reverse()
-            polys.append(poly)
+        parse_file(ns.filename)
         # print(polys)
     if ns.to == "mat":
         text = "poly = ["

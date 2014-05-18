@@ -30,6 +30,7 @@ ADD_DEFINITIONS(
     -std=c++0x
     -frounding-math
     -O0
+    # -H
 )
 
 ##
@@ -106,13 +107,11 @@ include_directories(src/include)
 
 add_executable(svg_parser
     src/SVGParserAdapter.cpp
-    src/VectorElementTree.h 
-    src/VectorTreeElements.h 
-    src/include/CGAL_Headers.h
-    src/include/tree.h
-    src/FillProcedures.h
-    src/SegmentationPreProcessor.h
-    src/GlobalOptions.h)
+    src/PostProcessor.cpp
+    src/PreProcessor.cpp
+    src/SimpleConnector.cpp
+    src/View.cpp
+)
 
 if(NOGUI)
     set(COMP_DEFS STANDALONE)
@@ -127,8 +126,10 @@ set_target_properties(svg_parser PROPERTIES COMPILE_DEFINITIONS "${COMP_DEFS}")
 ## Adding Python Lib
 add_library(beachbot_pathgen SHARED 
     src/PythonBindings.cpp
-    src/SVGParserAdapter.h
     src/SVGParserAdapter.cpp
+    src/PreProcessor.cpp
+    src/SimpleConnector.cpp
+
 )
 
 if(32BIT)
