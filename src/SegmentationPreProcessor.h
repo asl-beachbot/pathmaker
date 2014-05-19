@@ -5,6 +5,7 @@
 #include "VectorTreeElements.h"
 #include "VectorElementTree.h"
 #include "CGAL_Headers.h"
+#include <CGAL/create_offset_polygons_2.h>
 #include <iterator>     // std::back_inserter
 
 typedef VectorElementTree::Tree_ElementPtr::iterator TreeIterator;
@@ -28,14 +29,23 @@ private:
                                      partition_traits);
     for(Traits_Polygon_2 tp : partition_polys) {
       FilledSegment f;
-      f.poly = Polygon_2 (tp.vertices_begin(), tp.vertices_end());
       f.direction = Direction_2(0, 1);
       f.fill_method = 1;
+      if(segment_offset > 0) {
+        PolygonPtrVector offset_polygons = 
+          CGAL::create_interior_skeleton_and_offset_polygons_2
+          (-segment_offset,  Polygon_2 (tp.vertices_begin(), tp.vertices_end()));
 
-      // PolygonPtrVector offset_polygons = CGAL::create_interior_skeleton_and_offset_polygons_2<Polygon_2>(segment_offset);
-      // for(auto p_ptr : offset_polygons) {
-      //   f.poly = *p_ptr;
-      // }
+        if(offset_polygons.size() == 0) {
+          continue; // maybe some more failsafe handling?
+        }
+        for(auto i = offset_polygons.begin(); i != offset_polygons.end(); ++i) {
+          f.poly = (**i);
+        }
+      }
+      else {
+        f.poly = Polygon_2 (tp.vertices_begin(), tp.vertices_end());
+      }
       poly_element_ptr->segments.push_back(f);
     }
     // = partition_polys;

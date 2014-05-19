@@ -152,25 +152,27 @@ private:
         if(new_index == 0) {
           intersections.push_back(temp_intersect[1]);
           intersections.push_back(temp_intersect[0]);
+          ElementPtr * poly_element = new PolyLineElementPtr(
+            std::list<Point_2>{temp_intersect[1], temp_intersect[0]}
+          );
+          poly_element->fill_element = true;
+          result.push_back(poly_element);
+
           prev_line_endpoint = temp_intersect[1];
         } else {
           intersections.push_back(temp_intersect[0]);
           intersections.push_back(temp_intersect[1]);
+          ElementPtr * poly_element = new PolyLineElementPtr(
+            std::list<Point_2>{temp_intersect[0], temp_intersect[1]}
+          );
+          poly_element->fill_element = true;
+          result.push_back(poly_element);
           prev_line_endpoint = temp_intersect[0];
         }
-        // if(i % 2) { // apparently this doesn't work reliable?! Maybe it changes where polygon is 
-        //             // changing direction   <-<-<-<
-        //   intersections.push_back(temp_intersect[1]);
-        //   intersections.push_back(temp_intersect[0]);
-        // } else {
-        //   intersections.push_back(temp_intersect[0]);
-        //   intersections.push_back(temp_intersect[1]);
-        // }
         temp_intersect.clear();
       }  else  {
         done = true;
       }
-
       if(i > 10000) {
         break; /// just in case something goes wrong! 
       }
@@ -179,10 +181,10 @@ private:
       l_test = Line_2(v_start + repos_vector.transform(Transformation(CGAL::SCALING, act_x)), direction);
     }
 
-    ElementPtr * poly_element = new PolyLineElementPtr(intersections);
-    poly_element->fill_element = true;
+    // ElementPtr * poly_element = new PolyLineElementPtr(intersections);
+    // poly_element->fill_element = true;
 
-    result.push_back(poly_element);
+    //result.push_back(poly_element);
   }
   Point_2 findStartingPoint(Polygon_2 poly) {
     auto it = poly.vertices_begin();
