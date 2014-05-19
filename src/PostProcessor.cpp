@@ -180,7 +180,7 @@ PointList PostProcessor::decide_action(const Point_2 & p1, const Point_2 & p2, c
 }
 PointList PostProcessor::interpolateDistance(Point_2 p1, Point_2 p2) {
   int n_elems = (int)ceil(sqrt((p1-p2).squared_length()) / max_interpol_distance);
-  cout << (p1-p2).squared_length() << " msqid " << max_interpol_distance << " nel " << n_elems << endl;
+  // cout << (p1-p2).squared_length() << " msqid " << max_interpol_distance << " nel " << n_elems << endl;
   PointList res;
   if(n_elems > 1) {
     Vector_2 v_n = (p2 - p1) / sqrt((p1 - p2).squared_length());

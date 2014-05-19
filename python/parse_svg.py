@@ -332,7 +332,7 @@ def new_parse_file(filename):
                     stroke_width = i.get_style("stroke-width").val
                 if i.get_style("stroke").val == "#00ff00":
                     startpoint = True
-            coords = i.segments(precision=8)
+            coords = i.segments(precision=100)
             print("coords0", isinstance(coords[0], list), coords[0])
             if isinstance(coords[0], list):
                 print("First elem list!")

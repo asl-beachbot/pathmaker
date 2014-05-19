@@ -64,7 +64,8 @@ public:
     to(NULL), 
     from(NULL), 
     fill_element(false), 
-    post_processed_result(false)
+    post_processed_result(false),
+    manually_modified(false)
   {
     id = rand() % 10000000;
   };
@@ -177,17 +178,20 @@ public:
   #ifdef WITH_GUI
   PolygonWithHolesGraphicsI * graphx;
   std::list<PolygonGraphicsI *> segments_graphx;
+  std::list<Polygon_2> scaled_segments;
   QPen segments_pen;
   void set_graphx() {
     QColor segments_pen_color(0, 100, 100);
-    segments_pen = QPen(segments_pen_color, 2);
+    segments_pen = QPen(segments_pen_color, 0);
     this->graphx = new PolygonWithHolesGraphicsI(&element);
     this->graphx->setEdgesPen(pen);
     auto it = segments.begin();
     auto it_end = segments.end();
+    Transformation t = Transformation(CGAL::SCALING, GlobalOptions::getInstance().scale_for_disp);
     for( ; it != it_end; ++it ) {
-      cout << "adding segment: " << (it->poly) << endl;
-      segments_graphx.push_back(new PolygonGraphicsI(&((*it).poly)));
+      Polygon_2 ps = transform(t, it->poly);
+      scaled_segments.push_back(ps);
+      segments_graphx.push_back(new PolygonGraphicsI(&scaled_segments.back()));
       segments_graphx.back()->setEdgesPen(segments_pen);
     }
     return;

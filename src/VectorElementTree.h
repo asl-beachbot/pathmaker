@@ -32,9 +32,9 @@ private:
     if(elem->get_type() != EL_POLYLINE) {
       // This is a Polygon, does it contain the points?
       // Also check convex hull of polygon!!
-      cout << "Tested Elements: " << endl;
-      elem->print();
-      tested_elem->print();
+      // cout << "Tested Elements: " << endl;
+      // elem->print();
+      // tested_elem->print();
       if(tested_elem->get_type() != EL_POLYLINE) {
         switch(CGAL::bounded_side_2(
           elem->convexHull()->vertices_begin(),
@@ -44,12 +44,12 @@ private:
             // if bounded, or on boundary:
             // this is definitly not enough
             // subtrees have to be moved etcetera
-            cout << "On Bounded Side" << endl;
+            // cout << "On Bounded Side" << endl;
             return true;
             break; // unnecessary?!
           case CGAL::ON_UNBOUNDED_SIDE:
             // Outside of poly. Outside of children.
-            cout << "Not Inside" << endl;
+            // cout << "Not Inside" << endl;
             return false;
         }
       }
@@ -65,7 +65,7 @@ private:
         switch(start_bounded) {
           case CGAL::ON_BOUNDED_SIDE:
           case CGAL::ON_BOUNDARY:
-            cout << "Inside: " << elem << endl;
+            // cout << "Inside: " << elem << endl;
             return true;
             break;
         }
@@ -75,7 +75,7 @@ private:
         switch(end_bounded) {
           case CGAL::ON_BOUNDED_SIDE:
           case CGAL::ON_BOUNDARY:
-            cout << "Inside: " << elem << endl;
+            // cout << "Inside: " << elem << endl;
             return true;
             break;
         }
@@ -95,16 +95,13 @@ private:
     Tree_ElementPtr::breadth_first_iterator it = ++element_tree.begin_breadth_first(); // skip playfield
     Tree_ElementPtr::breadth_first_iterator it_end = element_tree.end_breadth_first();
     Tree_ElementPtr::iterator curr_parent = element_tree.begin();
-    elem_ptr->print();
     // cout << "Length: " << it - it_end << endl;
     for(; it != it_end; ++it) {
-      cout << "Checking all polys" <<  endl;
-      (*it)->print();
-
+      // cout << "Checking all polys" <<  endl;
         if(it == curr_parent) {continue;} // check if parent is playfield
         if(isInside((*it), elem_ptr)) {
           curr_parent = it;
-          cout << "Curr Parent " << (*curr_parent) << endl;
+          // cout << "Curr Parent " << (*curr_parent) << endl;
           if(it.node->first_child) {
             // it = Tree_ElementPtr::breadth_first_iterator(it.node->first_child);
           } else {
@@ -117,7 +114,7 @@ private:
     // found some parent?
     Tree_ElementPtr::iterator new_element_iter;
 
-    cout << "Inserting Element at " << (*curr_parent) << endl;
+    // cout << "Inserting Element at " << (*curr_parent) << endl;
     new_element_iter = element_tree.append_child(curr_parent, elem_ptr);
     // iterate over siblings: are they children of the new node?
     // If yes: reparent!
@@ -156,7 +153,7 @@ private:
       cout << "Polyline" << endl;
       res =  new PolyLineElementPtr(ve->vertices);
     }
-    res->manually_modified = ve->manually_modified;\
+    res->manually_modified = ve->manually_modified;
     if(ve->rake_states.size()) {
       assert(ve->rake_states.size() == ve->vertices.size());
       res->rake_states = RakeVector(ve->rake_states.begin(), ve->rake_states.end());
@@ -227,6 +224,7 @@ public:
             auto it_seg = temp_el->segments_graphx.begin();
             auto it_seg_end = temp_el->segments_graphx.end();
             for(; it_seg != it_seg_end; ++it_seg) {
+              cout << "Adding Segment to Window" << endl;
               window->addItem((*it_seg));
             }
           }
@@ -296,7 +294,6 @@ public:
     startpoint_elem = nullptr;
     playfield_list.push_back(Point_2(0, 0));
     playfield = new PolyLineElementPtr(playfield_list);
-    playfield->print();
     element_tree.insert(top, playfield); // Parent of all`
     for(VectorElement ve : ps->elements) {
       ElementPtr * elem_ptr = this->getElementRepresentation(&ve);
@@ -305,9 +302,8 @@ public:
         this->startpoint_elem = elem_ptr;
       }
       findSpot(elem_ptr);
-      cout << "Looping" << element_tree.size() << endl;
     }
-    this->print_tree();
+    // this->print_tree();
   };
   void insertIntoTree(ElementPtr * elem) {
       this->findSpot(elem);
@@ -360,10 +356,8 @@ public:
           el_ptr->fill_elements = wiggle_singleton->fill(el_ptr);
         }
         for(ElementPtr * e : el_ptr->fill_elements) {
-          cout << "Finding Spot for element: " << e << endl;
           if(!e) {cout << "Error null pointer!" << endl; continue;}
           findSpot(e);
-          this->print_tree();
         }
       }
     }

@@ -266,7 +266,7 @@ class Bezier:
 
         return (Point(xmin,ymin), Point(xmax,ymax))
 
-    def segments(self, start=True, precision=0):
+    def segments(self, start=True, precision=0, num_elems=0):
         '''Return a polyline approximation ("segments") of the Bezier curve
            precision is the minimum significative length of a segment'''
         segments = []
@@ -277,7 +277,9 @@ class Bezier:
             n = 1000
         if n < 10: n = 10
         if n > 1000 : n = 1000
-
+        if num_elems != 0:
+            n = num_elems
+        n = 10
         for t in range(0, n + 1):
             segments.append(self._bezierN(float(t)/n))
         print(segments)
