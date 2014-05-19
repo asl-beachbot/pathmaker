@@ -70,7 +70,7 @@ Point_2 SimpleConnector::find_closest_point_on_element(Point_2 exit_point, Eleme
       if(distance_begin > distance_end) {
         if(connect) {
           p2->entry_point = p2_end;
-          p2->entry_point_index = static_cast<PolyLineElementPtr * >(p2)->element.size();
+          p2->entry_point_index = static_cast<PolyLineElementPtr * >(p2)->element.size() - 1;
           p2->exit_point_index = 0;
           p2->exit_point = p2_begin;
         }
@@ -81,7 +81,7 @@ Point_2 SimpleConnector::find_closest_point_on_element(Point_2 exit_point, Eleme
           p2->entry_point = p2_begin;
           p2->exit_point = p2_end;
           p2->entry_point_index = 0;
-          p2->exit_point_index = static_cast<PolyLineElementPtr * >(p2)->element.size();
+          p2->exit_point_index = static_cast<PolyLineElementPtr * >(p2)->element.size() - 1;
         }
         return p2_begin;
       }
@@ -169,15 +169,17 @@ Point_2 SimpleConnector::find_closest_point_on_element(Point_2 exit_point, Eleme
         case EL_POLYGON:
           (*node)->entry_point = static_cast<PolygonElementPtr *>(*node)->element[0];
           (*node)->exit_point = (*node)->entry_point;
+          (*node)->exit_point_index = 0;
           break;
         case EL_FILLED_POLYGON:
           (*node)->entry_point = static_cast<FilledPolygonElementPtr *>(*node)->element.outer_boundary()[0];
           (*node)->exit_point = (*node)->entry_point;
+          (*node)->exit_point_index = 0;
           break;
         case EL_POLYLINE:
           (*node)->entry_point = static_cast<PolyLineElementPtr *>(*node)->element.front();
           (*node)->exit_point = static_cast<PolyLineElementPtr *>(*node)->element.back();
-
+          (*node)->exit_point_index = static_cast<PolyLineElementPtr *>(*node)->element.size() - 1;
           break;
       }
       (*node)->entry_point_index = 0;

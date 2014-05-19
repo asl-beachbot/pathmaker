@@ -69,6 +69,8 @@ public:
         ("field_height", po::value<double>(), "Height of field")
         ("segment_offset", po::value<double>(), "Offset of Segment (from partitioning)")
         ("no_tree_ordering", "Disables ordering of the tree (Useful when manual image from Timo!)")
+        ("number_segments_bezier_connect", po::value<int>(), "Define the number of segments for bezier interpolation)")
+        ("stop_go_outer", "Round (and outer round) outer contours or stop-turn-go cycle?")
     ;
   }
 
@@ -141,9 +143,18 @@ public:
     if(vm.count("svg_export_filename")) {
       this->SVG_export_filename = (std::string) vm["svg_export_filename"].as<std::string>();
     }
+    if(vm.count("stop_go_outer")) {
+      this->stop_go_outer = true;
+    }
 
     if(vm.count("segment_offset")) {
       this->segment_offset = (double) vm["segment_offset"].as<double>();
+    }
+    if(vm.count("field_offset")) {
+      this->field_offset = (double) vm["field_offset"].as<double>();
+    }
+    if(vm.count("number_segments_bezier_connect")) {
+      this->number_of_bezier_segs = (int) vm["number_segments_bezier_connect"].as<int>();
     }
 
     return 0;
@@ -223,10 +234,12 @@ public:
   bool display;
   double field_width;
   double field_height;
+  double field_offset;
   double beachbot_size;
   double line_distance;
   double rounding_radius;
   bool segmentation_on;
+  bool stop_go_outer;
   double scale_for_disp;
   bool translate_playfield;
   double translate_playfield_x;
@@ -268,8 +281,10 @@ private:
     max_interpol_distance(0.05),
     threshold_round_angle(3.14 / (double)2),
     segment_offset(1),
+    field_offset(0.2),
     fill_method(2), // spiral: 2, wiggle: 1
-    no_tree_ordering(false)
+    no_tree_ordering(false),
+    stop_go_outer(false)
   {};
 
    

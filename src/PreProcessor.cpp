@@ -1,4 +1,5 @@
 #include "PreProcessor.h"
+#include "GlobalOptions.h"
 #include "CGAL_Headers.h"
 #include <CGAL/Bbox_2.h>
 #include <CGAL/bounding_box.h>
@@ -9,10 +10,11 @@ typedef CGAL::Bbox_2 Bbox_2;
 // This class is mainly used for scaling all the polys to 
 // a certain bounding box!
 void PreProcessor::process(double xmin_target, double ymin_target, double width_target, double height_target) {
-	auto it = tree->element_tree.begin();
+	auto it = ++tree->element_tree.begin();
 	auto it_end = tree->element_tree.end();
 	Bbox_2 bb_final;
 	Bbox_2 bb;
+	int i = 0;
 	for(; it != it_end; ++it) {
 		switch((*it)->get_type()) {
 			case EL_POLYGON: {
@@ -28,12 +30,21 @@ void PreProcessor::process(double xmin_target, double ymin_target, double width_
 				bb = CGAL::bounding_box(p->begin(), p->end()).bbox();
 			}
 		}
-		bb_final = bb_final + bb;
+		if(i == 0) {
+			bb_final = bb;
+		} else {
+			bb_final = bb_final + bb;
+		}
+		i++;
 	}
 	double w = bb_final.xmax() - bb_final.xmin();
 	double h = bb_final.ymax() - bb_final.ymin();
-	cout << "BB: " << bb_final.xmax()<< " " <<bb_final.xmin() << " " << bb_final.ymax() << " " << bb_final.ymin() << endl;
+	cout << "BB: " << bb_final.xmax()<< " " << bb_final.xmin() << " " << bb_final.ymax() << " " << bb_final.ymin() << endl;
 
+	if(GlobalOptions::getInstance().field_offset) {
+		width_target -= 2 * GlobalOptions::getInstance().field_offset;
+		height_target -= 2 * GlobalOptions::getInstance().field_offset;
+	}
 	double ws = (double)width_target / (double)w;
 	double hs = (double)height_target / (double)h;
 	double s = (ws > hs) ? ws : hs;
@@ -43,8 +54,8 @@ void PreProcessor::process(double xmin_target, double ymin_target, double width_
 
 void PreProcessor::process(double scale, double trans_x, double trans_y) {
 	Transformation trafo_scale(CGAL::SCALING, scale);
-	Transformation trafo_trans(CGAL::TRANSLATION, Vector_2(trans_x, trans_y));
-	Transformation trafo = trafo_trans * trafo_scale;
+	Transformation trafo_trans(CGAL::TRANSLATION, Vector_2(-trans_x, -trans_y));
+	Transformation trafo = trafo_scale * trafo_trans;
 	auto it = tree->element_tree.begin();
 	auto it_end = tree->element_tree.end();
 

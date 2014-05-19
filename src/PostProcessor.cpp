@@ -17,7 +17,6 @@ typedef PolyLine_P PointList;
 
 
 float PostProcessor::calc_angle(Vector_2 v1, Vector_2 v2) {
-  cout << "Angle " << v1*v2 << " deg " << acos(v1 * v2) << endl;
   return acos(v1 * v2);
 }
 PointList PostProcessor::bezierHelper (
@@ -30,7 +29,7 @@ PointList PostProcessor::bezierHelper (
   PointList res;
   unsigned int i;
   cout << "Creating bezier with " << p1 << " " << c1 << " " << c2 << " " << p2 << endl;
-  for (i=0; i <= number_of_bezier_segs; ++i)
+  for (i=1; i <= number_of_bezier_segs - 1; ++i)
   {
     double t = (double)i / (double)number_of_bezier_segs;
 
@@ -145,7 +144,11 @@ PointList PostProcessor::decide_action(const Point_2 & p1, const Point_2 & p2, c
   elem_to_round.v2_n = elem_to_round.v2 / sqrt(elem_to_round.v2.squared_length());
 
   elem_to_round.angle = this->calc_angle(elem_to_round.v1_n, elem_to_round.v2_n);
-  if(elem_to_round.angle != elem_to_round.angle) return PointList({p2});
+
+  if(elem_to_round.angle != elem_to_round.angle) {
+    cout << "Angle == NaN!" << endl;
+    return PointList({p2});
+  }
 
   elem_to_round.orientation = CGAL::orientation(p1, p2, p3);
   if(filling_element) {
@@ -155,6 +158,13 @@ PointList PostProcessor::decide_action(const Point_2 & p1, const Point_2 & p2, c
       return round_corner(&elem_to_round);
     }
   } else {
+    if(GlobalOptions::getInstance().stop_go_outer) {
+      if(elem_to_round.angle < threshold_round_angle) {
+        turn_points.push_back(p2);
+        return PointList{p2};
+      }
+      return PointList{p2};
+    }
     // only sharp corners: go outside
     if(elem_to_round.angle < threshold_round_angle) {
       *outer = true;
@@ -276,9 +286,11 @@ void PostProcessor::process() {
           unsigned char rake_state;
           if(polyline_el->entry_point_index == 0) {
             // forward
+            final_path->push_back(polyline_el->getFromIndex(0)); // push in first point
+            final_rake->push_back(polyline_el->line_width);
             if(len > 2) {
               int i = 1;
-              for(; i < len - 2; ++i) {
+              for(; i <= len - 2; ++i) {
                 res = decide_action(el->at(i - 1), el->at(i), el->at(i + 1), &outer);
                 if(outer) {
                   rake_state = 0;
@@ -291,15 +303,19 @@ void PostProcessor::process() {
                 }
               }
             }
+            final_path->push_back(polyline_el->getFromIndex(-1)); // push in last point
+            final_rake->push_back(polyline_el->line_width);
             if(elem->to && elem->to != playfield) {
               PointList temp_res = round_connector(el->at(len - 2), el->at(len - 1), elem->to);
-              for(Point_2 p: temp_res) {
+              for(Point_2 p : temp_res) {
                 final_path->push_back(p);
                 final_rake->push_back(0);
               }
             }
           }
           else {
+            final_path->push_back(polyline_el->getFromIndex(-1)); // push in first point
+            final_rake->push_back(polyline_el->line_width);
             if(len > 2) {
               int i = len - 2;
               for(; i > 0; --i) {
@@ -310,14 +326,15 @@ void PostProcessor::process() {
                   rake_state = polyline_el->line_width; // replace with Linewidth
                 }
                 for(Point_2 p : res) {
-                  assert(p != p0);
                   final_path->push_back(p);
                   final_rake->push_back(rake_state);
                 }
               }
             }
+            final_path->push_back(polyline_el->getFromIndex(0)); // push in last point
+            final_rake->push_back(polyline_el->line_width);
             if(elem->to && elem->to != playfield) {
-              PointList temp_res = round_connector(el->at(0), el->at(1), elem->to);
+              PointList temp_res = round_connector(el->at(1), el->at(0), elem->to);
               for(Point_2 p: temp_res) {
                 assert(p != p0);
                 final_path->push_back(p);
@@ -467,7 +484,7 @@ void PostProcessor::process() {
   poly_el_ptr->rake_states = *final_rake;
   this->final_element = poly_el_ptr;
 
-  Exporter e = Exporter(final_path, final_rake);
+  Exporter e = Exporter(final_path, final_rake, &turn_points);
   e.export_result();
   tree->element_tree.append_child(tree->element_tree.begin(), poly_el_ptr);
 }

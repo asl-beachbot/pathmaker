@@ -167,9 +167,12 @@ class Segment:
     def __str__(self):
         return 'Segment from ' + str(self.start) + ' to ' + str(self.end)
 
-    def segments(self, precision=0):
+    def segments(self, start = True, precision=0):
         ''' Segments is simply the segment start -> end'''
-        return [self.start, self.end]
+        if start:
+            return [self.start, self.end]
+        else:
+            return [self.end]
 
     def length(self):
         '''Segment length, Pythagoras theorem'''
@@ -263,7 +266,7 @@ class Bezier:
 
         return (Point(xmin,ymin), Point(xmax,ymax))
 
-    def segments(self, precision=0):
+    def segments(self, start=True, precision=0):
         '''Return a polyline approximation ("segments") of the Bezier curve
            precision is the minimum significative length of a segment'''
         segments = []
@@ -275,8 +278,12 @@ class Bezier:
         if n < 10: n = 10
         if n > 1000 : n = 1000
 
-        for t in range(0, n):
+        for t in range(0, n + 1):
             segments.append(self._bezierN(float(t)/n))
+        print(segments)
+        if not start:
+            del segments[0]
+
         return segments
 
     def _bezier1(self, p0, p1, t):
@@ -320,6 +327,9 @@ class MoveTo:
 
     def transform(self, matrix):
         self.dest = matrix * self.dest
+
+    def segments(self, start=True, precision=0):
+        return [self.dest]
 
     def scale(self, ratio):
         self.dest *= ratio

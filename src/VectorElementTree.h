@@ -344,7 +344,6 @@ public:
     json["elems"] = elem_json_arr;
     std::ostringstream stream;
     stream << json;
-    cout << json;
     return stream.str();
   }
   void fillPolys() {

@@ -26,6 +26,7 @@ private:
   float max_interpol_distance;
   double threshold_round_angle;
   int number_of_bezier_segs;
+  std::vector<Point_2> turn_points;
   VectorElementTree * tree;
   Transformation rotate_90;
   Transformation rotate_m90;

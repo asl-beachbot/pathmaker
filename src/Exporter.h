@@ -4,36 +4,56 @@
 #include "VectorTreeElements.h"
 #include "GlobalOptions.h"
 #include <boost/format.hpp>
+#include <algorithm>
 using boost::format; using boost::str;
 
 class Exporter {
 private:
+
+
 	PolyLine_P * export_poly;
 	RakeVector * export_rake;
+	std::vector<Point_2> * turn_points;
 	// VectorElementTree * tree;
 public:
-	Exporter(PolyLine_P * export_poly, RakeVector * export_rake) : 
+	Exporter(PolyLine_P * export_poly, RakeVector * export_rake, std::vector<Point_2> * turn_points) : 
 		export_poly(export_poly),
-		export_rake(export_rake) {};
+		export_rake(export_rake),
+		turn_points(turn_points) {};
 	void export_result() {
 		cout << "Exporting to Files" << endl;
 		if(!GlobalOptions::getInstance().SVG_export_filename.empty()) {
+			double scale_for_disp = GlobalOptions::getInstance().scale_for_disp;
 			std::string fn = GlobalOptions::getInstance().SVG_export_filename;
+			cout << "Writing to SVG: " << fn << endl;
 			ofstream of(fn);
-			Transformation t(CGAL::SCALING, GlobalOptions::getInstance().scale_for_disp);
-			std::string res = str(format("<svg width=\"%1%\" height=\"%2%\">") 
-				% GlobalOptions::getInstance().field_width
-				% GlobalOptions::getInstance().field_height);
+			std::string res = "";
+			res += "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\"?> ";
+			res += "<!-- Created by Wolf Vollprechts super awesome path parser --> ";
+			res += "<svg ";
+			res += "xmlns:dc=\"http://purl.org/dc/elements/1.1/\" ";
+			res += "xmlns:cc=\"http://creativecommons.org/ns#\" ";
+			res += "xmlns:rdf=\"http://www.w3.org/1999/02/22-rdf-syntax-ns#\" ";
+			res += "xmlns:svg=\"http://www.w3.org/2000/svg\" ";
+			res += "xmlns=\"http://www.w3.org/2000/svg\" ";
+			res += "xmlns:sodipodi=\"http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd\" ";
+			res += "xmlns:inkscape=\"http://www.inkscape.org/namespaces/inkscape\" ";
+			res += str(format("width=\"%1%\" height=\"%2%\" ") 
+				% (GlobalOptions::getInstance().field_width * scale_for_disp)
+				% (GlobalOptions::getInstance().field_height * scale_for_disp));
+			res += "id=\"svg_output\" ";
+			res += str(format("scale_for_disp=\"%1%\" ") % scale_for_disp);
+			res += "version=\"1.1\"> ";
+			Transformation t(CGAL::SCALING, scale_for_disp);
 			res += "<path d=\"M ";
 			for(int i = 0; i < export_poly->size(); ++i) {
 				Point_2 p = export_poly->at(i);
-				p.transform(t);
-				res += str(format("%1%,%2% L ") % p.x() % p.y());
+				Point_2 pn = p.transform(t);
+				res += str(format("%1%,%2% L ") % pn.x() % pn.y());
 			}
-			res.resize(res.size() - 3);
+			res.resize(res.size() - 3); // delete last three chars (space and last L)
 			
-			 // remove last 3 chars
-			res += "\" style=\"fill: none; stroke: 'black'; stroke-width: 0.2\" rake_info=\"";
+			res += "\" style=\"fill: none; stroke: black; stroke-width: 2\" rake_info=\"";
 			for(int i = 0; i < export_rake->size(); ++i) {
 				res += str(format("%1% ") % (int)export_rake->at(i));
 			}
@@ -43,13 +63,24 @@ public:
 		if(!GlobalOptions::getInstance().TXT_export_filename.empty()) {
 			std::string res;
 			std::string fn = GlobalOptions::getInstance().TXT_export_filename;
+
 			cout << "Writing to File: " << fn << endl;
 			ofstream of(fn);
 			assert(export_poly->size() == export_rake->size());
-			for(int i = 0; i < export_poly->size(); ++i) {
-			  res += str(format("%1% %2% %3%\n") % export_poly->at(i).x() % export_poly->at(i).y() % (int)export_rake->at(i));
+			if(turn_points->size() == 0) {
+				for(int i = 0; i < export_poly->size(); ++i) {
+				  res += str(format("%1% %2% %3%\n") % export_poly->at(i).x() % export_poly->at(i).y() % (int)export_rake->at(i));
+				}
+			} else {
+				for(int i = 0; i < export_poly->size(); ++i) {
+				  res += str(format("%1% %2% %3%\n") % (*export_poly)[i].x() % (*export_poly)[i].y() % (int)export_rake->at(i));
+				  if(std::find(turn_points->begin(), turn_points->end(), (*export_poly)[i]) != turn_points->end()) {
+				  	res += "\n";
+				  }
+				}
 			}
 			of << res;
+
 		}
 	}
 };

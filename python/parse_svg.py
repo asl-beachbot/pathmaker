@@ -36,7 +36,7 @@ r = re.compile(r"([a-z])([^a-z]*)", flags=re.IGNORECASE)
 css_re = re.compile(r"([\w\-]+):(.+?);")
 unit_re = re.compile(r"([\d\.]+)\s?([a-z]*)", flags=re.IGNORECASE)
 
-xt = linspace(0.1, 1, 10) # first point is included from last M or L command!
+t = linspace(0.1, 1, 10) # first point is included from last M or L command!
 
 class SVGElement():
     def __init__(self, t, c, prev_el=None, relative_to=None):
@@ -321,7 +321,6 @@ def new_parse_file(filename):
     res['svg_base'] = base
     res["elements"] = list()
 
-    res["elements"] = list()
     for i in s.flatten():
         if hasattr(i, "segments"):
             stroke = False
@@ -333,12 +332,16 @@ def new_parse_file(filename):
                     stroke_width = i.get_style("stroke-width").val
                 if i.get_style("stroke").val == "#00ff00":
                     startpoint = True
-            coords = i.segments(precision=4)
+            coords = i.segments(precision=8)
             print("coords0", isinstance(coords[0], list), coords[0])
             if isinstance(coords[0], list):
                 print("First elem list!")
 
                 for l_coords in coords:
+                    if i.closed and signed_area(l_coords) > 0: 
+                        print ("signed area  > 0")
+                        l_coords.reverse()
+
                     print("LCOORDS: ", l_coords)
                     res["elements"].append({
                         "closed": i.closed,
@@ -352,6 +355,10 @@ def new_parse_file(filename):
                         "holes" : list()
                         })
             else:
+                if i.closed and signed_area(coords) > 0: 
+                    print ("signed area  > 0")
+                    coords.reverse()
+
                 res["elements"].append({
                     "closed": i.closed,
                     "filled": i.get_style("fill") is not None if i.get_style("fill") else False,
@@ -414,31 +421,45 @@ def run():
     #     print(i.items)
     #     if hasattr(i, "style"): print(i.style)
     res["elements"] = list()
+    sres = "<svg><path d=\"M 0,0 "
     for i in s.flatten():
         if hasattr(i, "segments"):
             stroke = False
             startpoint = False
+            coords = i.segments(precision=4)
+            if isinstance(coords[0], list):
+                for l in coords:
+                    for p in l:
+                        sres += "L {0} {1}".format(p[0], p[1])
+            else:
+                for p in coords:
+                    sres += "L {0} {1}".format(p[0], p[1])
+    sres += "\"/></svg>"
+    # print (sres)
+    return
 
-            if(i.get_style("stroke-width") and i.get_style("stroke-width").val > 0 and i.get_style("stroke")):
-                if i.get_style("stroke").val not in ["none", "#ffffff", "#fff", "#ff0000", "#00ff00"]:
-                    stroke = True;
-                    stroke_width = i.get_style("stroke-width").val
-                if i.get_style("stroke").val == "#00ff00":
-                    startpoint = true
 
-            res["elements"].append({
-                "closed": i.closed,
-                "filled": i.get_style("fill") is not None if i.get_style("fill") else False,
-                "stroke": stroke,
-                "startpoint": startpoint,
-                "manually_modified": "manually_modified" in i.attributes,
-                "stroke_width": stroke,
-                "rake_states": [j for j in i.attributes.get("rake_info").split(" ")] if i.attributes.get("rake_info") else None,
-                "coords": i.segments(precision=4)[0],
-                "holes" : None
-                })
 
-    print(res)
+    #         if(i.get_style("stroke-width") and i.get_style("stroke-width").val > 0 and i.get_style("stroke")):
+    #             if i.get_style("stroke").val not in ["none", "#ffffff", "#fff", "#ff0000", "#00ff00"]:
+    #                 stroke = True;
+    #                 stroke_width = i.get_style("stroke-width").val
+    #             if i.get_style("stroke").val == "#00ff00":
+    #                 startpoint = true
+
+    #         res["elements"].append({
+    #             "closed": i.closed,
+    #             "filled": i.get_style("fill") is not None if i.get_style("fill") else False,
+    #             "stroke": stroke,
+    #             "startpoint": startpoint,
+    #             "manually_modified": "manually_modified" in i.attributes,
+    #             "stroke_width": stroke,
+    #             "rake_states": [j for j in i.attributes.get("rake_info").split(" ")] if i.attributes.get("rake_info") else None,
+    #             "coords": i.segments(precision=4)[0],
+    #             "holes" : None
+    #             })
+
+    # print(res)
     return
     poly = list()
 

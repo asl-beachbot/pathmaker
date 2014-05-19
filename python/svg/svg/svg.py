@@ -535,16 +535,29 @@ class Path(Transformable, Stylable):
         '''Return a list of segments, each segment is ended by a MoveTo.
            A segment is a list of Points'''
         ret = []
+        prevMoveTo = MoveTo(Point(0, 0));
         # group items separated by MoveTo
+        seg = []
+        print "1", prevMoveTo
         for moveTo, group in itertools.groupby(self.items,
                 lambda x: isinstance(x, MoveTo)):
             # Use only non MoveTo item
+            # print moveTo
+            if moveTo:
+                for x in group:
+                    prevMoveTo = x
+                    # print prevMoveTo
+            # print "p", prevMoveTo
             if not moveTo:
                 # Generate segments for each relevant item
-                seg = [x.segments(precision) for x in group]
+                # seg = prevMoveTo.segments()
+                seg = [prevMoveTo.segments(False, precision)]
+                # print seg
+                # print group, moveTo, prevMoveTo
+                seg.extend([x.segments(False, precision) for x in group])
                 # Merge all segments into one
                 ret.append(list(itertools.chain.from_iterable(seg)))
-
+        # print ret
         return ret
 
     def simplify(self, precision):
