@@ -120,7 +120,6 @@ Point_2 SimpleConnector::find_closest_point_on_element(Point_2 exit_point, Eleme
       return 1;
     }
     for(;child_it != child_it.end();++child_it) {
-      cout << "child visited?" << endl;
       Tree_ElementPtr::sibling_iterator fn_it = this->element_tree->child(node, 0);
       Tree_ElementPtr::sibling_iterator fn_it_end = element_tree->end(fn_it);
       Point_2 closest_point;
@@ -128,18 +127,13 @@ Point_2 SimpleConnector::find_closest_point_on_element(Point_2 exit_point, Eleme
       Tree_ElementPtr::sibling_iterator next_element = child_it;
 
       if(!(*child_it)->visited) {
-        cout << "unvisited child !" << endl;
         for(; fn_it != fn_it_end; ++fn_it) {
-          cout << "checking for nearest" ;
           if((*fn_it)->visited) {continue;}
           closest_point = this->find_closest_point_on_element((*connect_from)->exit_point, (*fn_it), false);
-          cout << "Cur dist " << CGAL::squared_distance((*connect_from)->exit_point, closest_point) << endl;
           if(CGAL::squared_distance((*connect_from)->exit_point, closest_point) < cur_dist) {
             cur_dist = CGAL::squared_distance((*connect_from)->exit_point, closest_point);
-            cout << cur_dist << " as " << *next_element << endl;
             next_element = fn_it;
           }
-          cout << *next_element << " from " << *connect_from << endl;
         }
         this->connect_recursive(next_element, connect_from);
         return 1;

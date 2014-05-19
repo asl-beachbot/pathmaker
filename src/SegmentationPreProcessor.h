@@ -20,6 +20,7 @@ private:
   Tree_ElementPtr * element_tree;
   Traits partition_traits;
   double segment_offset;
+
   void segment(FilledPolygonElementPtr * poly_element_ptr) {
     std::list<Traits_Polygon_2> partition_polys;
     Polygon_2 outer = poly_element_ptr->element.outer_boundary();
@@ -32,9 +33,10 @@ private:
       f.direction = Direction_2(0, 1);
       f.fill_method = 1;
       if(segment_offset > 0) {
+        cout << "Segment Offset: " << segment_offset << endl;
         PolygonPtrVector offset_polygons = 
           CGAL::create_interior_skeleton_and_offset_polygons_2
-          (-segment_offset,  Polygon_2 (tp.vertices_begin(), tp.vertices_end()));
+          (segment_offset,  Polygon_2 (tp.vertices_begin(), tp.vertices_end()));
 
         if(offset_polygons.size() == 0) {
           continue; // maybe some more failsafe handling?
@@ -47,6 +49,9 @@ private:
         f.poly = Polygon_2 (tp.vertices_begin(), tp.vertices_end());
       }
       poly_element_ptr->segments.push_back(f);
+    }
+    for(auto it = poly_element_ptr->segments.begin(); it != poly_element_ptr->segments.end(); ++it) {
+      cout << "Got a Segment" << endl;
     }
     // = partition_polys;
   }
