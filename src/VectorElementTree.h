@@ -135,19 +135,23 @@ private:
   ElementPtr * getElementRepresentation(VectorElement * ve) {
     ElementPtr * res;
 
-    int lw_temp = Rake::RAKE_ZERO;
-    if(ve->stroke_width <= 0) {
+    vector<float> stroke_widths = GlobalOptions::getInstance().svg_stroke_sizes;
+    cout << "Comparing: " << ve->stroke_width << " to: " << endl;
+    int lw_temp = 0;
+    for(auto i = stroke_widths.begin(); i != stroke_widths.end(); ++i) {
+      cout << *i << endl;
+    }
+    if(ve->stroke_width <= stroke_widths.at(0)) {
       lw_temp = Rake::RAKE_ZERO;
-    } else if(ve->stroke_width <= 1) {
+    } else if(ve->stroke_width <= stroke_widths.at(1)) {
       lw_temp = Rake::RAKE_SMALL;
-    } else if(ve->stroke_width <= 3) {
+    } else if(ve->stroke_width <= stroke_widths.at(2)) {
       lw_temp = Rake::RAKE_MEDIUM;
-    } else if(ve->stroke_width <= 5) {
+    } else if(ve->stroke_width <= stroke_widths.at(3)) {
       lw_temp = Rake::RAKE_LARGE;
-    } else if(ve->stroke_width > 5) {
+    } else if(ve->stroke_width > stroke_widths.at(3)) {
       lw_temp = Rake::RAKE_FULL;
     }
-
     if(ve->closed && ve->filled) {
       Polygon_2 outer = Polygon_2(ve->vertices.begin(), ve->vertices.end());
       std::list<Polygon_2> holes;
@@ -156,17 +160,18 @@ private:
       }
       Polygon_with_holes_2 polygon_with_holes = Polygon_with_holes_2(outer, holes.begin(), holes.end());
       cout << "Polygon With Holes "<< polygon_with_holes << endl;
-      res = new FilledPolygonElementPtr(polygon_with_holes, lw_temp);
+      res = new FilledPolygonElementPtr(polygon_with_holes, (int) lw_temp);
     }
     else if (ve->closed) {
       Polygon_2 polygon = Polygon_2(ve->vertices.begin(), ve->vertices.end());
       cout << "Polygon " << polygon << endl;
-      res = new PolygonElementPtr(polygon, lw_temp);
+      res =  new PolygonElementPtr(polygon, (int) lw_temp);
     }
     else {
       cout << "Polyline" << endl;
-      res =  new PolyLineElementPtr(ve->vertices, lw_temp);
+      res =  new PolyLineElementPtr(ve->vertices, (int) lw_temp);
     }
+    cout << "Line Width: " << lw_temp << " " << (int)res->line_width <<endl;
     res->manually_modified = ve->manually_modified;
     if(ve->rake_states.size()) {
       assert(ve->rake_states.size() == ve->vertices.size());

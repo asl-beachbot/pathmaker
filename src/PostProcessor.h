@@ -3,6 +3,7 @@
 #pragma once
 #include "VectorElementTree.h"
 #include "CGAL_Headers.h"
+#include "Exporter.h"
 
 typedef PolyLine_P PointList;
 
@@ -37,6 +38,7 @@ private:
   PointList round_outer_corner(ThreePointElem * el);
   PointList decide_action(const Point_2 & p1, const Point_2 & p2, const Point_2 & p3, bool * outer, bool filling_element = false); 
   PointList interpolateDistance(Point_2 p1, Point_2 p2);
+  Exporter e;
 public:
   PolyLine_P * final_path;
   RakeVector * final_rake;

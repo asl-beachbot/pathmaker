@@ -130,12 +130,17 @@ def new_parse_file(filename):
     #     if hasattr(i, "style"): print(i.style)
     a,b = s.bbox()
 
+
     width, height = (a+b).coord()
 
     base = dict()
     base['width'] = float(width)
     base['height'] = float(height)
-
+    base["rake_sizes"] = s.root.get("rake_sizes")
+    if(s.root.get("scale_to_disp")):
+        base['scale_for_disp'] = float(s.root.get("scale_for_disp"))
+    else:
+        base['scale_for_disp'] = None
     res = dict()
     res['svg_base'] = base
     res["elements"] = list()
@@ -144,7 +149,6 @@ def new_parse_file(filename):
         if hasattr(i, "segments"):
             stroke = False
             startpoint = False
-
             stroke_width = 0
             if(i.get_style("stroke-width") and i.get_style("stroke-width").val > 0 and i.get_style("stroke")):
                 if i.get_style("stroke").val not in ["none", "#ffffff", "#fff", "#ff0000", "#00ff00"]:

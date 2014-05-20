@@ -201,6 +201,8 @@ PostProcessor::PostProcessor(VectorElementTree * tree) : tree(tree) {
   threshold_round_angle = GlobalOptions::getInstance().threshold_round_angle;
   rotate_90 = Transformation(CGAL::ROTATION, sin(M_PI/2), cos(M_PI/2));
   rotate_m90 =  Transformation(CGAL::ROTATION, sin(-M_PI/2), cos(-M_PI/2));
+  // Define exporter here to have access to pushBackAnnotated
+  this->e = Exporter(this->final_path, this->final_rake, &(this->turn_points));
 }
 PointList PostProcessor::round_connector(Point_2 p11, Point_2 p12, ElementPtr * to) {
   // Extrapolate direction
@@ -229,14 +231,20 @@ PointList PostProcessor::round_connector(Point_2 p11, Point_2 p12, ElementPtr * 
     }
     break;
   }
+  double length = sqrt((p12 - p21).squared_length());
+  if(length < GlobalOptions::getInstance().round_connection_threshold) {
+    return PointList{};
+  }
   Segment_2 s = Segment_2(p12, p21);
   Vector_2 d1 = (p12 - p11) / sqrt((p12 -p11).squared_length());
   Vector_2 d2 = (p22 - p21) / sqrt((p22 - p21).squared_length());
-  double length = sqrt((p12 - p21).squared_length());
   cout << "Length of connection " << length << endl;
   Transformation cp_scale = Transformation(CGAL::SCALING, length / 4);
   Point_2 cp1 = p12 + d1.transform(cp_scale);
   Point_2 cp2 = p21 - d2.transform(cp_scale);
+
+  e.pushBackAnnotated('C', {cp1, cp2, p21}, 0);
+
   return bezierHelper(p12, cp1, cp2, p21);
 }
 void PostProcessor::process() {
@@ -265,14 +273,14 @@ void PostProcessor::process() {
       case EL_POLYLINE: {
         PolyLineElementPtr * polyline_el = static_cast<PolyLineElementPtr * >(elem);
         PolyLine_P * el = &(polyline_el->element);
-        if(elem->manually_modified) {
+        if(elem->manually_modified && polyline_el->rake_states.size() == el->size()) {
           cout << "Elem manually modified!" << endl;
           assert(polyline_el->rake_states.size() == el->size());
           for(int i = 0; i < el->size(); ++i) {
             final_path->push_back(el->at(i));
             final_rake->push_back(polyline_el->rake_states.at(i));
           }
-        } 
+        }
         else {
           int len = el->size();
           // if(len <= 2) { // there is nothing to round here!
@@ -384,7 +392,7 @@ void PostProcessor::process() {
             cout << "rounding connector " << elem << " " << elem->to << endl;
             // elem->to->entry_point_index = elem->to->entry_point_index + 1; // TODO Quick Fix (replace in Connector)
             res = round_connector(p1, p2, elem->to);
-            rake_state = (elem->to->fill_element && elem->fill_element) ? Rake::RAKE_MEDIUM : 0;
+            rake_state = (elem->to->fill_element && elem->fill_element) ? elem->line_width : 0;
             finished = true; // finished circling
           } else if (circling_started && ind == end_index && boundary) {
             // this is the end! 
@@ -394,7 +402,7 @@ void PostProcessor::process() {
             if(outer) {
               rake_state = 0;
             } else {
-              rake_state = Rake::RAKE_MEDIUM; // replace with Linewidth
+              rake_state = elem->line_width; // replace with Linewidth
             }
           }
           for(Point_2 p : res) {
@@ -405,7 +413,7 @@ void PostProcessor::process() {
           }
           if(outer) {
             final_rake->pop_back();
-            final_rake->push_back(Rake::RAKE_MEDIUM); // replace with Linewidth
+            final_rake->push_back(elem->line_width); // replace with Linewidth
           }
           circling_started = true;
           if (finished) break;
@@ -482,7 +490,6 @@ void PostProcessor::process() {
   poly_el_ptr->rake_states = *final_rake;
   this->final_element = poly_el_ptr;
 
-  Exporter e = Exporter(final_path, final_rake, &turn_points);
   e.export_result();
   tree->element_tree.append_child(tree->element_tree.begin(), poly_el_ptr);
 }
