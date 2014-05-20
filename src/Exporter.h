@@ -40,11 +40,10 @@ private:
 	float rake_to_disp(unsigned char r) { // uint8 = rakeinformation
  		switch(r) {
 			case Rake::RAKE_ZERO: return 0.5;
-			case Rake::RAKE_SMALL: return 0.08 * scale_for_disp;
-			case Rake::RAKE_MEDIUM: return 0.20 * scale_for_disp;
-			case Rake::RAKE_LARGE: return 0.30 * scale_for_disp;
-			case Rake::RAKE_FULL: return 0.43 * scale_for_disp;
-
+			case Rake::RAKE_SMALL: return 0.04 * scale_for_disp;
+			case Rake::RAKE_MEDIUM: return 0.16 * scale_for_disp;
+			case Rake::RAKE_LARGE: return 0.32 * scale_for_disp;
+			case Rake::RAKE_FULL: return 0.42 * scale_for_disp;
 		}
 	}
 	std::vector<AnnotatedPoint> annotated_export_points;

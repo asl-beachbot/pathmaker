@@ -116,6 +116,18 @@ def parse_string(svg_string):
             })
     return res
 
+def remove_adjacent(l, closed = True):
+    i = 1
+    while i < len(l):    
+      if l[i] == l[i-1]:
+        l.pop(i)
+        i -= 1  
+      i += 1
+    if closed:
+        if(l[0] == l[len(l) - 1]):
+            l.pop(len(l) - 1)
+    return l
+
 def new_parse_file(filename):
     try:
         f = open(filename, 'r')
@@ -159,25 +171,52 @@ def new_parse_file(filename):
             coords = i.segments(precision=100)
             print("coords0", isinstance(coords[0], list), coords[0])
             if isinstance(coords[0], list):
+                print(i.get_style("fill"))
                 print("First elem list!")
-
-                for l_coords in coords:
-                    if i.closed and signed_area(l_coords) > 0: 
-                        print ("signed area  > 0")
-                        l_coords.reverse()
-
-                    print("LCOORDS: ", l_coords)
+                if i.closed:
+                    j = 0
+                    holes = list()
+                    for l_coords in coords:
+                        if j == 0:
+                            lc = remove_adjacent(l_coords, True)
+                            if signed_area(lc) > 0:
+                                lc.reverse()
+                        else:
+                            hc = l_coords
+                            # if signed_area(hc) < 0:
+                            hc.reverse()
+                            hc = remove_adjacent(hc, True)
+                            holes.append(hc)
+                        j = j + 1
                     res["elements"].append({
                         "closed": i.closed,
-                        "filled": i.get_style("fill") is not None if i.get_style("fill") else False,
+                        "filled": i.get_style("fill").val not in ["none", "#fff", "#ffffff", None],
                         "stroke": stroke,
                         "startpoint": startpoint,
                         "manually_modified": "manually_modified" in i.attributes,
                         "stroke_width": stroke_width,
                         "rake_states": [j for j in i.attributes.get("rake_info").split(" ")] if i.attributes.get("rake_info") else None,
-                        "coords": l_coords,
-                        "holes" : list()
+                        "coords": lc,
+                        "holes" : holes
                         })
+                else:
+                    for l_coords in coords:
+                        if i.closed and signed_area(l_coords) > 0: 
+                            print ("signed area  > 0")
+                            l_coords.reverse()
+                            # elements are holes!
+                        print("LCOORDS: ", l_coords)
+                        res["elements"].append({
+                            "closed": i.closed,
+                            "filled":  i.get_style("fill").val not in ["none", "#fff", "#ffffff", None],
+                            "stroke": stroke,
+                            "startpoint": startpoint,
+                            "manually_modified": "manually_modified" in i.attributes,
+                            "stroke_width": stroke_width,
+                            "rake_states": [j for j in i.attributes.get("rake_info").split(" ")] if i.attributes.get("rake_info") else None,
+                            "coords": l_coords,
+                            "holes" : list()
+                            })
             else:
                 if i.closed and signed_area(coords) > 0: 
                     print ("signed area  > 0")
@@ -185,7 +224,7 @@ def new_parse_file(filename):
 
                 res["elements"].append({
                     "closed": i.closed,
-                    "filled": i.get_style("fill") is not None if i.get_style("fill") else False,
+                    "filled": i.get_style("fill").val not in ["none", "#fff", "#ffffff", None],
                     "stroke": stroke,
                     "startpoint": startpoint,
                     "manually_modified": "manually_modified" in i.attributes,

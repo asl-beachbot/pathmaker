@@ -483,13 +483,22 @@ void PostProcessor::process() {
     final_rake->clear();
     *final_path = interpolated_vec;
     *final_rake = interpolated_rake_vec;
+    cout << "size : " << final_path->size();
+    PolyLineElementPtr * poly_el_ptr = new PolyLineElementPtr(*final_path);
+    poly_el_ptr->post_processed_result = true;
+    poly_el_ptr->rake_states = *final_rake;
+    this->final_element = poly_el_ptr;
+    e.set_export_objects(final_path, final_rake, &turn_points);
+    e.export_result();
+    tree->element_tree.append_child(tree->element_tree.begin(), poly_el_ptr);
+  } else {
+    cout << "size : " << final_path->size();
+    PolyLineElementPtr * poly_el_ptr = new PolyLineElementPtr(*final_path);
+    poly_el_ptr->post_processed_result = true;
+    poly_el_ptr->rake_states = *final_rake;
+    this->final_element = poly_el_ptr;
+    e.set_export_objects(final_path, final_rake, &turn_points);
+    e.export_result();
+    tree->element_tree.append_child(tree->element_tree.begin(), poly_el_ptr);
   }
-  cout << "size : " << final_path->size();
-  PolyLineElementPtr * poly_el_ptr = new PolyLineElementPtr(*final_path);
-  poly_el_ptr->post_processed_result = true;
-  poly_el_ptr->rake_states = *final_rake;
-  this->final_element = poly_el_ptr;
-  e.set_export_objects(final_path, final_rake, &turn_points);
-  e.export_result();
-  tree->element_tree.append_child(tree->element_tree.begin(), poly_el_ptr);
 }
