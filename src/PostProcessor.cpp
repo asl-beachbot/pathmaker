@@ -87,9 +87,7 @@ PointList PostProcessor::round_corner(ThreePointElem * el) {
     result.push_back(CGAL::ORIGIN + (v1_m + v_temp));
     // cout << "Iterating over rounded edge " << v_temp.x() << " " << v_temp.y() << endl;
   }
-  if(el->orientation == CGAL::RIGHT_TURN) {
-    std::reverse(result.begin(), result.end());
-  }
+  std::reverse(result.begin(), result.end());
   return result;
 }
 
@@ -295,7 +293,7 @@ void PostProcessor::process() {
                 if(outer) {
                   rake_state = 0;
                 } else {
-                  rake_state = polyline_el->line_width; // replace with Linewidth
+                  rake_state = polyline_el->line_width;
                 }
                 for(Point_2 p : res) {
                   final_path->push_back(p);

@@ -381,6 +381,7 @@ class Path(Transformable, Stylable):
         Transformable.__init__(self, elt)
         if elt is not None:
             self.attributes = elt.attrib
+            print(elt.get('d'))
             self.parse(elt.get('d'))
         Stylable.__init__(self, elt)
 

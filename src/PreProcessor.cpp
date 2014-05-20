@@ -65,7 +65,7 @@ void PreProcessor::process(double scale, double trans_x, double trans_y) {
 				Polygon_2 * p = &(static_cast<PolygonElementPtr *>(*it)->element);
 				for(auto poly_it = p->vertices_begin(); poly_it != p->vertices_end(); ++poly_it) {
 					*poly_it = poly_it->transform(trafo);
-				}
+				}			
 			}
 			break;
 			case EL_FILLED_POLYGON: { // Todo transform holes!

@@ -5,6 +5,7 @@
 #include "GlobalOptions.h"
 #include <boost/format.hpp>
 #include <algorithm>
+#include <CGAL/aff_transformation_tags.h>
 using boost::format; using boost::str;
 
 class Exporter {
@@ -66,21 +67,24 @@ public:
 
 			cout << "Writing to File: " << fn << endl;
 			ofstream of(fn);
+
+			double field =(double)GlobalOptions::getInstance().field_height;// / (double)2;
+
 			assert(export_poly->size() == export_rake->size());
 			if(turn_points->size() == 0) {
 				for(int i = 0; i < export_poly->size(); ++i) {
-				  res += str(format("%1% %2% %3%\n") % export_poly->at(i).x() % export_poly->at(i).y() % (int)export_rake->at(i));
+				  res += str(format("%1% %2% %3%\n") % (double) export_poly->at(i).x() % (double) (export_poly->at(i).y() * -1 +field) % (int)export_rake->at(i));
 				}
 			} else {
+				cout << "Exporting with Turn Points" << endl;
 				for(int i = 0; i < export_poly->size(); ++i) {
-				  res += str(format("%1% %2% %3%\n") % (*export_poly)[i].x() % (*export_poly)[i].y() % (int)export_rake->at(i));
+				  res += str(format("%1% %2% %3%\n") % (double) export_poly->at(i).x() % (double) (export_poly->at(i).y() * -1 + field) % (int)export_rake->at(i));
 				  if(std::find(turn_points->begin(), turn_points->end(), (*export_poly)[i]) != turn_points->end()) {
 				  	res += "\n";
 				  }
 				}
 			}
 			of << res;
-
 		}
 	}
 };

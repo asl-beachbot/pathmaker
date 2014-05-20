@@ -67,6 +67,7 @@ public:
         ("svg_export_filename", po::value<std::string>(), "Filename for export to SVG File")
         ("field_width", po::value<double>(), "Width of field")
         ("field_height", po::value<double>(), "Height of field")
+        ("field_offset", po::value<double>(), "Offset (margin) of field")
         ("segment_offset", po::value<double>(), "Offset of Segment (from partitioning)")
         ("no_tree_ordering", "Disables ordering of the tree (Useful when manual image from Timo!)")
         ("number_segments_bezier_connect", po::value<int>(), "Define the number of segments for bezier interpolation)")

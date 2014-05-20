@@ -32,174 +32,6 @@ from math import *
 
 from numpy import linspace
 
-r = re.compile(r"([a-z])([^a-z]*)", flags=re.IGNORECASE)
-css_re = re.compile(r"([\w\-]+):(.+?);")
-unit_re = re.compile(r"([\d\.]+)\s?([a-z]*)", flags=re.IGNORECASE)
-
-t = linspace(0.1, 1, 10) # first point is included from last M or L command!
-
-class SVGElement():
-    def __init__(self, t, c, prev_el=None, relative_to=None):
-        self.element_type = t
-        self.coords = list()
-
-        if t == "z":
-            return
-        if c[0] == '':
-            print("Error! First coordinate empty!")
-            return
-        if prev_el:
-            self.coords.append(prev_el.coords[-1])
-        if t.islower():
-            if (relative_to or t == "C") and len(relative_to.coords):
-                rel_coords = relative_to.coords[-1]
-            else:
-                rel_coords = [0, 0]
-            for x in range(0, len(c), 2):
-                # print(c)
-                self.coords.append([rel_coords[0] + float(c[x]),
-                                    rel_coords[1] + float(c[x + 1])])
-                if t in ["m"]:
-                    rel_coords = self.coords[-1]
-        else:
-            for x in range(0, len(c), 2):
-                self.coords.append([float(c[x]), float(c[x + 1])])
-
-    def __repr__(self):
-        return "%s | %r" % (self.element_type, self.coords)
-        print(self.element_type, self.coords)
-
-    def __str__(self):
-        return "%s | %r" % (self.element_type, self.coords)
-
-    @staticmethod
-    def bezier(P, t):
-        def bernstein(n, i, t):
-            return factorial(n) / (factorial(i) * factorial(n - i)) \
-                * t**i * (1-t)**(n-i)
-        res = np.zeros([len(t), 2])
-        for i, k in enumerate(t):
-            for j, c in enumerate(P):
-                res[i][0] = res[i][0] + c[0] * bernstein(len(P) - 1,
-                                                         j, t[i])
-                res[i][1] = res[i][1] + c[1] * bernstein(len(P) - 1,
-                                                         j, t[i])
-        return res
-
-    def to_poly(self):
-        if self.element_type in ["z", "Z"]:
-            return
-        if self.element_type in ["c", "C"]:
-            return SVGElement.bezier(self.coords, t)
-        if self.element_type in ["l", "L"]:
-            return [self.coords[-1]]
-        return self.coords
-
-    @staticmethod
-    def parse_path(path, container=list()):
-        print(path)
-        d = path['d']
-        element = dict()
-        css = re.findall(css_re, path['style'].replace(" ", ""))
-        fill = False
-        stroke = False
-        stroke_width = 0
-        startpoint = False
-        for c in css:
-            print(c)
-            if c[0].lower() == 'fill'\
-                and c[1].lower() not in ["none", "#ffffff", "#fff"]:
-                fill = True
-            if c[0].lower() == "stroke"\
-                and c[1].lower() not in ["none", "#ffffff", "#fff", "#ff0000", "#00ff00"]:
-                stroke = True;
-                if c[1].lower == "#00ff00":
-                    startpoint = true
-            if c[0].lower() == "stroke-width":
-                temp_w = unit_re.match(c[1])
-                stroke_width = float(temp_w.group(1))
-
-        element["startpoint"] = startpoint
-
-        if stroke and stroke_width:
-            element["stroke"] = stroke_width
-        else:
-            element["stroke"] = -1
-
-        if path.has_attr("fill") and path["fill"].lower() != "none" or fill:
-            element['filled'] = True
-        else:
-            element['filled'] = False
-        if d.endswith("z") or d.endswith("Z"):
-            element['closed'] = True
-        else:
-            element['closed'] = False
-        if path.has_attr("rake_info"):
-            element["rake_info"] = [i for i in path["rake_info"].split(" ")]
-        else:
-            element["rake_info"] = None
-
-        element["manually_modified"] = False
-        if path.has_attr("manually_modified"):
-            element["manually_modified"] = (path["manually_modified"].lower() == "true")
-
-        m = re.findall(r, d)
-        element['svg_elems'] = list()
-        element['holes'] = list()
-        curr_el = element['svg_elems']
-        i = 0
-        if m:
-            for match in m:
-                if match[0] in ('M', 'm') and i != 0:
-                    # This is a hole?
-                    print("A new M")
-                    if(d[-1:] in ["z", "Z"]):
-                        print('a hole')
-                        curr_el = list()
-                        element['holes'].append(curr_el)
-                    else:
-                        print(container)
-                        container.append(copy.copy(element))
-                        element = copy.copy(element)
-                        element["svg_elems"] = list()
-                        curr_el = element["svg_elems"]
-
-                coords = match[1]
-                coords = coords.lstrip().rstrip()
-                coords_list = re.split("[^\d\-.]*", coords)
-                #if(coords_list[0] == ''): continue
-                if match[0] in ["c", "C"]:
-                    for x in range(0, int(len(coords_list)), 6):
-                        rel_el = None
-                        prev_el = curr_el[-1] if (curr_el and len(curr_el)) else None
-                        prev_coords = None
-                        if prev_el:
-                            rel_el = prev_el
-                        # if x / 6 > 0:
-                        #     prev_el = 
-                        inst_coords = coords_list[x:x+6]
-                        inst = SVGElement(match[0], inst_coords, prev_el, rel_el)
-                        print (inst)
-                        curr_el.append(inst)
-
-                else:
-                    # apparently "M 1,2 3,4 5,6" is valid, too :( 
-                    rel_el = None
-                    prev_el = curr_el[-1] if (curr_el and len(curr_el)) else None
-                    prev_coords = None
-                    if prev_el:
-                        rel_el = prev_el
-                    inst_coords = coords_list
-                    inst = SVGElement(match[0], inst_coords, prev_el, rel_el)
-                    print (inst)
-                    curr_el.append(inst)
-                print (curr_el)
-                # curr_el.append(inst)
-                i += 1
-        # pp.pprint(element)
-        container.append(element)
-        return container
-
 def signed_area(coords_list):
     l = len(coords_list)
     s = 0
@@ -284,19 +116,6 @@ def parse_string(svg_string):
             })
     return res
 
-# def scale (c, s):
-#     return (c[0] * s, c[1] * s)
-
-# def export_to_timon(e):
-#     f = open("export_2.txt", "w+")
-
-#     if(len(el["elements"]) > 1):
-#         print "WTF"
-#     for i in enumerate(el['coords']):
-#         scl = scale (el['coords'][i], s)
-#         f.write("{0} {1} {2}\n".format(scl[0], scl[1], rake_info[i])
-
-
 def new_parse_file(filename):
     try:
         f = open(filename, 'r')
@@ -326,6 +145,7 @@ def new_parse_file(filename):
             stroke = False
             startpoint = False
 
+            stroke_width = 0
             if(i.get_style("stroke-width") and i.get_style("stroke-width").val > 0 and i.get_style("stroke")):
                 if i.get_style("stroke").val not in ["none", "#ffffff", "#fff", "#ff0000", "#00ff00"]:
                     stroke = True;
@@ -349,7 +169,7 @@ def new_parse_file(filename):
                         "stroke": stroke,
                         "startpoint": startpoint,
                         "manually_modified": "manually_modified" in i.attributes,
-                        "stroke_width": stroke,
+                        "stroke_width": stroke_width,
                         "rake_states": [j for j in i.attributes.get("rake_info").split(" ")] if i.attributes.get("rake_info") else None,
                         "coords": l_coords,
                         "holes" : list()
@@ -365,7 +185,7 @@ def new_parse_file(filename):
                     "stroke": stroke,
                     "startpoint": startpoint,
                     "manually_modified": "manually_modified" in i.attributes,
-                    "stroke_width": stroke,
+                    "stroke_width": stroke_width,
                     "rake_states": [j for j in i.attributes.get("rake_info").split(" ")] if i.attributes.get("rake_info") else None,
                     "coords": coords,
                     "holes" : list()
