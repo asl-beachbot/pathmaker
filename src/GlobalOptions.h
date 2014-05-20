@@ -71,6 +71,7 @@ public:
         ("no_tree_ordering", "Disables ordering of the tree (Useful when manual image from Timo!)")
         ("number_segments_bezier_connect", po::value<int>(), "Define the number of segments for bezier interpolation)")
         ("stop_go_outer", "Round (and outer round) outer contours or stop-turn-go cycle?")
+        ("round_connection_threshold", "Threshold for rounding connections (otherwise just place point) [squared length of point distance]")
     ;
   }
 
@@ -149,6 +150,9 @@ public:
 
     if(vm.count("segment_offset")) {
       this->segment_offset = (double) vm["segment_offset"].as<double>();
+    }
+    if(vm.count("round_connection_threshold")) {
+      this->round_connection_threshold = (double) vm["round_connection_threshold"].as<double>();
     }
     if(vm.count("field_offset")) {
       this->field_offset = (double) vm["field_offset"].as<double>();
@@ -249,6 +253,7 @@ public:
   double segment_offset;
   int number_of_bezier_segs;
   double max_interpol_distance;
+  double round_connection_threshold;
   double threshold_round_angle;
   int fill_method;// spiral: 2, wiggle: 1
   std::string TXT_export_filename;
@@ -284,7 +289,8 @@ private:
     field_offset(0.2),
     fill_method(2), // spiral: 2, wiggle: 1
     no_tree_ordering(false),
-    stop_go_outer(false)
+    stop_go_outer(false),
+    round_connection_threshold(0.2)
   {};
 
    

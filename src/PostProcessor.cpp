@@ -231,10 +231,13 @@ PointList PostProcessor::round_connector(Point_2 p11, Point_2 p12, ElementPtr * 
     }
     break;
   }
+  double length = sqrt((p12 - p21).squared_length());
+  if(length < GlobalOptions::getInstance().round_connection_threshold) {
+    return PointList{};
+  }
   Segment_2 s = Segment_2(p12, p21);
   Vector_2 d1 = (p12 - p11) / sqrt((p12 -p11).squared_length());
   Vector_2 d2 = (p22 - p21) / sqrt((p22 - p21).squared_length());
-  double length = sqrt((p12 - p21).squared_length());
   cout << "Length of connection " << length << endl;
   Transformation cp_scale = Transformation(CGAL::SCALING, length / 4);
   Point_2 cp1 = p12 + d1.transform(cp_scale);

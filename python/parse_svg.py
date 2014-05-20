@@ -316,7 +316,7 @@ def new_parse_file(filename):
     base = dict()
     base['width'] = float(width)
     base['height'] = float(height)
-
+    base['scale_to_disp'] = s.root.get("scale_to_disp")
     res = dict()
     res['svg_base'] = base
     res["elements"] = list()
@@ -325,7 +325,7 @@ def new_parse_file(filename):
         if hasattr(i, "segments"):
             stroke = False
             startpoint = False
-
+            stroke_width = 0
             if(i.get_style("stroke-width") and i.get_style("stroke-width").val > 0 and i.get_style("stroke")):
                 if i.get_style("stroke").val not in ["none", "#ffffff", "#fff", "#ff0000", "#00ff00"]:
                     stroke = True;
@@ -362,7 +362,7 @@ def new_parse_file(filename):
                 res["elements"].append({
                     "closed": i.closed,
                     "filled": i.get_style("fill") is not None if i.get_style("fill") else False,
-                    "stroke": stroke,
+                    "stroke": stroke_width,
                     "startpoint": startpoint,
                     "manually_modified": "manually_modified" in i.attributes,
                     "stroke_width": stroke,
