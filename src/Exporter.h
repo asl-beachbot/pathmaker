@@ -54,11 +54,15 @@ private:
 	double scale_for_disp;
 	// VectorElementTree * tree;
 public:
-	Exporter(PolyLine_P * export_poly, RakeVector * export_rake, std::vector<Point_2> * turn_points_obj) : 
-		export_poly(export_poly),
-		export_rake(export_rake),
-		turn_points(turn_points_obj) {
+	Exporter() {
 			 scale_for_disp = GlobalOptions::getInstance().scale_for_disp;
+	}
+	void set_export_objects(PolyLine_P * s_export_poly, 
+		RakeVector * s_export_rake,
+		std::vector<Point_2> * s_turn_points) {
+		this->export_poly = s_export_poly;
+		this->export_rake = s_export_rake;
+		this->turn_points = s_turn_points;
 	}
 	void appendAnnotatedPoint(unsigned char point_type, std::vector<Point_2> coords, int line_width) {
 		this->annotated_export_points.push_back(AnnotatedPoint(point_type, coords, line_width));
