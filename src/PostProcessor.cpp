@@ -203,6 +203,8 @@ PostProcessor::PostProcessor(VectorElementTree * tree) : tree(tree) {
   threshold_round_angle = GlobalOptions::getInstance().threshold_round_angle;
   rotate_90 = Transformation(CGAL::ROTATION, sin(M_PI/2), cos(M_PI/2));
   rotate_m90 =  Transformation(CGAL::ROTATION, sin(-M_PI/2), cos(-M_PI/2));
+  // Define exporter here to have access to pushBackAnnotated
+  this->e = Exporter(this->final_path, this->final_rake, &(this->turn_points));
 }
 PointList PostProcessor::round_connector(Point_2 p11, Point_2 p12, ElementPtr * to) {
   // Extrapolate direction
@@ -242,6 +244,9 @@ PointList PostProcessor::round_connector(Point_2 p11, Point_2 p12, ElementPtr * 
   Transformation cp_scale = Transformation(CGAL::SCALING, length / 4);
   Point_2 cp1 = p12 + d1.transform(cp_scale);
   Point_2 cp2 = p21 - d2.transform(cp_scale);
+
+  e.pushBackAnnotated('C', {cp1, cp2, p21}, 0);
+
   return bezierHelper(p12, cp1, cp2, p21);
 }
 void PostProcessor::process() {
@@ -487,7 +492,6 @@ void PostProcessor::process() {
   poly_el_ptr->rake_states = *final_rake;
   this->final_element = poly_el_ptr;
 
-  Exporter e = Exporter(final_path, final_rake, &turn_points);
   e.export_result();
   tree->element_tree.append_child(tree->element_tree.begin(), poly_el_ptr);
 }

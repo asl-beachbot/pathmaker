@@ -15,6 +15,24 @@ using boost::format; using boost::str;
 //   RAKE_FULL = 0x7f
 // };
 
+class AnnotatedPoint {
+private:
+	unsigned char point_type; // one of the SVG types: L or B (all others irrelevant)
+	std::vector<Point_2> coords;
+	int line_width;
+public:
+	AnnotatedPoint(unsigned char element_type, std::vector<Point_2> coords, int line_width) :
+		point_type(point_type), coords(coords), line_width(line_width) {}
+	std::string getSVG(const Transformation & t) {
+		std::string res = "";
+		res += point_type;
+		for(Point_2 p : coords) {
+			Point_2 p_temp = p.transform(t);
+			res += str(format(" %1%,%2% ") % p_temp.x(), p_temp.y());
+		}
+		return res;
+	}
+};
 
 class Exporter {
 private:
@@ -28,19 +46,23 @@ private:
 
 		}
 	}
-
+	std::vector annotated_export_points;
 	PolyLine_P * export_poly;
 	RakeVector * export_rake;
 	std::vector<Point_2> * turn_points;
 	double scale_for_disp;
 	// VectorElementTree * tree;
 public:
-	Exporter(PolyLine_P * export_poly, RakeVector * export_rake, std::vector<Point_2> * turn_points) : 
+	Exporter(PolyLine_P * export_poly, RakeVector * export_rake, std::vector<Point_2> * turn_points_obj) : 
 		export_poly(export_poly),
 		export_rake(export_rake),
-		turn_points(turn_points) {
+		turn_points(turn_points_obj) {
 			 scale_for_disp = GlobalOptions::getInstance().scale_for_disp;
-		};
+			 this->annotated_export_points = {};
+	}
+	void appendAnnotatedPoint(std::string point_type, std::vector<float> coords, int line_width) {
+		this->annotated_export_points.push_back(AnnotatedPoint(point_type, coords, line_width));
+	}
 	void export_result() {
 		cout << "Exporting to Files" << endl;
 		if(!GlobalOptions::getInstance().SVG_export_filename.empty()) {
