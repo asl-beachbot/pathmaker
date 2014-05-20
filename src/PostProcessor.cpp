@@ -270,14 +270,14 @@ void PostProcessor::process() {
       case EL_POLYLINE: {
         PolyLineElementPtr * polyline_el = static_cast<PolyLineElementPtr * >(elem);
         PolyLine_P * el = &(polyline_el->element);
-        if(elem->manually_modified) {
+        if(elem->manually_modified && polyline_el->rake_states.size() == el->size()) {
           cout << "Elem manually modified!" << endl;
           assert(polyline_el->rake_states.size() == el->size());
           for(int i = 0; i < el->size(); ++i) {
             final_path->push_back(el->at(i));
             final_rake->push_back(polyline_el->rake_states.at(i));
           }
-        } 
+        }
         else {
           int len = el->size();
           // if(len <= 2) { // there is nothing to round here!

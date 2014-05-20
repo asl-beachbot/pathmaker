@@ -311,12 +311,17 @@ def new_parse_file(filename):
     #     if hasattr(i, "style"): print(i.style)
     a,b = s.bbox()
 
+
     width, height = (a+b).coord()
 
     base = dict()
     base['width'] = float(width)
     base['height'] = float(height)
-    base['scale_to_disp'] = s.root.get("scale_to_disp")
+    base["rake_sizes"] = s.root.get("rake_sizes")
+    if(s.root.get("scale_to_disp")):
+        base['scale_for_disp'] = float(s.root.get("scale_for_disp"))
+    else:
+        base['scale_for_disp'] = None
     res = dict()
     res['svg_base'] = base
     res["elements"] = list()
@@ -349,7 +354,7 @@ def new_parse_file(filename):
                         "stroke": stroke,
                         "startpoint": startpoint,
                         "manually_modified": "manually_modified" in i.attributes,
-                        "stroke_width": stroke,
+                        "stroke_width": stroke_width,
                         "rake_states": [j for j in i.attributes.get("rake_info").split(" ")] if i.attributes.get("rake_info") else None,
                         "coords": l_coords,
                         "holes" : list()
@@ -362,10 +367,10 @@ def new_parse_file(filename):
                 res["elements"].append({
                     "closed": i.closed,
                     "filled": i.get_style("fill") is not None if i.get_style("fill") else False,
-                    "stroke": stroke_width,
+                    "stroke": stroke,
                     "startpoint": startpoint,
                     "manually_modified": "manually_modified" in i.attributes,
-                    "stroke_width": stroke,
+                    "stroke_width": stroke_width,
                     "rake_states": [j for j in i.attributes.get("rake_info").split(" ")] if i.attributes.get("rake_info") else None,
                     "coords": coords,
                     "holes" : list()

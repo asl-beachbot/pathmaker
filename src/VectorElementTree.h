@@ -163,16 +163,16 @@ private:
     // RAKE_MEDIUM = 0x1c,
     // RAKE_LARGE = 0x3e, 
     // RAKE_FULL = 0x7f
-
-    if(ve->stroke_width <= 0) {
+    vector<float> stroke_widths = GlobalOptions::getInstance().svg_stroke_sizes;
+    if(ve->stroke_width <= stroke_widths.at(0)) {
       res->line_width = Rake::RAKE_ZERO;
-    } else if(ve->stroke_width <= 1) {
+    } else if(ve->stroke_width <= stroke_widths.at(1)) {
       res->line_width = Rake::RAKE_SMALL;
-    } else if(ve->stroke_width <= 3) {
+    } else if(ve->stroke_width <= stroke_widths.at(2)) {
       res->line_width = Rake::RAKE_MEDIUM;
-    } else if(ve->stroke_width <= 5) {
+    } else if(ve->stroke_width <= stroke_widths.at(3)) {
       res->line_width = Rake::RAKE_LARGE;
-    } else if(ve->stroke_width > 5) {
+    } else if(ve->stroke_width > stroke_widths.at(3)) {
       res->line_width = Rake::RAKE_FULL;
     }
     cout << "Line Width: " << res->line_width << endl;

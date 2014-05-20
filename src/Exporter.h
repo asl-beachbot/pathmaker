@@ -58,16 +58,35 @@ public:
 			res += "xmlns=\"http://www.w3.org/2000/svg\" ";
 			res += "xmlns:sodipodi=\"http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd\" ";
 			res += "xmlns:inkscape=\"http://www.inkscape.org/namespaces/inkscape\" \n";
-			res += str(format("width=\"%1%\" height=\"%2%\" \n") 
+			res += str(format("width=\"%1%\" height=\"%2%\" \n")
 				% (GlobalOptions::getInstance().field_width * scale_for_disp)
 				% (GlobalOptions::getInstance().field_height * scale_for_disp));
 			res += "id=\"svg_output\" \n";
+
 			res += str(format("scale_for_disp=\"%1%\" \n") % scale_for_disp);
+			// Prevent rounding errors by adding 0.001
+			res += str(format("rake_sizes=\"%1% %2% %3% %4% %5%\"\n")
+				% (rake_to_disp((unsigned char) Rake::RAKE_ZERO))
+				% (rake_to_disp((unsigned char) Rake::RAKE_SMALL) + 0.001)
+				% (rake_to_disp((unsigned char) Rake::RAKE_MEDIUM) + 0.001)
+				% (rake_to_disp((unsigned char) Rake::RAKE_LARGE) + 0.001)
+				% (rake_to_disp((unsigned char) Rake::RAKE_FULL) + 0.001)
+			);
 			res += "rake_info=\"";
 			for(int i = 0; i < export_rake->size(); ++i) {
 				res += str(format("%1% ") % (int)export_rake->at(i));
 			}
 			res += "\"\nversion=\"1.1\"> ";
+			res += "<defs>\n";
+		  res += "<marker id=\"Triangle\"\n"
+		  res += "viewBox=\"0 0 10 10\" refX=\"10\" refY=\"5\"\n";
+		  res += "markerUnits=\"strokeWidth\"\n";
+			res += "markerWidth=\"4\" markerHeight=\"3\"\n"
+		  res += "orient=\"auto\">\n"
+		  res += "<path d=\"M 0 0 L 10 5 L 0 10 z\" style=\"fill: yellow\" />\n"
+		  res += "</marker>\n"
+		  res += "</defs>\n"
+
 			Transformation t(CGAL::SCALING, scale_for_disp);
 			int prev_rake = export_rake->at(0);
 			std::string stroke_color = "#000000";

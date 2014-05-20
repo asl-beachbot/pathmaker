@@ -57,6 +57,10 @@ void ParsedSVG::repr() {
 void ParsedSVG::extractPython(bp::dict result) {
   this->width = bp::extract<float>(result["svg_base"]["width"]);
   this->height = bp::extract<float>(result["svg_base"]["height"]);
+  bp::extract<std::string>stroke_sizes(result["svg_base"]["rake_sizes"]);
+  if(stroke_sizes.check()) GlobalOptions::getInstance().parseSVGStrokeSizes(stroke_sizes);
+  bp::extract<float>rescale(result["svg_base"]["scale_for_disp"]);
+  if(rescale.check()) GlobalOptions::getInstance().scale_back = rescale;
   bp::list elem_list = bp::extract<bp::list>(result["elements"]);
   int l = bp::len(elem_list);
   for(int i = 0; i < l; ++i) {

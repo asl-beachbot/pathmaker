@@ -4,6 +4,9 @@
 #include <cmath>
 #include <iostream>
 #include <fstream>
+#include <sstream>
+#include <vector>
+#include <string>
 
 using namespace std;
 
@@ -73,6 +76,15 @@ public:
         ("stop_go_outer", "Round (and outer round) outer contours or stop-turn-go cycle?")
         ("round_connection_threshold", "Threshold for rounding connections (otherwise just place point) [squared length of point distance]")
     ;
+  }
+
+  void parseSVGStrokeSizes(std::string sizes) {
+    std::stringstream ss(sizes); 
+    std::string buf;
+    cout << "SVG Stroke widths: " << sizes << endl;
+    while(ss >> buf) {
+      svg_stroke_sizes.push_back(stof(buf));
+    }
   }
 
   int parseConfigFile(std::string cfg_filename = "config.cfg") {
@@ -259,7 +271,8 @@ public:
   std::string TXT_export_filename;
   std::string SVG_export_filename;
   bool no_tree_ordering;
-
+  std::vector<float> svg_stroke_sizes;
+  double scale_back;
 private:
   
 // options
@@ -290,7 +303,9 @@ private:
     fill_method(2), // spiral: 2, wiggle: 1
     no_tree_ordering(false),
     stop_go_outer(false),
-    round_connection_threshold(0.2)
+    round_connection_threshold(0.2),
+    scale_back(1),
+    svg_stroke_sizes{0,1,3,5,8}
   {};
 
    
