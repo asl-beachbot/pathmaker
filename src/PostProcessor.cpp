@@ -298,7 +298,7 @@ void PostProcessor::process() {
                 if(outer) {
                   rake_state = 0;
                 } else {
-                  rake_state = polyline_el->line_width; // replace with Linewidth
+                  rake_state = polyline_el->line_width;
                 }
                 for(Point_2 p : res) {
                   final_path->push_back(p);
@@ -389,7 +389,7 @@ void PostProcessor::process() {
             cout << "rounding connector " << elem << " " << elem->to << endl;
             // elem->to->entry_point_index = elem->to->entry_point_index + 1; // TODO Quick Fix (replace in Connector)
             res = round_connector(p1, p2, elem->to);
-            rake_state = (elem->to->fill_element && elem->fill_element) ? Rake::RAKE_MEDIUM : 0;
+            rake_state = (elem->to->fill_element && elem->fill_element) ? elem->line_width : 0;
             finished = true; // finished circling
           } else if (circling_started && ind == end_index && boundary) {
             // this is the end! 
@@ -399,7 +399,7 @@ void PostProcessor::process() {
             if(outer) {
               rake_state = 0;
             } else {
-              rake_state = Rake::RAKE_MEDIUM; // replace with Linewidth
+              rake_state = elem->line_width; // replace with Linewidth
             }
           }
           for(Point_2 p : res) {
@@ -410,7 +410,7 @@ void PostProcessor::process() {
           }
           if(outer) {
             final_rake->pop_back();
-            final_rake->push_back(Rake::RAKE_MEDIUM); // replace with Linewidth
+            final_rake->push_back(elem->line_width); // replace with Linewidth
           }
           circling_started = true;
           if (finished) break;

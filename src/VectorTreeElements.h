@@ -87,10 +87,11 @@ class PolygonElementPtr : public ElementPtr {
 public:
   Polygon_2 element;
   // int visited_vertices[];
-  PolygonElementPtr(Polygon_2 poly, int line_width = Rake::RAKE_MEDIUM) {
+  PolygonElementPtr(Polygon_2 poly, int lw = Rake::RAKE_MEDIUM) {
     this->element = poly;
-    this->rake_states = RakeVector(poly.size(), line_width);
+    this->rake_states = RakeVector(poly.size(), lw);
     this->visited = false;
+    this->line_width = lw;
   };
   #ifdef WITH_GUI
   PolygonGraphicsI * graphx;
@@ -155,9 +156,9 @@ public:
   int fill_method; // fill type: 1 = Skeleton, 2 = wiggle
   Direction_2 direction; // only for wiggle fill
 
-  FilledPolygonElementPtr(Polygon_with_holes_2 poly, int line_width = Rake::RAKE_MEDIUM) :
-    element(poly) {
-
+  FilledPolygonElementPtr(Polygon_with_holes_2 poly, int lw = Rake::RAKE_MEDIUM) :
+    element(poly){
+      this->line_width = lw;
       fill_method = GlobalOptions::getInstance().fill_method;
     // This probably will have to be a bit more complicated!
     // this->rake_states = RakeVector(poly.size(), line_width);
@@ -303,13 +304,15 @@ public:
   PolyLine_P  element;
   std::list< PolyLine_P > graphx_elem;
   // int visited_vertices[];
-  PolyLineElementPtr(PolyLine_P polyline, int line_width = Rake::RAKE_MEDIUM) : element(polyline) {
-    this->rake_states = RakeVector(polyline.size(), line_width);
+  PolyLineElementPtr(PolyLine_P polyline, int lw = Rake::RAKE_MEDIUM) : element(polyline) {
+    this->line_width = lw;
+    this->rake_states = RakeVector(polyline.size(), lw);
   };
-  PolyLineElementPtr(std::list<Point_2> polyline, int line_width = Rake::RAKE_MEDIUM) {
+  PolyLineElementPtr(std::list<Point_2> polyline, int lw = Rake::RAKE_MEDIUM) {
     this->element = PolyLine_P{std::begin(polyline),
                                std::end(polyline)};
-    this->rake_states = RakeVector(polyline.size(), line_width);
+    this->rake_states = RakeVector(polyline.size(), lw);
+    this->line_width = lw;
 
   };
   #ifdef WITH_GUI

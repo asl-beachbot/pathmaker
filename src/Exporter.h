@@ -78,14 +78,14 @@ public:
 			}
 			res += "\"\nversion=\"1.1\"> ";
 			res += "<defs>\n";
-		  res += "<marker id=\"Triangle\"\n"
+		  res += "<marker id=\"Triangle\"\n";
 		  res += "viewBox=\"0 0 10 10\" refX=\"10\" refY=\"5\"\n";
 		  res += "markerUnits=\"strokeWidth\"\n";
-			res += "markerWidth=\"4\" markerHeight=\"3\"\n"
-		  res += "orient=\"auto\">\n"
-		  res += "<path d=\"M 0 0 L 10 5 L 0 10 z\" style=\"fill: yellow\" />\n"
-		  res += "</marker>\n"
-		  res += "</defs>\n"
+			res += "markerWidth=\"4\" markerHeight=\"3\"\n";
+		  res += "orient=\"auto\">\n";
+		  res += "<path d=\"M 0 0 L 10 5 L 0 10 z\" style=\"fill: yellow\" />\n";
+		  res += "</marker>\n";
+		  res += "</defs>\n";
 
 			Transformation t(CGAL::SCALING, scale_for_disp);
 			int prev_rake = export_rake->at(0);

@@ -82,9 +82,12 @@ public:
     std::stringstream ss(sizes); 
     std::string buf;
     cout << "SVG Stroke widths: " << sizes << endl;
+    svg_stroke_sizes.clear();
     while(ss >> buf) {
       svg_stroke_sizes.push_back(stof(buf));
+      cout << "Width: " << buf;
     }
+    cout << endl;
   }
 
   int parseConfigFile(std::string cfg_filename = "config.cfg") {

@@ -134,6 +134,23 @@ private:
   }
   ElementPtr * getElementRepresentation(VectorElement * ve) {
     ElementPtr * res;
+    vector<float> stroke_widths = GlobalOptions::getInstance().svg_stroke_sizes;
+    cout << "Comparing: " << ve->stroke_width << " to: " << endl;
+    int lw_temp = 0;
+    for(auto i = stroke_widths.begin(); i != stroke_widths.end(); ++i) {
+      cout << *i << endl;
+    }
+    if(ve->stroke_width <= stroke_widths.at(0)) {
+      lw_temp = Rake::RAKE_ZERO;
+    } else if(ve->stroke_width <= stroke_widths.at(1)) {
+      lw_temp = Rake::RAKE_SMALL;
+    } else if(ve->stroke_width <= stroke_widths.at(2)) {
+      lw_temp = Rake::RAKE_MEDIUM;
+    } else if(ve->stroke_width <= stroke_widths.at(3)) {
+      lw_temp = Rake::RAKE_LARGE;
+    } else if(ve->stroke_width > stroke_widths.at(3)) {
+      lw_temp = Rake::RAKE_FULL;
+    }
     if(ve->closed && ve->filled) {
       Polygon_2 outer = Polygon_2(ve->vertices.begin(), ve->vertices.end());
       std::list<Polygon_2> holes;
@@ -142,40 +159,23 @@ private:
       }
       Polygon_with_holes_2 polygon_with_holes = Polygon_with_holes_2(outer, holes.begin(), holes.end());
       cout << "Polygon With Holes "<< polygon_with_holes << endl;
-      res = new FilledPolygonElementPtr(polygon_with_holes);
+      res = new FilledPolygonElementPtr(polygon_with_holes, (int) lw_temp);
     }
     else if (ve->closed) {
       Polygon_2 polygon = Polygon_2(ve->vertices.begin(), ve->vertices.end());
       cout << "Polygon " << polygon << endl;
-      res =  new PolygonElementPtr(polygon);
+      res =  new PolygonElementPtr(polygon, (int) lw_temp);
     }
     else {
       cout << "Polyline" << endl;
-      res =  new PolyLineElementPtr(ve->vertices);
+      res =  new PolyLineElementPtr(ve->vertices, (int) lw_temp);
     }
+    cout << "Line Width: " << lw_temp << " " << (int)res->line_width <<endl;
     res->manually_modified = ve->manually_modified;
     if(ve->rake_states.size()) {
       assert(ve->rake_states.size() == ve->vertices.size());
       res->rake_states = RakeVector(ve->rake_states.begin(), ve->rake_states.end());
     }
-    // RAKE_ZERO = 0,
-    // RAKE_SMALL = 0 | 1 << 3,
-    // RAKE_MEDIUM = 0x1c,
-    // RAKE_LARGE = 0x3e, 
-    // RAKE_FULL = 0x7f
-    vector<float> stroke_widths = GlobalOptions::getInstance().svg_stroke_sizes;
-    if(ve->stroke_width <= stroke_widths.at(0)) {
-      res->line_width = Rake::RAKE_ZERO;
-    } else if(ve->stroke_width <= stroke_widths.at(1)) {
-      res->line_width = Rake::RAKE_SMALL;
-    } else if(ve->stroke_width <= stroke_widths.at(2)) {
-      res->line_width = Rake::RAKE_MEDIUM;
-    } else if(ve->stroke_width <= stroke_widths.at(3)) {
-      res->line_width = Rake::RAKE_LARGE;
-    } else if(ve->stroke_width > stroke_widths.at(3)) {
-      res->line_width = Rake::RAKE_FULL;
-    }
-    cout << "Line Width: " << res->line_width << endl;
     return res;
   }
 public:
