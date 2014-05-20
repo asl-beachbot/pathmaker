@@ -47,15 +47,18 @@ void PreProcessor::process(double xmin_target, double ymin_target, double width_
 	}
 	double ws = (double)width_target / (double)w;
 	double hs = (double)height_target / (double)h;
-	double s = (ws > hs) ? ws : hs;
+	double s = (ws < hs) ? ws : hs;
 	cout << "Scale: " << s << endl;
-	this->process(s, bb_final.xmin(), bb_final.ymin()); // -bb_final.xmin() -bb_final.ymin();
+	this->process(s, 
+		bb_final.xmin() - GlobalOptions::getInstance().field_offset * 1 / s, 
+		bb_final.ymin() - GlobalOptions::getInstance().field_offset * 1 / s); // -bb_final.xmin() -bb_final.ymin();
 }
 
 void PreProcessor::process(double scale, double trans_x, double trans_y) {
 	Transformation trafo_scale(CGAL::SCALING, scale);
 	Transformation trafo_trans(CGAL::TRANSLATION, Vector_2(-trans_x, -trans_y));
 	Transformation trafo = trafo_scale * trafo_trans;
+	cout << "Transforming: " << trafo << endl;
 	auto it = tree->element_tree.begin();
 	auto it_end = tree->element_tree.end();
 
