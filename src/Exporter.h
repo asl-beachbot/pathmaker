@@ -29,7 +29,7 @@ public:
 		res += point_type;
 		for(Point_2 p : coords) {
 			Point_2 p_temp = p.transform(t);
-			res += str(format(" %1%,%2% ") % p_temp.x(), p_temp.y());
+			res += str(format(" %1%,%2% ") % (double) p_temp.x() % (double) p_temp.y());
 		}
 		return res;
 	}
@@ -47,7 +47,7 @@ private:
 
 		}
 	}
-	std::vector annotated_export_points;
+	std::vector<AnnotatedPoint> annotated_export_points;
 	PolyLine_P * export_poly;
 	RakeVector * export_rake;
 	std::vector<Point_2> * turn_points;
@@ -59,9 +59,8 @@ public:
 		export_rake(export_rake),
 		turn_points(turn_points_obj) {
 			 scale_for_disp = GlobalOptions::getInstance().scale_for_disp;
-			 this->annotated_export_points = {};
 	}
-	void appendAnnotatedPoint(std::string point_type, std::vector<float> coords, int line_width) {
+	void appendAnnotatedPoint(unsigned char point_type, std::vector<Point_2> coords, int line_width) {
 		this->annotated_export_points.push_back(AnnotatedPoint(point_type, coords, line_width));
 	}
 	void export_result() {

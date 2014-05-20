@@ -193,7 +193,9 @@ PointList PostProcessor::interpolateDistance(Point_2 p1, Point_2 p2) {
   }
   return res;
 }
-PostProcessor::PostProcessor(VectorElementTree * tree) : tree(tree) {
+PostProcessor::PostProcessor(VectorElementTree * tree) :
+ tree(tree),
+ e(Exporter(this->final_path, this->final_rake, &(this->turn_points))) {
   radius = GlobalOptions::getInstance().rounding_radius;
   angle_interpolation = GlobalOptions::getInstance().angle_interpolation_stepsize;
   number_of_bezier_segs = GlobalOptions::getInstance().number_of_bezier_segs;
@@ -202,7 +204,6 @@ PostProcessor::PostProcessor(VectorElementTree * tree) : tree(tree) {
   rotate_90 = Transformation(CGAL::ROTATION, sin(M_PI/2), cos(M_PI/2));
   rotate_m90 =  Transformation(CGAL::ROTATION, sin(-M_PI/2), cos(-M_PI/2));
   // Define exporter here to have access to pushBackAnnotated
-  this->e = Exporter(this->final_path, this->final_rake, &(this->turn_points));
 }
 PointList PostProcessor::round_connector(Point_2 p11, Point_2 p12, ElementPtr * to) {
   // Extrapolate direction
@@ -243,7 +244,7 @@ PointList PostProcessor::round_connector(Point_2 p11, Point_2 p12, ElementPtr * 
   Point_2 cp1 = p12 + d1.transform(cp_scale);
   Point_2 cp2 = p21 - d2.transform(cp_scale);
 
-  e.pushBackAnnotated('C', {cp1, cp2, p21}, 0);
+  e.appendAnnotatedPoint('C', {cp1, cp2, p21}, 0);
 
   return bezierHelper(p12, cp1, cp2, p21);
 }
