@@ -42,7 +42,7 @@ public:
           cout << "Skipping / Removing inside poly" << endl;
           continue;
         }
-        ElementPtr * poly_element = new PolygonElementPtr(outer);
+        ElementPtr * poly_element = new PolygonElementPtr(outer, Rake::RAKE_FULL);
         poly_element->fill_element = true;
         cout << poly_element << endl;
         result.push_back(poly_element);

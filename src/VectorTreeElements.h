@@ -69,7 +69,7 @@ public:
   {
     id = rand() % 10000000;
   };
-  ~ElementPtr() {cout << "delete called" << endl;};
+  ~ElementPtr() {cout << "delete called" << endl;} 
   virtual Point_2 getFromIndex(int i) {};
   virtual void set_graphx() {};
   virtual ElementType get_type() {};
@@ -88,6 +88,13 @@ public:
   Polygon_2 element;
   // int visited_vertices[];
   PolygonElementPtr(Polygon_2 poly, int lw = Rake::RAKE_MEDIUM) {
+    if(!poly.is_clockwise_oriented()) {
+       // think about turning direction of polygon here!
+      // std::reverse(poly.vertex_begin(), poly.vertex_end());
+      cout << "Polygon counterclockwise" << endl;
+    } else {
+      cout << "Polygon clockwise" << endl;      
+    }
     this->element = poly;
     this->rake_states = RakeVector(poly.size(), lw);
     this->visited = false;

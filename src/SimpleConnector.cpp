@@ -55,8 +55,8 @@ Point_2 SimpleConnector::find_closest_point_on_element(Point_2 exit_point, Eleme
     if(connect) {
       p2->exit_point = point2;
       p2->exit_point_index = std::abs(std::distance(p2_found_iter, p2_begin_ref));
-      p2->entry_point = poly[p2->exit_point_index + 1];
-      p2->entry_point_index = p2->exit_point_index + 1; // one more forward!
+      p2->entry_point = poly[p2->exit_point_index];
+      p2->entry_point_index = p2->exit_point_index; // one more forward!
       cout << "EntryP: " << p2->entry_point << " " << p2->entry_point_index << " Exit: " << p2->exit_point << " " << p2->exit_point_index << endl;
     }
     return point2;
@@ -199,6 +199,7 @@ void SimpleConnector::connect() {
     Tree_ElementPtr::iterator start_iter = std::find(element_tree->begin(), element_tree->end(), tree->startpoint_elem);
     cout << "startpoint found: ";
     (*start_iter)->print();
+    // TODO reverse start iter as needed (sometimes the line shows in the wrong direction)
     cout << endl;
     connect_recursive(start_iter, NULL);
   }

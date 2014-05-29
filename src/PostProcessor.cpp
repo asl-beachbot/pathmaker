@@ -87,7 +87,9 @@ PointList PostProcessor::round_corner(ThreePointElem * el) {
     result.push_back(CGAL::ORIGIN + (v1_m + v_temp));
     // cout << "Iterating over rounded edge " << v_temp.x() << " " << v_temp.y() << endl;
   }
-  std::reverse(result.begin(), result.end());
+  if(el->orientation == CGAL::RIGHT_TURN) {
+    std::reverse(result.begin(), result.end());
+  }
   return result;
 }
 
@@ -204,7 +206,8 @@ PostProcessor::PostProcessor(VectorElementTree * tree) :
   rotate_m90 =  Transformation(CGAL::ROTATION, sin(-M_PI/2), cos(-M_PI/2));
   // Define exporter here to have access to pushBackAnnotated
 }
-PointList PostProcessor::round_connector(Point_2 p11, Point_2 p12, ElementPtr * to) {
+PointList PostProcessor::round_connector(Point_2 p11, Point_2 p12, 
+  ElementPtr * to, bool fill_element) {
   // Extrapolate direction
   // and round with two bezier curves
   Point_2 p21, p22;
@@ -225,9 +228,16 @@ PointList PostProcessor::round_connector(Point_2 p11, Point_2 p12, ElementPtr * 
     case EL_POLYGON:
     case EL_FILLED_POLYGON: {
       // allways clockwise or whatever
-      cout << "Polygon Entry: " << to->entry_point_index << " Size: " << static_cast<PolygonElementPtr * >(to)->element.size() << endl;
+      if(fill_element) {
+        // Find nearest point in driving direction but
+        // with sufficient distance from where we area
+      } else {
+        p21 = to->getFromIndex(to->entry_point_index);
+        p22 = to->getFromIndex(to->entry_point_index + 1);
+      }
       p21 = to->getFromIndex(to->entry_point_index);
       p22 = to->getFromIndex(to->entry_point_index + 1);
+      cout << "Polygon Entry: " << to->entry_point_index << " Size: " << static_cast<PolygonElementPtr * >(to)->element.size() << endl;
     }
     break;
   }
@@ -392,10 +402,14 @@ void PostProcessor::process() {
             cout << "rounding connector " << elem << " " << elem->to << endl;
             // elem->to->entry_point_index = elem->to->entry_point_index + 1; // TODO Quick Fix (replace in Connector)
             res = round_connector(p1, p2, elem->to);
-            rake_state = (elem->to->fill_element && elem->fill_element) ? elem->line_width : 0;
+            //rake_state = (elem->to->fill_element && elem->fill_element) ? elem->line_width : 0;
+            rake_state = Rake::RAKE_ZERO;
             finished = true; // finished circling
+            outer = false;
           } else if (circling_started && ind == end_index && boundary) {
             // this is the end! 
+            res.push_back(p2);
+            rake_state = elem->line_width;
             finished = true;
           } else {
             res = decide_action(p1, p2, p3, &outer, elem->fill_element);

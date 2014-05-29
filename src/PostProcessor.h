@@ -43,6 +43,6 @@ public:
   PolyLine_P * final_path;
   RakeVector * final_rake;
 	PostProcessor(VectorElementTree * tree);
-  PointList round_connector(Point_2 p11, Point_2 p12, ElementPtr * to);
+  PointList round_connector(Point_2 p11, Point_2 p12, ElementPtr * to, bool fill_element = false);
   void process();
 };

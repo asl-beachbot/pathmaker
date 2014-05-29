@@ -22,3 +22,10 @@ Install qt-creator, qt-designer, libqt5svg5-dev and compile. Enjoy the ride!
     (C) BeachBot Team (Wolf Vollprecht)
 
 
+### TODO
+
+- connection for spiral fill
+- check starting point
+- relaxed bezier connection with radius constraint?
+- export better with splines ... // unrelated to bachelor thesis
+- fix round corner / bezier bug ? 
