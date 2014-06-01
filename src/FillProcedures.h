@@ -17,12 +17,6 @@ public:
 
 class SpiralFillProcedure : public FillProcedure {
 public:
-  static SpiralFillProcedure& getInstance() {
-      static SpiralFillProcedure instance; // Guaranteed to be destroyed.
-                                           // Instantiated on first use.
-      return instance;
-  }
-public:
   // ElemList result;
 	void run() {
     cout << "Area smaller than " << max_area_for_deletion << " will get deleted" << endl;
@@ -55,27 +49,22 @@ public:
 	Polygon_with_holes_2 * poly;
   float line_distance;
 	ElemList fill(FilledPolygonElementPtr * filled_poly_ptr) {
+    result.clear();
     line_distance = GlobalOptions::getInstance().line_distance;
     this->poly = &(filled_poly_ptr->element);
     this->run();
     for(ElementPtr * e : result) {
       cout << "Element: " << e << endl;
     }
-    return result; // return copy of result
+    return result;
 	}
   ~SpiralFillProcedure() {
-    // delete poly;
   }
-private:
-  double max_area_for_deletion;
   SpiralFillProcedure() : max_area_for_deletion(0) {
     this->max_area_for_deletion = GlobalOptions::getInstance().area_deletion_threshold;
-  };                   // Constructor? (the {} brackets) are needed here.
-  // Dont forget to declare these two. You want to make sure they
-  // are unaccessable otherwise you may accidently get copies of
-  // your singleton appearing.
-  SpiralFillProcedure(SpiralFillProcedure const&);// Don't Implement
-  void operator=(SpiralFillProcedure const&); // Don't implement
+  };
+private:
+  double max_area_for_deletion;
 };
 
 
@@ -97,17 +86,14 @@ class WiggleFillProcedure : FillProcedure {
 
 private:
   Transformation rotate_90;
-  Direction_2 direction;
   float line_distance;
-  void fill_polygon(Polygon_2 poly) {
+  void fill_polygon(Polygon_2 poly, Direction_2 direction) {
     // inset
     // PolygonWithHolesPtrVector offset_poly_wh =
     //   CGAL::create_interior_skeleton_and_offset_polygons_with_holes_2(lOffset, *poly);
 
-
-    direction = Direction_2(1, 1);
     std::list<Segment_2> poly_lines;
-    Point_2 v_start = findStartingPoint(poly);
+    Point_2 v_start = findStartingPoint(poly, direction);
 
     Vector_2 repos_vector = direction.vector();
     repos_vector = rotate_90(repos_vector);
@@ -186,7 +172,7 @@ private:
 
     //result.push_back(poly_element);
   }
-  Point_2 findStartingPoint(Polygon_2 poly) {
+  Point_2 findStartingPoint(Polygon_2 poly, Direction_2 direction) {
     auto it = poly.vertices_begin();
     auto it_end = poly.vertices_end();
     for(; it != it_end; ++it ) {
@@ -212,17 +198,13 @@ private:
     return *it;
   }
 public:
-  static WiggleFillProcedure& getInstance() {
-    static WiggleFillProcedure instance; // Guaranteed to be destroyed.
-                                         // Instantiated on first use.
-    return instance;
-  }
   WiggleFillProcedure() {
     rotate_90 = Transformation(CGAL::ROTATION, sin(-M_PI/2), cos(-M_PI/2));
   }
 
   Polygon_2 p;
   ElemList fill(FilledPolygonElementPtr * filled_poly_ptr) {
+    result.clear();
     line_distance = GlobalOptions::getInstance().line_distance;
     this->p = filled_poly_ptr->element.outer_boundary();
 
@@ -230,11 +212,11 @@ public:
     if(filled_poly_ptr->segments.size() > 0) {
       for (FilledSegment fs : filled_poly_ptr->segments) {
         cout << "Working on Segment" << endl;
-        fill_polygon(fs.poly);
+        fill_polygon(fs.poly, fs.direction);
       }
     }
     else {
-      fill_polygon(filled_poly_ptr->element.outer_boundary());
+      fill_polygon(filled_poly_ptr->element.outer_boundary(), Direction_2(1, 0));
     }
 
     return result;

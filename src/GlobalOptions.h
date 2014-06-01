@@ -10,7 +10,6 @@
 
 using namespace std;
 
-#ifdef STANDALONE
 #include <boost/program_options.hpp>
 namespace po = boost::program_options;
 
@@ -37,7 +36,6 @@ namespace Color {
         }
     };
 }
-#endif
 
 class GlobalOptions
 {
@@ -47,7 +45,7 @@ public:
     static GlobalOptions instance;
     return instance;
   }
-#ifdef STANDALONE
+
   po::options_description desc;
   po::variables_map vm;
 
@@ -97,6 +95,7 @@ public:
     po::store(po::parse_config_file(ifs, desc), vm);
   }
 
+#ifdef STANDALONE
   int parseCommandLine(int argc, char ** argv) {
     po::store(po::parse_command_line(argc, argv, desc), vm);
     if(vm.count("config_file")) {
@@ -179,6 +178,7 @@ public:
 
     return 0;
   }
+#endif
   void printOptions() {
     Color::Modifier red(Color::FG_RED);
     Color::Modifier def(Color::FG_DEFAULT);
@@ -249,7 +249,6 @@ public:
       endl;
 
   }
-#endif
   std::string filename;
   bool display;
   double field_width;
@@ -282,9 +281,7 @@ private:
 // options
 
   GlobalOptions() : 
-#ifdef STANDALONE
     desc(po::options_description("Allowed options")),
-#endif
     filename("assets/test.svg"),
     display(false),
     field_width(5),
@@ -292,7 +289,7 @@ private:
     beachbot_size(0.25),
     line_distance(0.25),
     rounding_radius(0.5),
-    segmentation_on(0),
+    segmentation_on(1),
     scale_for_disp(100),
     translate_playfield(false),
     translate_playfield_x(0),
@@ -302,9 +299,9 @@ private:
     number_of_bezier_segs(30),
     max_interpol_distance(0.05),
     threshold_round_angle(3.14 / (double)2),
-    segment_offset(1),
+    segment_offset(0.3),
     field_offset(0.2),
-    fill_method(2), // spiral: 2, wiggle: 1
+    fill_method(1), // spiral: 2, wiggle: 1
     no_tree_ordering(false),
     stop_go_outer(false),
     round_connection_threshold(0.2),

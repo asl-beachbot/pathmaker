@@ -328,6 +328,38 @@ public:
       elem = elem->to;
     }
   }
+
+  void clearFill() {
+    // clear all elements with fill! (or elements, children of, with fill .. )
+
+    // first clear all connections
+    auto it = element_tree.begin();
+    auto it_end = element_tree.end();
+
+    while(it != it_end) {
+      if((*it)->fill_element) {
+        it = element_tree.erase(it);
+      } else {
+        // remove connections
+        (*it)->from = nullptr;
+        (*it)->to = nullptr;
+        ++it;
+      }
+    }
+  }
+
+  ElementPtr * getByID(int id) {
+    auto res = std::find_if(element_tree.begin(), element_tree.end(),
+      [id](ElementPtr * e) { return e->id == id; }
+    );
+    if(res != element_tree.end()) {
+      cout << "Found the element" << *res << endl;
+      return *res;
+    } else {
+      return NULL;
+    }
+  }
+
   std::string toJSON() {
     Json::Value json;
     Json::Value elem_json_arr(Json::arrayValue);
@@ -347,15 +379,15 @@ public:
   void fillPolys() {
     Tree_ElementPtr::iterator it = element_tree.begin();
     Tree_ElementPtr::iterator it_end = element_tree.end();
-    WiggleFillProcedure * wiggle_singleton = &WiggleFillProcedure::getInstance();
-    SpiralFillProcedure * spiral_singleton = &SpiralFillProcedure::getInstance();
+    WiggleFillProcedure * wiggle = new WiggleFillProcedure();
+    SpiralFillProcedure * spiral = new SpiralFillProcedure();
     for(; it != it_end; ++it) {
       if((*it)->get_type() == EL_FILLED_POLYGON) {
         FilledPolygonElementPtr * el_ptr = static_cast<FilledPolygonElementPtr *>((*it));
         if(el_ptr->fill_method == SPIRAL_FILL) {
-          el_ptr->fill_elements = spiral_singleton->fill(el_ptr);
+          el_ptr->fill_elements = spiral->fill(el_ptr);
         } else {
-          el_ptr->fill_elements = wiggle_singleton->fill(el_ptr);
+          el_ptr->fill_elements = wiggle->fill(el_ptr);
         }
         for(ElementPtr * e : el_ptr->fill_elements) {
           if(!e) {cout << "Error null pointer!" << endl; continue;}

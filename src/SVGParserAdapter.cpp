@@ -156,11 +156,12 @@ int main(int argc, char** argv) {
    // GlobalOptions config = GlobalOptions::getInstance();
 
   GlobalOptions::getInstance().init();
+#ifdef STANDALONE
   int quit = GlobalOptions::getInstance().parseCommandLine(argc, argv);
   if(quit) return quit;
 
   GlobalOptions::getInstance().printOptions();
-
+#endif
   ParsedSVG * ps = new ParsedSVG();
   quit = ps->parseSVGFile(GlobalOptions::getInstance().filename);
   if(quit) return quit;
@@ -182,8 +183,13 @@ int main(int argc, char** argv) {
   vet->fillPolys();
   SimpleConnector * sc = new SimpleConnector(vet);
   sc->connect();
-  PostProcessor *  psc = new PostProcessor(vet);
-  psc->process();
+
+  vet->clearFill();
+  
+  // PostProcessor *  psc = new PostProcessor(vet);
+  // psc->process();
+
+
   // psc->export_result();
   
   std::string json = "var PolyJSON = '" + vet->toJSON();

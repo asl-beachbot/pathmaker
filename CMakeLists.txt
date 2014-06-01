@@ -124,7 +124,7 @@ target_link_libraries(svg_parser  ${Boost_LIBRARIES} ${PYTHON_LIBRARIES} ${QT_LI
 set_target_properties(svg_parser PROPERTIES COMPILE_DEFINITIONS "${COMP_DEFS}")
 
 ## Adding Python Lib
-add_library(beachbot_pathgen SHARED 
+add_library(python/beachbot_pathgen SHARED 
     src/PythonBindings.cpp
     src/SVGParserAdapter.cpp
     src/PreProcessor.cpp
@@ -133,12 +133,12 @@ add_library(beachbot_pathgen SHARED
 )
 
 if(32BIT)
-    set_target_properties(beachbot_pathgen PROPERTIES PREFIX "" COMPILE_FLAGS "-m32" LINK_FLAGS "-m32")
+    set_target_properties(python/beachbot_pathgen PROPERTIES PREFIX "" COMPILE_FLAGS "-m32" LINK_FLAGS "-m32")
 else(32BIT)
-    set_target_properties(beachbot_pathgen PROPERTIES PREFIX "")
+    set_target_properties(python/beachbot_pathgen PROPERTIES PREFIX "")
 endif(32BIT)
 
-target_link_libraries(beachbot_pathgen ${Boost_LIBRARIES} ${PYTHON_LIBRARIES} ${QT_LIBRARIES} ${JSONCPP_LIBRARIES})
+target_link_libraries(python/beachbot_pathgen ${Boost_LIBRARIES} ${PYTHON_LIBRARIES} ${QT_LIBRARIES} ${JSONCPP_LIBRARIES})
 
 message("THANK YOU FOR CHOOSING PATHMAKER: ") 
 message("  CGAL: ${CGAL_USE_FILE}") 

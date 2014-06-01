@@ -123,8 +123,11 @@ public:
     val["type"] = "POLYGON";
     val["type_int"] = EL_POLYGON;
     val["id"] = id;
-    auto it = element.vertices_begin();
-    auto it_end = element.vertices_end();
+    Polygon_2 scaled_elem = transform(
+      Transformation(CGAL::SCALING, GlobalOptions::getInstance().scale_for_disp), 
+      element);
+    auto it = scaled_elem.vertices_begin();
+    auto it_end = scaled_elem.vertices_end();
     Json::Value coords(Json::arrayValue);
     for(; it != it_end; ++it) {
       Json::Value c(Json::arrayValue);
@@ -159,7 +162,7 @@ public:
 
   // int visited_vertices[];
   Polygon_with_holes_2 element;
-  std::list<FilledSegment> segments;
+  std::vector<FilledSegment> segments;
   int fill_method; // fill type: 1 = Skeleton, 2 = wiggle
   Direction_2 direction; // only for wiggle fill
 
@@ -240,8 +243,10 @@ public:
     val["type"] = "FILLED_POLYGON";
     val["type_int"] = EL_FILLED_POLYGON;
     val["id"] = id;
-    auto it = element.outer_boundary().vertices_begin();
-    auto it_end = element.outer_boundary().vertices_end();
+    Transformation disp_trafo = Transformation(CGAL::SCALING, GlobalOptions::getInstance().scale_for_disp);
+    Polygon_2 scaled_outer = transform(disp_trafo, element.outer_boundary());
+    auto it = scaled_outer.vertices_begin();
+    auto it_end = scaled_outer.vertices_end();
     Json::Value coords(Json::arrayValue);
     for(; it != it_end; ++it) {
       Json::Value c(Json::arrayValue);
@@ -255,7 +260,7 @@ public:
     auto it_end_holes = element.holes_end();
     Json::Value holes(Json::arrayValue);
     for(; it_holes != it_end_holes; ++it_holes) {
-      Polygon_2 hole = (*it_holes);
+      Polygon_2 hole = transform(disp_trafo, (*it_holes));
       auto hole_it = hole.vertices_begin();
       auto hole_it_end = hole.vertices_end();
       Json::Value hole_coords(Json::arrayValue);
@@ -272,8 +277,9 @@ public:
     auto it_end_segments = segments.end();
     Json::Value segments_json(Json::arrayValue);
     for(; it_segments != it_end_segments; ++it_segments) {
-      auto segment_it = it_segments->poly.vertices_begin();
-      auto segment_it_end = it_segments->poly.vertices_end();
+      Polygon_2 scaled_segment = transform(disp_trafo, it_segments->poly);
+      auto segment_it = scaled_segment.vertices_begin();
+      auto segment_it_end = scaled_segment.vertices_end();
       Json::Value segment_coords(Json::arrayValue);
       for(; segment_it != segment_it_end; ++segment_it) {
         Json::Value c(Json::arrayValue);
@@ -368,10 +374,12 @@ public:
     auto it = element.begin();
     auto it_end = element.end();
     Json::Value coords(Json::arrayValue);
+    Transformation disp_trafo = Transformation(CGAL::SCALING, GlobalOptions::getInstance().scale_for_disp);
     for(; it != it_end; ++it) {
       Json::Value c(Json::arrayValue);
-      c.append(it->x());
-      c.append(it->y());
+      Point_2 scaled = (*it).transform(disp_trafo);
+      c.append(scaled.x());
+      c.append(scaled.y());
       coords.append(c);
     }
     val["coords"] = coords;
