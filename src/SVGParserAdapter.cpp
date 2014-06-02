@@ -184,7 +184,7 @@ int main(int argc, char** argv) {
   SimpleConnector * sc = new SimpleConnector(vet);
   sc->connect();
 
-  vet->clearFill();
+  // vet->clearFill();
   
   // PostProcessor *  psc = new PostProcessor(vet);
   // psc->process();

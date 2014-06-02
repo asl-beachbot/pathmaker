@@ -22,15 +22,19 @@ public:
     cout << "Area smaller than " << max_area_for_deletion << " will get deleted" << endl;
     float lOffset = line_distance;
     int count = 0;
-    PolygonWithHolesPtrVector offset_poly_wh =
-        CGAL::create_interior_skeleton_and_offset_polygons_with_holes_2(lOffset, *poly);
+    SSPtr ss = CGAL::create_interior_straight_skeleton_2(*poly);
+
+    PolygonPtrVector offset_poly_wh = CGAL::create_offset_polygons_2(lOffset, *ss);
+
+    // PolygonWithHolesPtrVector offset_poly_wh =
+    //     CGAL::create_interior_skeleton_and_offset_polygons_with_holes_2(lOffset, *poly);
 
     while(offset_poly_wh.size() > 0) {
       cout << "adding poly" << count << " l o " << lOffset << *offset_poly_wh[0]<<  endl;
       count++;
       // no more polys
-      for(std::vector<PolygonWithHolesPtr>::iterator i = offset_poly_wh.begin(); i != offset_poly_wh.end(); ++i) {
-        Polygon_2 outer = (**i).outer_boundary();
+      for(auto i = offset_poly_wh.begin(); i != offset_poly_wh.end(); ++i) {
+        Polygon_2 outer = (**i);
         cout << "Area: " << outer.area() << endl;
         if(max_area_for_deletion > std::abs(outer.area())) { // area is signed ccw or cw
           cout << "Skipping / Removing inside poly" << endl;
@@ -42,8 +46,10 @@ public:
         result.push_back(poly_element);
       }
       lOffset = lOffset + line_distance;
-      offset_poly_wh =
-        CGAL::create_interior_skeleton_and_offset_polygons_with_holes_2(lOffset, *poly);
+      offset_poly_wh = CGAL::create_offset_polygons_2(lOffset, *ss);
+
+      // offset_poly_wh =
+      //   CGAL::create_interior_skeleton_and_offset_polygons_with_holes_2(lOffset, *poly);
     }
   }
 	Polygon_with_holes_2 * poly;

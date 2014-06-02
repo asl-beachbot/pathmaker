@@ -6,6 +6,7 @@
 #include "VectorElementTree.h"
 #include "CGAL_Headers.h"
 #include <CGAL/create_offset_polygons_2.h>
+#include <CGAL/create_offset_polygons_2.h>
 #include <iterator>     // std::back_inserter
 
 typedef VectorElementTree::Tree_ElementPtr::iterator TreeIterator;
@@ -28,6 +29,10 @@ private:
                                      outer.vertices_end(),
                                      std::back_inserter(partition_polys),
                                      partition_traits);
+    // CGAL::approx_convex_partition_2(outer.vertices_begin(),
+    //                                  outer.vertices_end(),
+    //                                  std::back_inserter(partition_polys),
+    //                                  partition_traits);
     for(Traits_Polygon_2 tp : partition_polys) {
       FilledSegment f;
       f.direction = Direction_2(0, 1);

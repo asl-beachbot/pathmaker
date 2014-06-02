@@ -21,18 +21,20 @@ public:
         GlobalOptions::getInstance().init();
         GlobalOptions::getInstance().parseConfigFile("pythoncfg.cfg");
         GlobalOptions::getInstance().printOptions();
-        ps = new ParsedSVG();
         vet = nullptr;
         sc = nullptr;
     }
     void parseSVGString(std::string str) {
+        ps = new ParsedSVG();
         ps->parseSVGString(str);
     }
     void parseSVGFile(std::string fn) {
+        ps = new ParsedSVG();
         ps->parseSVGFile(fn);
     }
     std::string run_routine() {
       if(vet) {
+        cout << "deleting the old VET" << endl;
         delete vet;
       }
       vet = new VectorElementTree();
