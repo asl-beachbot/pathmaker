@@ -1,5 +1,6 @@
 // Sophisticated Connector
 #include "SimpleConnector.h"
+#include <limits>
 
 
 class TourElement {
@@ -29,7 +30,7 @@ private:
 public:
   void connect();
   TSPConnector(VectorElementTree * vet) : Connector(vet) {
-    curr_min = 99999999;
+    curr_min = std::numeric_limits<double>::max();
     path_size = vet->element_tree.size() - 1;
   };
 };
