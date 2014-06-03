@@ -10,6 +10,7 @@
 #include "VectorElementTree.h"
 #include "SVGParserAdapter.h"
 #include "SimpleConnector.h"
+#include "TSPConnector.h"
 #include "FillProcedures.h"
 #include "SegmentationPreProcessor.h"
 #include "PostProcessor.h"
@@ -180,18 +181,19 @@ int main(int argc, char** argv) {
     spp->process();
   }
   // vet->print_tree();
-  vet->fillPolys();
-  SimpleConnector * sc = new SimpleConnector(vet);
-  sc->connect();
+  // vet->fillPolys();
+  // SimpleConnector * sc = new SimpleConnector(vet);
+  // sc->connect();
 
+  TSPConnector * sc = new TSPConnector(vet);
+  sc->connect();
   // vet->clearFill();
-  
+  // vet->  drawConnections();
+
+
   // PostProcessor *  psc = new PostProcessor(vet);
   // psc->process();
 
-
-  // psc->export_result();
-  
   std::string json = "var PolyJSON = '" + vet->toJSON();
   json += "'";
   std::ofstream of("PolyJSON.js");

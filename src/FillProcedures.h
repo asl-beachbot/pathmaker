@@ -8,6 +8,7 @@
 #include "VectorTreeElements.h"
 
 typedef std::list<ElementPtr * > ElemList;
+typedef std::list<Polygon_with_holes_2> Pwh_list_2;
 
 class FillProcedure {
 public:
@@ -25,32 +26,38 @@ public:
     SSPtr ss = CGAL::create_interior_straight_skeleton_2(*poly);
 
     PolygonPtrVector offset_poly_wh = CGAL::create_offset_polygons_2(lOffset, *ss);
-
+    Polygon_2 outer;
     // PolygonWithHolesPtrVector offset_poly_wh =
     //     CGAL::create_interior_skeleton_and_offset_polygons_with_holes_2(lOffset, *poly);
-
+    int idx = 0; // TODO set to some reasonable value
+    PolyLine_P superline;
     while(offset_poly_wh.size() > 0) {
       cout << "adding poly" << count << " l o " << lOffset << *offset_poly_wh[0]<<  endl;
       count++;
       // no more polys
       for(auto i = offset_poly_wh.begin(); i != offset_poly_wh.end(); ++i) {
-        Polygon_2 outer = (**i);
+        outer = (**i);
         cout << "Area: " << outer.area() << endl;
-        if(max_area_for_deletion > std::abs(outer.area())) { // area is signed ccw or cw
+
+        if(max_area_for_deletion != 0 && max_area_for_deletion > std::abs(outer.area())) { // area is signed ccw or cw
           cout << "Skipping / Removing inside poly" << endl;
           continue;
         }
         ElementPtr * poly_element = new PolygonElementPtr(outer, Rake::RAKE_FULL);
         poly_element->fill_element = true;
         cout << poly_element << endl;
-        result.push_back(poly_element);
+        // result.push_back(poly_element);
       }
-      lOffset = lOffset + line_distance;
+      superline.push_back(outer[idx % outer.size()]);
+      idx += 1;
+      lOffset = lOffset + (line_distance / outer.size());
       offset_poly_wh = CGAL::create_offset_polygons_2(lOffset, *ss);
 
       // offset_poly_wh =
       //   CGAL::create_interior_skeleton_and_offset_polygons_with_holes_2(lOffset, *poly);
     }
+    ElementPtr * superline_element = new PolyLineElementPtr(superline, Rake::RAKE_FULL);
+    result.push_back(superline_element);
   }
 	Polygon_with_holes_2 * poly;
   float line_distance;

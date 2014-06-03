@@ -270,16 +270,18 @@ public:
     connect_lines_gi->show();
     Tree_ElementPtr::iterator it = ++element_tree.begin();
     Tree_ElementPtr::iterator it_end = element_tree.end();
-
+    cout << "Drawing connections" << endl;
     for(; it != it_end; ++it) {
-      if((*it)->from == NULL) {
+      if((*it)->from == nullptr) {
+        cout << "Found starting point" << endl;
         break; // it = start iterator
       }
     }
+    Transformation scale = Transformation(CGAL::SCALING, GlobalOptions::getInstance().scale_for_disp); 
     ElementPtr * elem = (*it);
-    while(elem->to != NULL) {
+    while(elem->to != nullptr) {
       cout << elem->exit_point.x() << " " << elem->exit_point.y() << " -> " << elem->to->entry_point.x() << " " << elem->to->entry_point.y() << endl;
-      this->addLine(elem->exit_point, elem->to->entry_point, &connect_lines);
+      this->addLine(elem->exit_point.transform(scale), elem->to->entry_point.transform(scale), &connect_lines);
       elem = elem->to;
     }
     connect_lines_gi->modelChanged();
@@ -316,12 +318,12 @@ public:
     auto it = ++element_tree.begin();
     auto it_end = element_tree.end();
     for(; it != it_end; ++it) {
-      if((*it)->from == NULL) {
+      if((*it)->from == nullptr) {
         break; // it = start iterator
       }
     }
     ElementPtr * elem = (*it);
-    while(elem->to != NULL) {
+    while(elem->to != nullptr) {
       std::string elem_str = elem->toString();
       cout << elem_str;
       file_out << elem_str;

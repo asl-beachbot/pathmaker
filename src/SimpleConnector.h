@@ -1,5 +1,5 @@
 // Connector Implementation
-
+#pragma once
 #include "VectorElementTree.h"
 #include "CGAL_Headers.h"
 
@@ -12,7 +12,9 @@ protected:
   Tree * tree;
   Tree_ElementPtr * element_tree;
 public:
-  Connector(VectorElementTree * vet) : tree(vet) {};
+  Connector(VectorElementTree * vet) : tree(vet) {
+    element_tree = &(vet->element_tree);
+  };
   virtual void connect() = 0;
   void print_connections();
 };
