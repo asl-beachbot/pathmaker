@@ -70,16 +70,17 @@ public:
     id = rand() % 10000000;
   };
   ~ElementPtr() {cout << "delete called" << endl;} 
-  virtual Point_2 getFromIndex(int i) {};
-  virtual void set_graphx() {};
-  virtual ElementType get_type() {};
-  virtual Polygon_2 * convexHull() {};
-  virtual void print() {};
-  virtual std::string toString() {};
+  virtual Point_2 getFromIndex(int i) = 0;
+  virtual int getSize() = 0;
+  virtual void set_graphx() = 0;
+  virtual ElementType get_type() = 0;
+  virtual Polygon_2 * convexHull() = 0;
+  virtual void print() = 0;
+  virtual std::string toString() = 0;
   bool unvisited() {
     return !this->visited;
   }
-  virtual Json::Value toJSON() {};
+  virtual Json::Value toJSON() = 0;
 };
 
 
@@ -110,6 +111,9 @@ public:
   #endif
   Point_2 getFromIndex(int i) {
     return element[i % element.size()];
+  }
+  int getSize() {
+    return element.size();
   }
   ElementType get_type() { return EL_POLYGON; }
   void print() {
@@ -150,9 +154,9 @@ public:
   }
 };
 
-class FilledSegment {
+class FilledSegment : public PolygonElementPtr {
 public:
-  Polygon_2 poly;
+  FilledSegment(Polygon_2 poly) : PolygonElementPtr(poly) {};
   int fill_method; // fill type: 1 = Skeleton, 2 = wiggle
   Direction_2 direction; // only for wiggle fill
 };
@@ -200,7 +204,7 @@ public:
     auto it_end = segments.end();
     Transformation t = Transformation(CGAL::SCALING, GlobalOptions::getInstance().scale_for_disp);
     for( ; it != it_end; ++it ) {
-      Polygon_2 ps = transform(t, it->poly);
+      Polygon_2 ps = transform(t, it->element);
       scaled_segments.push_back(ps);
       segments_graphx.push_back(new PolygonGraphicsI(&scaled_segments.back()));
       segments_graphx.back()->setEdgesPen(segments_pen);
@@ -213,6 +217,9 @@ public:
   ElementType get_type() { return EL_FILLED_POLYGON; };
   Point_2 getFromIndex(int i) {
     return element.outer_boundary()[i];
+  }
+  int getSize() {
+    return element.outer_boundary().size();
   }
 
   Polygon_2 * convexHull() {
@@ -277,7 +284,7 @@ public:
     auto it_end_segments = segments.end();
     Json::Value segments_json(Json::arrayValue);
     for(; it_segments != it_end_segments; ++it_segments) {
-      Polygon_2 scaled_segment = transform(disp_trafo, it_segments->poly);
+      Polygon_2 scaled_segment = transform(disp_trafo, it_segments->element);
       auto segment_it = scaled_segment.vertices_begin();
       auto segment_it_end = scaled_segment.vertices_end();
       Json::Value segment_coords(Json::arrayValue);
@@ -314,7 +321,7 @@ public:
 class PolyLineElementPtr : public ElementPtr {
 public:
   // Change implementation to Curve_2!
-  PolyLine_P  element;
+  PolyLine_P element;
   std::list< PolyLine_P > graphx_elem;
   // int visited_vertices[];
   PolyLineElementPtr(PolyLine_P polyline, int lw = Rake::RAKE_MEDIUM) : element(polyline) {
@@ -351,6 +358,10 @@ public:
       return element[element.size() + i];
     }
   }
+  int getSize() {
+    return element.size();
+  }
+
   ElementType get_type() { return EL_POLYLINE; }
 
   void print() {
@@ -361,6 +372,15 @@ public:
     cout << std::endl;
   }
   Polygon_2 * convexHull() {
+    std::istream_iterator< Point_2 >  in_start();
+    std::istream_iterator< Point_2 >  in_end;
+    std::ostream_iterator< Point_2 >  out( std::cout, "\n" );
+    Polygon_2 ch;
+    cout << "Convex Hull" << endl;
+    auto op_it = CGAL::convex_hull_2(element.begin(), element.end(), std::iterator<Point_2> output);
+    for(Point_2 p : output) {
+      cout << p << endl;
+    }
     return NULL;
   }
   Json::Value toJSON() {

@@ -1,4 +1,6 @@
 // Sophisticated Connector
+#pragma once
+
 #include "SimpleConnector.h"
 #include <limits>
 
@@ -20,17 +22,20 @@ typedef std::vector<TourElement *> Tour;
 
 class TSPConnector : public Connector {
 private:
-  double curr_min;
+  float curr_min;
   int path_size;
   Tour best_tour;
   // vector<TourElement *> current_tour;
-  double curr_dist;
   void recursive_check(TourElement * from, TourElement * next, 
     const ElementVector & unvisited_elems, Tour current_tour, float length, int level);
 public:
   void connect();
+  void connect(std::vector<FilledSegment>::iterator begin, std::vector<FilledSegment>::iterator end);
+  void connect_segments();
+  TSPConnector();
   TSPConnector(VectorElementTree * vet) : Connector(vet) {
-    curr_min = std::numeric_limits<double>::max();
+    curr_min = 9999999999;
+    cout << "curr min " << curr_min << endl;
     path_size = vet->element_tree.size() - 1;
   };
 };
@@ -38,11 +43,10 @@ public:
 void TSPConnector::recursive_check(TourElement * from, TourElement * next, 
   const ElementVector & unvisited_elems, Tour current_tour, 
   float length, int level) {
-  // auto f = static_cast<PolylineElementPtr * > from;
-  // auto n = static_cast<PolylineElementPtr * > next;
   level += 1;
   current_tour.push_back(next);
   if(from) length += CGAL::squared_distance(from->exit_point, next->entry_point);
+  cout << "length: " << length << " curr_min " << curr_min << " " << level << " " << path_size << endl;
   if(length >= curr_min) {
     return;
   }
@@ -65,7 +69,67 @@ void TSPConnector::recursive_check(TourElement * from, TourElement * next,
       recursive_check(next, 
         new TourElement(unvisited_elems[i], unvisited_elems[i]->getFromIndex(-1), unvisited_elems[i]->getFromIndex(0)), 
         copy, current_tour, length, level);
+    } else {
+      for(int j = 0; j < unvisited_elems[i]->getSize(); ++j) {
+        recursive_check(next, new TourElement(unvisited_elems[i], 
+          unvisited_elems[i]->getFromIndex(j), 
+          unvisited_elems[i]->getFromIndex(j)), copy, current_tour, length, level);
+      }
     }
+  }
+}
+ 
+void TSPConnector::connect(std::vector<FilledSegment>::iterator begin, std::vector<FilledSegment>::iterator end) {
+  path_size = std::distance(begin, end);
+  curr_min = 9999999999;
+
+  ElementVector unvisited_elems;
+  for(auto it = begin; it != end; ++it) {
+    unvisited_elems.push_back(&(*it));
+  }
+  for(int i = 0; i < unvisited_elems.size(); ++i) { // check all different start point options
+    ElementVector copy = unvisited_elems;
+    copy.erase(copy.begin() + i);
+    if(unvisited_elems[i]->get_type() == EL_POLYLINE) {
+      recursive_check(nullptr, new TourElement(unvisited_elems[i], 
+        unvisited_elems[i]->getFromIndex(0), 
+        unvisited_elems[i]->getFromIndex(-1)), copy, Tour{}, 0, 0);
+      recursive_check(nullptr, new TourElement(unvisited_elems[i], 
+        unvisited_elems[i]->getFromIndex(-1), 
+        unvisited_elems[i]->getFromIndex(0)), copy, Tour{}, 0, 0);      
+    }
+    else {
+      for(int j = 0; j < unvisited_elems[i]->getSize(); ++j) {
+        cout << "iterating poly" << j << endl;
+        recursive_check(nullptr, new TourElement(unvisited_elems[i], 
+          unvisited_elems[i]->getFromIndex(j), 
+          unvisited_elems[i]->getFromIndex(j)), copy, Tour{}, 0, 0);
+      }
+    }
+  }
+  for(int i = 0; i < best_tour.size(); ++i) {
+    auto tour_el = best_tour[i];
+    if(i < best_tour.size() - 1) {
+      tour_el->elem->to = best_tour[i + 1]->elem;
+    }
+    if(i > 0) {
+      tour_el->elem->from = best_tour[i - 1]->elem;
+    }
+    tour_el->elem->entry_point = tour_el->entry_point;
+    tour_el->elem->exit_point = tour_el->exit_point;
+    cout << "entry_point " << tour_el->entry_point << " exit_point " << tour_el->exit_point << endl;
+    tour_el->elem->visited = true;
+  }
+
+}
+void TSPConnector::connect_segments() {
+  for(auto it = ++element_tree->begin(); it != element_tree->end(); ++it) {
+    if((*it)->get_type() == EL_FILLED_POLYGON) {
+      FilledPolygonElementPtr * ptr = static_cast<FilledPolygonElementPtr *>(*it);
+      if(ptr->segments.size()) {
+        connect(ptr->segments.begin(), ptr->segments.end());
+      }  
+    } 
   }
 }
 
@@ -78,12 +142,22 @@ void TSPConnector::connect() {
   for(int i = 0; i < unvisited_elems.size(); ++i) { // check all different start point options
     ElementVector copy = unvisited_elems;
     copy.erase(copy.begin() + i);
-    recursive_check(nullptr, new TourElement(unvisited_elems[i], 
-      unvisited_elems[i]->getFromIndex(0), 
-      unvisited_elems[i]->getFromIndex(-1)), copy, Tour{}, 0, 0);
-    recursive_check(nullptr, new TourElement(unvisited_elems[i], 
-      unvisited_elems[i]->getFromIndex(-1), 
-      unvisited_elems[i]->getFromIndex(0)), copy, Tour{}, 0, 0);
+    if(unvisited_elems[i]->get_type() == EL_POLYLINE) {
+      recursive_check(nullptr, new TourElement(unvisited_elems[i], 
+        unvisited_elems[i]->getFromIndex(0), 
+        unvisited_elems[i]->getFromIndex(-1)), copy, Tour{}, 0, 0);
+      recursive_check(nullptr, new TourElement(unvisited_elems[i], 
+        unvisited_elems[i]->getFromIndex(-1), 
+        unvisited_elems[i]->getFromIndex(0)), copy, Tour{}, 0, 0);      
+    }
+    else {
+      for(int j = 0; j < unvisited_elems[i]->getSize(); ++j) {
+        cout << "iterating poly" << j << endl;
+        recursive_check(nullptr, new TourElement(unvisited_elems[i], 
+          unvisited_elems[i]->getFromIndex(j), 
+          unvisited_elems[i]->getFromIndex(j)), copy, Tour{}, 0, 0);
+      }
+    }
   }
 
   // project the found connections on the tree...

@@ -1,5 +1,4 @@
 // Connector Implementation
-
 #include "VectorElementTree.h"
 #include "CGAL_Headers.h"
 #include "SimpleConnector.h"

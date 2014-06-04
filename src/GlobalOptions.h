@@ -93,6 +93,7 @@ public:
     cout << "Parsing Config: " << cfg_filename << endl;
     std::ifstream ifs(cfg_filename);
     po::store(po::parse_config_file(ifs, desc), vm);
+    return 1;
   }
 
 #ifdef STANDALONE

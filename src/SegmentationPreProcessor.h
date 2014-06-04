@@ -34,9 +34,6 @@ private:
     //                                  std::back_inserter(partition_polys),
     //                                  partition_traits);
     for(Traits_Polygon_2 tp : partition_polys) {
-      FilledSegment f;
-      f.direction = Direction_2(0, 1);
-      f.fill_method = 1;
       if(segment_offset > 0) {
         cout << "Segment Offset: " << segment_offset << endl;
         PolygonPtrVector offset_polygons = 
@@ -47,13 +44,18 @@ private:
           continue; // maybe some more failsafe handling?
         }
         for(auto i = offset_polygons.begin(); i != offset_polygons.end(); ++i) {
-          f.poly = (**i);
+          FilledSegment f(**i);
+          f.direction = Direction_2(0, 1);
+          f.fill_method = 1;
+          poly_element_ptr->segments.push_back(f);
         }
       }
       else {
-        f.poly = Polygon_2 (tp.vertices_begin(), tp.vertices_end());
+        FilledSegment f(Polygon_2 (tp.vertices_begin(), tp.vertices_end()));
+        f.direction = Direction_2(0, 1);
+        f.fill_method = 1;
+        poly_element_ptr->segments.push_back(f);
       }
-      poly_element_ptr->segments.push_back(f);
     }
     for(auto it = poly_element_ptr->segments.begin(); it != poly_element_ptr->segments.end(); ++it) {
       cout << "Got a Segment" << endl;

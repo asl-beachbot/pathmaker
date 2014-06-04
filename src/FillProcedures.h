@@ -13,31 +13,36 @@ typedef std::list<Polygon_with_holes_2> Pwh_list_2;
 class FillProcedure {
 public:
   ElemList result;
-	virtual ElemList fill(FilledPolygonElementPtr * filled_poly_ptr) {};
+	virtual ElemList fill(FilledPolygonElementPtr * filled_poly_ptr) = 0;
 };
 
 class SpiralFillProcedure : public FillProcedure {
 public:
-  // ElemList result;
-	void run() {
+  float line_distance;
+  void run(const Polygon_with_holes_2 * poly, Point_2 * start_point = nullptr) {
     cout << "Area smaller than " << max_area_for_deletion << " will get deleted" << endl;
     float lOffset = line_distance;
     int count = 0;
     SSPtr ss = CGAL::create_interior_straight_skeleton_2(*poly);
 
-    PolygonPtrVector offset_poly_wh = CGAL::create_offset_polygons_2(lOffset, *ss);
+    PolygonPtrVector offset_poly_wh = CGAL::create_offset_polygons_2(lOffset / poly->outer_boundary().size(), *ss);
     Polygon_2 outer;
-    // PolygonWithHolesPtrVector offset_poly_wh =
-    //     CGAL::create_interior_skeleton_and_offset_polygons_with_holes_2(lOffset, *poly);
-    int idx = 0; // TODO set to some reasonable value
+    int idx = 0;
+    if(start_point) {
+      idx = findClosestIndex((*start_point), *offset_poly_wh[0]);
+    }
+    cout << "Closest index: " << idx << endl;
     PolyLine_P superline;
+    outer = *offset_poly_wh[0];
+    // superline.push_back(outer[idx - 1 % offset_poly_wh[0]->size()]); (check if diagonal would be better...)
+    superline.push_back(outer[idx % offset_poly_wh[0]->size()]);
     while(offset_poly_wh.size() > 0) {
       cout << "adding poly" << count << " l o " << lOffset << *offset_poly_wh[0]<<  endl;
       count++;
       // no more polys
       for(auto i = offset_poly_wh.begin(); i != offset_poly_wh.end(); ++i) {
         outer = (**i);
-        cout << "Area: " << outer.area() << endl;
+        cout << "Area: " << outer.area() << endl; 
 
         if(max_area_for_deletion != 0 && max_area_for_deletion > std::abs(outer.area())) { // area is signed ccw or cw
           cout << "Skipping / Removing inside poly" << endl;
@@ -46,36 +51,51 @@ public:
         ElementPtr * poly_element = new PolygonElementPtr(outer, Rake::RAKE_FULL);
         poly_element->fill_element = true;
         cout << poly_element << endl;
-        // result.push_back(poly_element);
+        // result.push_back(poly_element); TODO handle this stuff!
       }
       superline.push_back(outer[idx % outer.size()]);
       idx += 1;
       lOffset = lOffset + (line_distance / outer.size());
       offset_poly_wh = CGAL::create_offset_polygons_2(lOffset, *ss);
-
-      // offset_poly_wh =
-      //   CGAL::create_interior_skeleton_and_offset_polygons_with_holes_2(lOffset, *poly);
     }
     ElementPtr * superline_element = new PolyLineElementPtr(superline, Rake::RAKE_FULL);
     result.push_back(superline_element);
   }
-	Polygon_with_holes_2 * poly;
-  float line_distance;
+
 	ElemList fill(FilledPolygonElementPtr * filled_poly_ptr) {
     result.clear();
     line_distance = GlobalOptions::getInstance().line_distance;
-    this->poly = &(filled_poly_ptr->element);
-    this->run();
+    if(filled_poly_ptr->segments.size()) {
+      // handle all segments seperately!
+      for(FilledSegment s : filled_poly_ptr->segments) {
+        std::list<Polygon_2> empty_list;
+        this->run(new Polygon_with_holes_2(s.element, empty_list.begin(), empty_list.end()), &s.entry_point);
+      }
+    } else {
+      this->run( &(filled_poly_ptr->element));
+    }
     for(ElementPtr * e : result) {
       cout << "Element: " << e << endl;
     }
     return result;
 	}
-  ~SpiralFillProcedure() {
-  }
+  ~SpiralFillProcedure() {}
   SpiralFillProcedure() : max_area_for_deletion(0) {
     this->max_area_for_deletion = GlobalOptions::getInstance().area_deletion_threshold;
   };
+  int findClosestIndex(Point_2 p, Polygon_2 poly) {
+    double curr_dist = 99999999;
+    int idx = 0;
+    cout << "searching closest indx" << endl;
+    for(int i = 0; i < poly.size(); ++i) {
+      Point_2 q = poly[i];
+      if(CGAL::squared_distance(p, q) < curr_dist) {
+        curr_dist = CGAL::squared_distance(p, q);
+        idx = i;
+      }
+    }
+    return idx;
+  }
 private:
   double max_area_for_deletion;
 };
@@ -225,7 +245,7 @@ public:
     if(filled_poly_ptr->segments.size() > 0) {
       for (FilledSegment fs : filled_poly_ptr->segments) {
         cout << "Working on Segment" << endl;
-        fill_polygon(fs.poly, fs.direction);
+        fill_polygon(fs.element, fs.direction);
       }
     }
     else {

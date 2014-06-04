@@ -181,24 +181,27 @@ int main(int argc, char** argv) {
     spp->process();
   }
   // vet->print_tree();
-  // vet->fillPolys();
-  // SimpleConnector * sc = new SimpleConnector(vet);
-  // sc->connect();
+  TSPConnector * segment_connector = new TSPConnector(vet);
+  segment_connector->connect_segments();
 
-  TSPConnector * sc = new TSPConnector(vet);
+  vet->fillPolys();
+  SimpleConnector * sc = new SimpleConnector(vet);
   sc->connect();
+
+  // TSPConnector * sc = new TSPConnector(vet);
+  // sc->connect();
   // vet->clearFill();
   // vet->  drawConnections();
 
 
-  // PostProcessor *  psc = new PostProcessor(vet);
-  // psc->process();
+  PostProcessor *  psc = new PostProcessor(vet);
+  psc->process();
 
-  std::string json = "var PolyJSON = '" + vet->toJSON();
-  json += "'";
-  std::ofstream of("PolyJSON.js");
-  of << json;
-  vet->writeToFile("out_tree.txt");
+  // std::string json = "var PolyJSON = '" + vet->toJSON();
+  // json += "'";
+  // std::ofstream of("PolyJSON.js");
+  // of << json;
+  // vet->writeToFile("out_tree.txt");
 #ifdef WITH_GUI
   if(GlobalOptions::getInstance().display) {
     if(GlobalOptions::getInstance().scale_for_disp != 1) {
