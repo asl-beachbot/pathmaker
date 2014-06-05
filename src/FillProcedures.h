@@ -21,16 +21,19 @@ public:
   float line_distance;
   void run(const Polygon_with_holes_2 * poly, Point_2 * start_point = nullptr) {
     cout << "Area smaller than " << max_area_for_deletion << " will get deleted" << endl;
-    float lOffset = line_distance;
+    float lOffset = line_distance / poly->outer_boundary().size();
     int count = 0;
-    SSPtr ss = CGAL::create_interior_straight_skeleton_2(*poly);
-
-    PolygonPtrVector offset_poly_wh = CGAL::create_offset_polygons_2(lOffset / poly->outer_boundary().size(), *ss);
-    Polygon_2 outer;
     int idx = 0;
+    Point_2 prev_point;
+    Polygon_2 outer;
+
+    SSPtr ss = CGAL::create_interior_straight_skeleton_2(*poly);
+    PolygonPtrVector offset_poly_wh = CGAL::create_offset_polygons_2(lOffset, *ss);
+
     if(start_point) {
       idx = findClosestIndex((*start_point), *offset_poly_wh[0]);
     }
+
     cout << "Closest index: " << idx << endl;
     PolyLine_P superline;
     outer = *offset_poly_wh[0];
@@ -40,6 +43,32 @@ public:
       cout << "adding poly" << count << " l o " << lOffset << *offset_poly_wh[0]<<  endl;
       count++;
       // no more polys
+      if(offset_poly_wh.size() > 1) {
+        // decide which poly should continue this spiral
+        // and with the rest, start a new recursion!
+        int index_of_spiral_cont = 0;
+        double curr_min_dist = 99999999;
+        int count_ind = 0;
+        for(int count_ind = 0; count_ind < offset_poly_wh.size(); ++count_ind) {
+          int cl_index = findClosestIndex(prev_point, *offset_poly_wh[count_ind]);
+          double dist = CGAL::squared_distance((*offset_poly_wh[count_ind])[cl_index], prev_point);
+          if(dist < curr_min_dist) {
+            curr_min_dist = dist;
+            index_of_spiral_cont = count_ind;
+          }
+        }
+        for(int count_ind = 0; count_ind < offset_poly_wh.size(); ++count_ind) {
+          if(count_ind == index_of_spiral_cont) continue;
+          else {
+            this->run(new Polygon_with_holes_2((*offset_poly_wh[count_ind]), poly->holes_begin(), poly->holes_end()), &prev_point);
+          }
+        }
+        Polygon_with_holes_2 temp_poly((*offset_poly_wh[index_of_spiral_cont]), poly->holes_begin(), poly->holes_end());
+        cout << "Temp Poly: " << temp_poly << endl;
+        ss = CGAL::create_interior_straight_skeleton_2(temp_poly);
+        lOffset = 0; // restart lOffset
+        offset_poly_wh = CGAL::create_offset_polygons_2(lOffset, *ss);
+      }
       for(auto i = offset_poly_wh.begin(); i != offset_poly_wh.end(); ++i) {
         outer = (**i);
         cout << "Area: " << outer.area() << endl; 
@@ -54,6 +83,7 @@ public:
         // result.push_back(poly_element); TODO handle this stuff!
       }
       superline.push_back(outer[idx % outer.size()]);
+      prev_point = outer[idx % outer.size()];
       idx += 1;
       lOffset = lOffset + (line_distance / outer.size());
       offset_poly_wh = CGAL::create_offset_polygons_2(lOffset, *ss);

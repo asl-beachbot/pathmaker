@@ -194,8 +194,8 @@ int main(int argc, char** argv) {
   // vet->  drawConnections();
 
 
-  PostProcessor *  psc = new PostProcessor(vet);
-  psc->process();
+  // PostProcessor *  psc = new PostProcessor(vet);
+  // psc->process();
 
   // std::string json = "var PolyJSON = '" + vet->toJSON();
   // json += "'";

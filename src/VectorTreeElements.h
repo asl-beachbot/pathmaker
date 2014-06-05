@@ -168,6 +168,7 @@ public:
   Polygon_with_holes_2 element;
   std::vector<FilledSegment> segments;
   int fill_method; // fill type: 1 = Skeleton, 2 = wiggle
+  bool segmentation_on;
   Direction_2 direction; // only for wiggle fill
 
   FilledPolygonElementPtr(Polygon_with_holes_2 poly, int lw = Rake::RAKE_MEDIUM) :
@@ -372,16 +373,26 @@ public:
     cout << std::endl;
   }
   Polygon_2 * convexHull() {
-    std::istream_iterator< Point_2 >  in_start();
-    std::istream_iterator< Point_2 >  in_end;
-    std::ostream_iterator< Point_2 >  out( std::cout, "\n" );
-    Polygon_2 ch;
-    cout << "Convex Hull" << endl;
-    auto op_it = CGAL::convex_hull_2(element.begin(), element.end(), std::iterator<Point_2> output);
-    for(Point_2 p : output) {
-      cout << p << endl;
-    }
-    return NULL;
+    // return NULL;
+    std::list<Point_2> convex_hull_list;
+    CGAL::convex_hull_2(
+      element.begin(), element.end(),
+      std::back_inserter(convex_hull_list)
+    );
+    Polygon_2 * convex_hull = new Polygon_2(convex_hull_list.begin(),
+                                            convex_hull_list.end());
+    cout << * convex_hull << endl;
+    return convex_hull;
+    // std::istream_iterator< Point_2 >  in_start();
+    // std::istream_iterator< Point_2 >  in_end;
+    // std::ostream_iterator< Point_2 >  out( std::cout, "\n" );
+    // Polygon_2 ch;
+    // cout << "Convex Hull" << endl;
+    // auto op_it = CGAL::convex_hull_2(element.begin(), element.end(), std::iterator<Point_2> output);
+    // for(Point_2 p : output) {
+    //   cout << p << endl;
+    // }
+    // return NULL;
   }
   Json::Value toJSON() {
     Json::Value val;

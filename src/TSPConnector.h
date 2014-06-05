@@ -4,6 +4,16 @@
 #include "SimpleConnector.h"
 #include <limits>
 
+// ok, since this is taking way too long 
+// we'll optimize it using the LKH implementation
+// So
+
+// Define full matrix:
+// ATSP problem
+// every polygon edge will be zero
+// every polyline edge will be zero
+// and back from the starting point will be equal weight and very high
+// thus it will not optimize for the return way (it's equal from every point)
 
 class TourElement {
 public:
@@ -78,7 +88,30 @@ void TSPConnector::recursive_check(TourElement * from, TourElement * next,
     }
   }
 }
- 
+
+// void TSPConnector::create_distance_matrix() {
+//   // 2 dimensional iteration through the complete tree
+//   // always calculating the squared distance between all possible cities
+
+//   auto it = element_tree.begin();
+//   auto it_end = element_tree.end();
+//   for(; it != it_end; ++it) {
+//     auto inner_it = element_tree.begin();
+//     if(it->get_type() == EL_POLYLINE) {
+
+//     } else {
+      
+//     }
+//     for(; inner_it != it_end; ++inner_it) {
+//       if(*it == *inner_it) {
+//         // special case if iterating on the same polygon
+
+//       }
+//     }
+//   }
+
+// }
+
 void TSPConnector::connect(std::vector<FilledSegment>::iterator begin, std::vector<FilledSegment>::iterator end) {
   path_size = std::distance(begin, end);
   curr_min = 9999999999;
