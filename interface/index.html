@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Pathmaker Interface</title>
+	<link rel="stylesheet" type="text/css" href="css/style.css">
+	<script type="text/javascript" src="js/polyjson.js"></script>
+
+	<script type="text/javascript" src="./js/paper/dist/paper-full.js"></script>
+	<script type="text/javascript" src="js/importexport.js"></script>
+
+	<script type="text/javascript" src="js/jquery.js"></script>
+	<script type="text/javascript" src="js/jquery.mousewheel.js"></script>
+	<script type="text/javascript" src="js/paint.js"></script>
+</head >
+<body>
+<canvas resize="true" id="canvas" width="100%" height="100%"></canvas>
+<div id="select_fill">
+	<h3>Select Fill</h3>
+	<div class="options">
+		<input type="radio" name="fill" value="spiral">Spiral Fill<br>
+		<input type="radio" name="fill" value="wiggle">Wiggle Fill<br>
+		<div>
+			<input type="radio" name="fill_direction" value="0,1">0,1<br>
+			<input type="radio" name="fill_direction" value="1,1">1,1<br>
+			<input type="radio" name="fill_direction" value="1,0">1,0<br>
+			<input type="radio" name="fill_direction" value="1,0.5">1,0.5<br>
+
+		</div>
+		<button id="testbtn">Test!</button>
+	</div>
+	<canvas resize="true" id="direction_canvas" width="100%" height="100%"></canvas>
+</div>
+</body>
+</html>
