@@ -37,11 +37,16 @@ private:
   Tour best_tour;
   // vector<TourElement *> current_tour;
   void recursive_check(TourElement * from, TourElement * next, 
-    const ElementVector & unvisited_elems, Tour current_tour, float length, int level);
+                       const ElementVector & unvisited_elems, Tour current_tour, 
+                       float length, int level);
+  vector<int> create_distance_matrix_row(Tree_ElementPtr::iterator row_it, 
+                                                int element_index, int column_index);
+
 public:
   void connect();
   void connect(std::vector<FilledSegment>::iterator begin, std::vector<FilledSegment>::iterator end);
   void connect_segments();
+  void create_distance_matrix();
   TSPConnector();
   TSPConnector(VectorElementTree * vet) : Connector(vet) {
     curr_min = 9999999999;
@@ -89,28 +94,79 @@ void TSPConnector::recursive_check(TourElement * from, TourElement * next,
   }
 }
 
-// void TSPConnector::create_distance_matrix() {
-//   // 2 dimensional iteration through the complete tree
-//   // always calculating the squared distance between all possible cities
+vector<int> TSPConnector::create_distance_matrix_row(Tree_ElementPtr::iterator row_it, 
+                                              int element_index, int column_index) {
+  auto it = ++element_tree->begin();
+  auto it_end = element_tree->end();
+  Point_2 current_point = (*row_it)->getFromIndex(element_index);
+  vector<int> row;
+  for(; it != it_end; ++it) {
+    if(*it != *row_it) {
+      cout << "Equal elements" << endl;
+      if((*it)->get_type() == EL_POLYLINE) {
+        row.push_back(ceil(CGAL::squared_distance(current_point, (*it)->getFromIndex(0))));
+        row.push_back(ceil(CGAL::squared_distance(current_point, (*it)->getFromIndex(-1))));
+      } else {
+        for(int i = 0; i < (*it)->getSize(); i++) {
+          row.push_back(ceil(CGAL::squared_distance(current_point, (*it)->getFromIndex(i))));
+        }
+      }
+    } else {
+      // we're on the same element now! 
+      // special properties?!
+      if((*it)->get_type() == EL_POLYLINE) {
+        if(element_index == 0) {
+          row.push_back(9999999);
+          row.push_back(0); // zero distance to travel to next point
+        } else {
+          row.push_back(0);
+          row.push_back(9999999); // zero distance to travel to next point          
+        }
+      } else {
+        for(int i = 0; i < (*it)->getSize(); i++) {
+          if(i == (element_index + 1) % (*it)->getSize()) {
+            row.push_back(0); // cycle through
+          } else {
+            row.push_back(9999999); // never jump around
+          }
+        }
+      }
+    }
+  }
+  return row;
+}
 
-//   auto it = element_tree.begin();
-//   auto it_end = element_tree.end();
-//   for(; it != it_end; ++it) {
-//     auto inner_it = element_tree.begin();
-//     if(it->get_type() == EL_POLYLINE) {
+void TSPConnector::create_distance_matrix() {
+  // 2 dimensional iteration through the complete tree
+  // always calculating the squared distance between all possible cities
 
-//     } else {
-      
-//     }
-//     for(; inner_it != it_end; ++inner_it) {
-//       if(*it == *inner_it) {
-//         // special case if iterating on the same polygon
+  auto it = ++element_tree->begin();
+  auto it_end = element_tree->end();
+  // float[][] result = new float[]
+  vector< vector<int> > matrix;
+  int act_col = 0;
+  for(; it != it_end; ++it) {
+    if((*it)->get_type() == EL_POLYLINE) {
+      matrix.push_back(create_distance_matrix_row(it, 0, act_col));
+      act_col++;
+      matrix.push_back(create_distance_matrix_row(it, -1, act_col));
+      act_col++;
+    } else {
+      for(int i = 0; i < (*it)->getSize(); i++) {
+        matrix.push_back(create_distance_matrix_row(it, i, act_col));
+        act_col++;
+      }
+    }
+  }
 
-//       }
-//     }
-//   }
-
-// }
+  cout << "Die Matrix: " << endl;
+  for(vector<int> v : matrix) {
+    for(int d : v) {
+      cout << d << " ";
+    }
+    cout << endl;
+  }
+}
 
 void TSPConnector::connect(std::vector<FilledSegment>::iterator begin, std::vector<FilledSegment>::iterator end) {
   path_size = std::distance(begin, end);

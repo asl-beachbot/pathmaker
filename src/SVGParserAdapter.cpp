@@ -185,10 +185,11 @@ int main(int argc, char** argv) {
   segment_connector->connect_segments();
 
   vet->fillPolys();
-  SimpleConnector * sc = new SimpleConnector(vet);
-  sc->connect();
+  // SimpleConnector * sc = new SimpleConnector(vet);
+  // sc->connect();
 
-  // TSPConnector * sc = new TSPConnector(vet);
+  TSPConnector * sc = new TSPConnector(vet);
+  sc->create_distance_matrix();
   // sc->connect();
   // vet->clearFill();
   // vet->  drawConnections();
