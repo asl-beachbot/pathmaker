@@ -64,10 +64,13 @@ public:
           }
         }
         Polygon_with_holes_2 temp_poly((*offset_poly_wh[index_of_spiral_cont]), poly->holes_begin(), poly->holes_end());
+        // get a new idx! 
+        idx = findClosestIndex(prev_point, (*offset_poly_wh[index_of_spiral_cont])) + 1;
         cout << "Temp Poly: " << temp_poly << endl;
         ss = CGAL::create_interior_straight_skeleton_2(temp_poly);
         lOffset = 0; // restart lOffset
         offset_poly_wh = CGAL::create_offset_polygons_2(lOffset, *ss);
+
       }
       for(auto i = offset_poly_wh.begin(); i != offset_poly_wh.end(); ++i) {
         outer = (**i);

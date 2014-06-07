@@ -183,7 +183,7 @@ int main(int argc, char** argv) {
   // vet->print_tree();
   TSPConnector * segment_connector = new TSPConnector(vet);
   segment_connector->connect_segments();
-
+  
   vet->fillPolys();
   // SimpleConnector * sc = new SimpleConnector(vet);
   // sc->connect();

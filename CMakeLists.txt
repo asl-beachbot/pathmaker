@@ -104,6 +104,7 @@ find_package(JSONCPP REQUIRED)
 include_directories(${JSONCPP_INCLUDE_DIR})
 
 include_directories(src/include)
+include_directories(src/include/LKH-2.0.2/SRC src/include/LKH-2.0.2/SRC/INCLUDE)
 
 add_executable(svg_parser
     src/SVGParserAdapter.cpp
