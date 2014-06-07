@@ -92,4 +92,12 @@ void PreProcessor::process(double scale, double trans_x, double trans_y) {
 			break;
 		}
 	}
+	if(tree->startpoint_elem) {
+		PolyLine_P * p = &(static_cast<PolyLineElementPtr *>(tree->startpoint_elem)->element);
+		auto poly_it = p->begin();
+		auto poly_end = p->end();
+		for(; poly_it != poly_end; ++poly_it) {
+			*poly_it = poly_it->transform(trafo);
+		}
+	}
 }

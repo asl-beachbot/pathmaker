@@ -41,6 +41,7 @@ public:
   bool post_processed_result;
   bool manually_modified;
   int line_width;
+  vector<vector<float>> bezier_connector;
   RakeVector rake_states;
 
   #ifdef WITH_GUI

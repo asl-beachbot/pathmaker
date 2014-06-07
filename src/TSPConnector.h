@@ -7,17 +7,6 @@
 #include <sstream>
 #include <string>
 
-// extern "C" {
-//   #include "LKH.h"
-//   #include "Delaunay.h"
-//   #include "GainType.h"
-//   #include "GeoConversion.h"
-//   #include "Hashing.h"
-//   #include "Heap.h"
-//   #include "Segment.h"
-//   #include "Sequence.h"
-// }
-
 // ok, since this is taking way too long 
 // we'll optimize it using the LKH implementation
 // So
@@ -191,6 +180,7 @@ void TSPConnector::project_result_to_tree(std::vector<int> solution) {
   // to our element tree
   int start_traverse = 0;
   bool startpoint = false;
+  int index_add = -2; // TODO: change
   if(startpoint) { 
     // startpoint has always index 0
     // which means that TSP will put it out as 1
@@ -200,14 +190,32 @@ void TSPConnector::project_result_to_tree(std::vector<int> solution) {
         break;
       }
     }
+    index_add = -2;
+  } else {
+    // find first occurence of element thats not equal to the prev
+    bool wraps = (city_order[solution.front() + index_add].element == 
+                  city_order[solution.back() + index_add].element);
+    if(wraps) {
+      ElementPtr * prev_elem = nullptr;
+      for(int i = 0; i < solution.size(); ++i) {
+        int curr_ind = solution.at(i % solution.size()) + index_add;
+        ElementPtr * curr_elem = city_order[curr_ind].element;
+        if(prev_elem && curr_elem != prev_elem) {
+          start_traverse = i;
+        } else {
+        }
+      }      
+    } else {
+      start_traverse = 0;
+    }
   }
   ElementPtr * prev_elem = nullptr;
   for(int i = start_traverse; i < solution.size() + start_traverse; ++i) {
     // if no startpoint defined, just start anywhere
-    int curr_ind = i % solution.size();
+    int curr_ind = solution.at(i % solution.size()) + index_add;
     ElementPtr * curr_elem = city_order[curr_ind].element;
     // polygon / polyline changed?
-    if(curr_elem != prev_elem) {
+    if(curr_elem != prev_elem && curr_elem->visited == false) {
       curr_elem->from = prev_elem;
       if(prev_elem) prev_elem->to = curr_elem;
       curr_elem->entry_point = curr_elem->getFromIndex(city_order[curr_ind].node_index);
@@ -224,6 +232,7 @@ void TSPConnector::project_result_to_tree(std::vector<int> solution) {
         curr_elem->exit_point = curr_elem->entry_point;
         curr_elem->exit_point_index = city_order[curr_ind].node_index;
       }
+      curr_elem->visited = true;
       prev_elem = curr_elem;
     }
   }
@@ -248,11 +257,11 @@ vector<int> TSPConnector::create_distance_matrix_row(Tree_ElementPtr::iterator r
     if(*it != *row_it) {
       cout << "Equal elements" << endl;
       if((*it)->get_type() == EL_POLYLINE) {
-        row.push_back(ceil(CGAL::squared_distance(current_point, (*it)->getFromIndex(0))));
-        row.push_back(ceil(CGAL::squared_distance(current_point, (*it)->getFromIndex(-1))));
+        row.push_back(ceil(CGAL::squared_distance(current_point, (*it)->getFromIndex(0)) * 100));
+        row.push_back(ceil(CGAL::squared_distance(current_point, (*it)->getFromIndex(-1)) * 100));
       } else {
         for(int i = 0; i < (*it)->getSize(); i++) {
-          row.push_back(ceil(CGAL::squared_distance(current_point, (*it)->getFromIndex(i))));
+          row.push_back(ceil(CGAL::squared_distance(current_point, (*it)->getFromIndex(i)) * 100));
         }
       }
     } else {
@@ -285,11 +294,11 @@ vector<int> TSPConnector::create_startpoint_distance_matrix_row(Point_2 sp) {
   row.push_back(9999999);
   for(auto it = ++element_tree->begin(); it != element_tree->end(); ++it) {
     if((*it)->get_type() == EL_POLYLINE) {
-      row.push_back(ceil(CGAL::squared_distance(sp, (*it)->getFromIndex(0))));
-      row.push_back(ceil(CGAL::squared_distance(sp, (*it)->getFromIndex(-1))));
+      row.push_back(ceil(CGAL::squared_distance(sp, (*it)->getFromIndex(0)) * 100));
+      row.push_back(ceil(CGAL::squared_distance(sp, (*it)->getFromIndex(-1)) * 100));
     } else {
       for(int i = 0; i < (*it)->getSize(); i++) {
-        row.push_back(ceil(CGAL::squared_distance(sp, (*it)->getFromIndex(i))));
+        row.push_back(ceil(CGAL::squared_distance(sp, (*it)->getFromIndex(i)) * 100));
       }
     }
   }
@@ -305,8 +314,11 @@ void TSPConnector::create_distance_matrix() {
   // float[][] result = new float[]
   vector< vector<int> > matrix;
   int act_col = 0;
-
-  matrix.push_back(create_startpoint_distance_matrix_row(Point_2(10, 10)));
+  if(tree->startpoint_elem) {
+    matrix.push_back(create_startpoint_distance_matrix_row(tree->startpoint_elem->getFromIndex(-1)));
+  } else {
+    matrix.push_back(create_startpoint_distance_matrix_row(Point_2(0,0)));
+  }
   for(; it != it_end; ++it) {
     if((*it)->get_type() == EL_POLYLINE) {
       matrix.push_back(create_distance_matrix_row(it, 0, act_col));

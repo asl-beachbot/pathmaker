@@ -304,8 +304,9 @@ public:
       // find parent tree iter if possible
       if(ve.startpoint) {
         this->startpoint_elem = elem_ptr;
+      } else {
+        findSpot(elem_ptr);
       }
-      findSpot(elem_ptr);
     }
     // this->print_tree();
   };
