@@ -16,6 +16,7 @@ private:
     ParsedSVG * ps;
     VectorElementTree * vet;
     SimpleConnector * sc;
+    SegmentationPreProcessor * spp;
 public:
     Generator() {
         GlobalOptions::getInstance().init();
@@ -46,8 +47,8 @@ public:
         GlobalOptions::getInstance().field_width,
         GlobalOptions::getInstance().field_height
       );
+      spp = new SegmentationPreProcessor(vet);
       if(GlobalOptions::getInstance().segmentation_on) {
-        SegmentationPreProcessor * spp = new SegmentationPreProcessor(vet);
         spp->process();
       }
       vet->fillPolys();
@@ -88,10 +89,33 @@ public:
         vet->print_tree();
         return vet->toJSON();
     }
+    std::string resegment_with_line(std::string arguments_as_json) {
+        Json::Reader jsonreader;
+        Json::Value arguments;
+        bool success = jsonreader.parse(arguments_as_json, arguments);
+        if(!success) {
+            std::cout << "Failed to parse arguments, bailing" << endl;
+            return "{\"error\":\"Error Parsing JSON\"}";
+        }
+        double x1, x2, y1, y2;
+        x1 = arguments.get("x1", 0).asDouble();
+        x2 = arguments.get("x2", 0).asDouble();
+        y1 = arguments.get("y1", 0).asDouble();
+        y2 = arguments.get("y2", 0).asDouble();
+        cout << "Resegmenting: " << x1 << " "<< y1 << " "<< x2 << " "<< y2 << endl;
+        Segment_2 s = Segment_2(Point_2(x1, y1), Point_2(x2, y2));
+        spp->addCutLine(s);
+        vet->clearFill();
+        spp->process();
+        vet->print_tree();
+        vet->fillPolys();
+        return vet->toJSON();
+    }
     ~Generator() {
         delete ps;
         delete vet;
         delete sc;
+        delete spp;
     }
 };
 
@@ -103,5 +127,6 @@ BOOST_PYTHON_MODULE(beachbot_pathgen)
         .def("parse_file", &Generator::parseSVGFile)
         .def("run_routine", &Generator::run_routine)
         .def("update_fill_for_element", &Generator::update_fill_for_element)
+        .def("resegment_with_line", &Generator::resegment_with_line)
     ;
 }

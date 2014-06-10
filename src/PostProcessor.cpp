@@ -7,6 +7,9 @@
 #include "GlobalOptions.h"
 #include "Exporter.h"
 #include "PostProcessor.h"
+
+#include "Spiro.h"
+
 using boost::format; using boost::str;
 
 

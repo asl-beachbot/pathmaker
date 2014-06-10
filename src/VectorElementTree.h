@@ -40,13 +40,13 @@ private:
           elem->convexHull()->vertices_begin(),
           elem->convexHull()->vertices_end(), tested_elem->getFromIndex(0))){
           case CGAL::ON_BOUNDED_SIDE:
-          case CGAL::ON_BOUNDARY:
             // if bounded, or on boundary:
             // this is definitly not enough
             // subtrees have to be moved etcetera
             // cout << "On Bounded Side" << endl;
             return true;
             break; // unnecessary?!
+          case CGAL::ON_BOUNDARY:
           case CGAL::ON_UNBOUNDED_SIDE:
             // Outside of poly. Outside of children.
             // cout << "Not Inside" << endl;

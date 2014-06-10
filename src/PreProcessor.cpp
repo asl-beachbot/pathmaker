@@ -1,4 +1,4 @@
-#include "PreProcessor.h"
+ #include "PreProcessor.h"
 #include "GlobalOptions.h"
 #include "CGAL_Headers.h"
 #include <CGAL/Bbox_2.h>
@@ -58,6 +58,7 @@ void PreProcessor::process(double scale, double trans_x, double trans_y) {
 	Transformation trafo_scale(CGAL::SCALING, scale);
 	Transformation trafo_trans(CGAL::TRANSLATION, Vector_2(-trans_x, -trans_y));
 	Transformation trafo = trafo_scale * trafo_trans;
+	// GlobalOptions::getInstance().tree_trafo = trafo;
 	cout << "Transforming: " << trafo << endl;
 	auto it = tree->element_tree.begin();
 	auto it_end = tree->element_tree.end();

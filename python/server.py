@@ -37,6 +37,15 @@ def update_fill_for_element():
     resp.headers['Access-Control-Allow-Origin'] = "*"
     return resp
 
+@app.route('/resegment_with_line', methods=['POST'])
+def resegment_with_line():
+    print("new segmentation")
+    j = request.get_data()
+    return_j = generator.resegment_with_line(j);
+    resp = make_response(return_j, 200)
+    resp.headers['Content-Type'] = "application/json"
+    resp.headers['Access-Control-Allow-Origin'] = "*"
+    return resp
 
 if __name__ == '__main__':
     app.run(debug=False)

@@ -40,6 +40,7 @@ public:
   bool fill_element;
   bool post_processed_result;
   bool manually_modified;
+  std::map<std::string, int> attrs;
   int line_width;
   vector<vector<float>> bezier_connector;
   RakeVector rake_states;
@@ -50,6 +51,7 @@ public:
     QColor pen_color(depth * 40, 100, 0);
     pen = QPen(pen_color, 0);
   }
+  virtual void set_graphx() = 0;
   #endif
 
   Point_2 entry_point;
@@ -73,7 +75,6 @@ public:
   ~ElementPtr() {cout << "delete called" << endl;} 
   virtual Point_2 getFromIndex(int i) = 0;
   virtual int getSize() = 0;
-  virtual void set_graphx() = 0;
   virtual ElementType get_type() = 0;
   virtual Polygon_2 * convexHull() = 0;
   virtual void print() = 0;

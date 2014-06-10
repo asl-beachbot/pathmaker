@@ -5,7 +5,7 @@
   base_url = "http://localhost:5000/";
 
   window.onload = function() {
-    var canvas, curr_zoom, directionCanvas, handle, hitOptions, isDragging, movePath, oldcenter, paintVector, paper, path, prevDragPosition, project, segment, tool, vector, vectorItem, vectorTool;
+    var canvas, hitOptions, paper;
     hitOptions = {
       segments: true,
       stroke: true,
@@ -18,145 +18,12 @@
     canvas = document.getElementById('canvas');
     paper.setup(canvas);
     window.mainCanvas = paper.projects[0];
-    populate_paper();
+    api.populatePaper();
     mainCanvas.activate();
-    path = new paper.Path();
-    path.strokeColor = 'black';
     paper.view.draw();
-    tool = new paper.Tool();
-    tool.minDistance = 10;
-    tool.activate();
-    movePath = false;
-    project = paper.project;
-    segment = path = oldcenter = handle = null;
-    tool.onMouseDown = function(event) {
-      var hitResult, location, prev_selected;
-      prev_selected = paper.project.selectedItems;
-      paper.project.deselectAll();
-      segment = path = null;
-      hitResult = project.hitTest(event.point, hitOptions);
-      if (!hitResult) {
-        return;
-      }
-      hitResult.item.selected = true;
-      console.log(event);
-      console.log(hitResult);
-      if (hitResult.item.is_segment) {
-        console.log("selected a segment!");
-        $("#select_fill").show();
-      }
-      if (hitResult) {
-        path = hitResult.item;
-        if (hitResult.type === 'segment') {
-          segment = hitResult.segment;
-        } else if (hitResult.type === 'stroke') {
-          location = hitResult.location;
-        } else if (hitResult.type === 'handle-in') {
-          handle = hitResult.segment.handleIn;
-        } else if (hitResult.type === 'handle-out') {
-          handle = hitResult.segment.handleOut;
-        }
-      }
-      movePath = hitResult.type === 'fill';
-      if (movePath) {
-        return project.activeLayer.addChild(hitResult.item);
-      }
-    };
-    tool.onMouseMove = function(event) {
-      if (event.item) {
-        return event.item.selected = true;
-      }
-    };
-    tool.onMouseDrag = function(event) {
-      if (segment) {
-        console.log(segment.point);
-        segment.point = segment.point.add(event.delta);
-        return console.log(segment.point);
-      } else if (path) {
-        return path.position = path.position.add(event.delta);
-      } else if (handle) {
-        return handle.position = handle.position.add(event.delta);
-      }
-    };
-    curr_zoom = 1;
-    isDragging = false;
-    prevDragPosition = [0, 0];
-    $('#canvas').on('mousedown', function(event) {
-      mainCanvas.activate();
-      tool.activate();
-      return $(window).on('mousemove', function() {
-        prevDragPosition = [event.pageX, event.pageY];
-        isDragging = true;
-        return $(window).off('mousemove');
-      });
-    });
-    $('#canvas').on('mouseup', function() {
-      var wasDragging;
-      mainCanvas.activate();
-      wasDragging = isDragging;
-      isDragging = false;
-      return $(window).off("mousemove");
-    });
-    $('#canvas').on('mousemove', function(event) {
-      var delta;
-      mainCanvas.activate();
-      if (isDragging && !paper.project.selectedItems.length) {
-        console.log('dragging');
-        delta = [event.pageX - prevDragPosition[0], event.pageY - prevDragPosition[1]];
-        prevDragPosition = [event.pageX, event.pageY];
-        return paper.view.center = paper.view.center.subtract(new paper.Point(delta).multiply(1 / curr_zoom));
-      }
-    });
-    $('#canvas').on('mousewheel', function(event) {
-      var a, beta, d, p, pc, zoom_factor;
-      mainCanvas.activate();
-      console.log(event.deltaX, event.deltaY, event.deltaFactor);
-      d = event.deltaY;
-      zoom_factor = 1;
-      if (d > 0) {
-        zoom_factor = Math.pow(0.8, d);
-      } else {
-        zoom_factor = Math.pow(1.2, Math.abs(d));
-      }
-      beta = 1 / zoom_factor;
-      curr_zoom = curr_zoom * zoom_factor;
-      p = new paper.Point(event.pageX, event.pageY);
-      console.log(event, p);
-      pc = p.subtract(paper.view.center);
-      a = p.subtract(pc.multiply(beta)).subtract(paper.view.center);
-      paper.view.zoom = curr_zoom;
-      return paper.view.center = paper.view.center.add(a);
-    });
-    paper.setup(document.getElementById("direction_canvas"));
-    directionCanvas = paper.projects[1];
-    vectorItem = null;
-    vector = null;
-    paintVector = function(pos) {
-      var arrowVector, end, items, vectorEnd, vectorStart;
-      directionCanvas.activate();
-      vectorStart = new paper.Point(75, 75);
-      vectorEnd = pos;
-      vector = vectorEnd.subtract(vectorStart);
-      if (vectorItem) {
-        vectorItem.remove();
-      }
-      items = [];
-      arrowVector = vector.normalize(10);
-      end = vectorStart + vector;
-      vectorItem = new paper.Group([new paper.Path([vectorStart, vectorEnd]), new paper.Path([vectorEnd.add(arrowVector.rotate(135)), vectorEnd, vectorEnd.add(arrowVector.rotate(-135))])]);
-      vectorItem.strokeColor = 'black';
-      return vectorItem.strokeWidth = 3;
-    };
-    paintVector(new paper.Point(0, 0));
-    directionCanvas.activate();
-    vectorTool = new paper.Tool();
-    vectorTool.activate();
-    vectorTool.onMouseDrag = function(event) {
-      return paintVector(event.point);
-    };
-    directionCanvas.view.draw();
+    segmentation_tool.activate();
     return $('#testbtn').click(function() {
-      var dx, dy, obj;
+      var dx, dy, segment, vector;
       dx = 1;
       dy = 0;
       mainCanvas.activate();
@@ -169,22 +36,7 @@
         dx = vector.x;
         dy = vector.y;
       }
-      obj = {
-        id: segment._id,
-        segment_index: segment.segment_index,
-        dx: dx,
-        dy: dy
-      };
-      return $.ajax({
-        url: base_url + "update_fill_for_element",
-        data: JSON.stringify(obj),
-        type: "POST",
-        success: function(data) {
-          mainCanvas.activate();
-          paper.project.activeLayer.removeChildren();
-          return loadJsonToPaper(data);
-        }
-      });
+      return changeFill(segment, vector);
     });
   };
 

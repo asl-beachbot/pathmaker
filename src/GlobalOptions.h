@@ -7,7 +7,7 @@
 #include <sstream>
 #include <vector>
 #include <string>
-
+// #include "CGAL_headers.h"
 using namespace std;
 
 #include <boost/program_options.hpp>
@@ -277,6 +277,7 @@ public:
   bool no_tree_ordering;
   std::vector<float> svg_stroke_sizes;
   double scale_back;
+  // Transformation global_trafo;
 private:
   
 // options
