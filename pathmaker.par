@@ -1,0 +1,5 @@
+PROBLEM_FILE = pathmaker_tsp.atsp
+OUTPUT_TOUR_FILE=o$
+TRACE_LEVEL=1
+TOUR_FILE=pathmaker_tour
+SUBGRADIENT=YES
