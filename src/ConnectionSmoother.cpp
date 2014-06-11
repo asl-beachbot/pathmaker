@@ -8,14 +8,18 @@ std::vector<BezierCP> ConnectionSmoother::getBezierCPS(
   Point_2 p2,
   Direction_2 d2) {
   std::vector<spiro_cp> spiro_cps;
-  spiro_cps.push_back({p1.x(), p1.y(), '{'});
+  spiro_cps.push_back({p1.x(), p1.y(), 'v'});
   auto pm1 = p1 + d1.vector() * 50;
-  spiro_cps.push_back({pm1.x(), pm1.y(), '['});
+  spiro_cps.push_back({pm1.x(), pm1.y(), ']'});
     
   auto pm2 = p2 - d2.vector() * 50;
-  spiro_cps.push_back({pm2.x(), pm2.y(), ']'});
+  spiro_cps.push_back({pm2.x(), pm2.y(), '['});
 
-  spiro_cps.push_back({p2.x(), p2.y(), '}'});
+  spiro_cps.push_back({p2.x(), p2.y(), 'v'});
+  cout << "Spiro CP: ";
+  for(auto cp : spiro_cps) {
+    cout << cp.x << " " << cp.y << " " << cp.ty << endl;
+  }
   std::vector<BezierCP> v;
   v = s.TaggedSpiroCPsToBezier(spiro_cps);
   for(auto b : v) {
@@ -35,7 +39,8 @@ void ConnectionSmoother::smooth() {
     }
   }
   ElementPtr * elem = (*it);
-  while(elem->to != nullptr) {
+  while(elem->to != nullptr && elem->to != *element_tree->begin()) {
+    cout << elem << " " << elem->to << endl;
     Point_2 p1 = elem->getFromIndex(elem->exit_point_index);
     Point_2 p1_t = elem->getFromIndex(elem->exit_point_index - 1);
     Point_2 p2 = elem->to->getFromIndex(elem->to->entry_point_index);

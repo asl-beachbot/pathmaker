@@ -185,12 +185,12 @@ int main(int argc, char** argv) {
   segment_connector->connect_segments();
   
   vet->fillPolys();
-  // SimpleConnector * sc = new SimpleConnector(vet);
-  // sc->connect();
-
-  TSPConnector * sc = new TSPConnector(vet);
-  sc->create_distance_matrix();
+  SimpleConnector * sc = new SimpleConnector(vet);
   sc->connect();
+
+  // TSPConnector * sc = new TSPConnector(vet);
+  // sc->create_distance_matrix();
+  // sc->connect();
 
   ConnectionSmoother cs(vet);
   cs.smooth();

@@ -67,9 +67,9 @@ public:
 	void spiro_seg_to_bpath(const double ks[4],
        double x0, double y0, double x1, double y1,
        bezctx *bc, int depth);
-  std::vector<BezierCP> spiro_to_bpath(const spiro_seg *s, int n, bezctx * bc);
+  void spiro_to_bpath(const spiro_seg *s, int n, bezctx * bc);
   double get_knot_th(const spiro_seg *s, int i);
-  std::vector< BezierCP > TaggedSpiroCPsToBezier(std::vector<spiro_cp> spiros_v)
+  std::vector<BezierCP> TaggedSpiroCPsToBezier(std::vector<spiro_cp> spiros_v)
   {
       spiro_seg *s;
       int n;
@@ -88,6 +88,7 @@ public:
       SpiroBezierCtx * bc = new SpiroBezierCtx();
 
       spiro_to_bpath(s, n, bc);
+      return bc->cps;
       // free_spiro(s);
   };
 };

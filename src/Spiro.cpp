@@ -877,7 +877,7 @@ Spiro::run_spiro(const spiro_cp *src, int n)
 //		 free(s);
 // }
 
-std::vector<BezierCP> 
+void
 Spiro::spiro_to_bpath(const spiro_seg *s, int n, bezctx * bc)
 {
 	int i;
