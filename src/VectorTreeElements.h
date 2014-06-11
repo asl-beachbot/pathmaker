@@ -4,6 +4,7 @@
 #include <json/json.h>
 #include <boost/format.hpp>
 #include <stdlib.h>
+#include "Spiro.h"
 
 using boost::format; using boost::str;
 
@@ -33,7 +34,6 @@ enum FillMethods {
   SPIRAL_FILL = 2
 };
 
-
 class ElementPtr {
 public:
   bool visited;
@@ -45,6 +45,15 @@ public:
   vector<vector<float>> bezier_connector;
   RakeVector rake_states;
 
+  Point_2 entry_point;
+  Point_2 exit_point;
+  int entry_point_index;
+  int exit_point_index;
+
+  ElementPtr * to;
+  ElementPtr * from;
+  std::vector<BezierCP> smooth_connection;
+
   #ifdef WITH_GUI
   QPen pen;
   void setColorFromDepth(int depth) {
@@ -54,13 +63,6 @@ public:
   virtual void set_graphx() = 0;
   #endif
 
-  Point_2 entry_point;
-  Point_2 exit_point;
-  int entry_point_index;
-  int exit_point_index;
-
-  ElementPtr * to;
-  ElementPtr * from;
   unsigned int id;
   ElementPtr() :  
     visited(false), 

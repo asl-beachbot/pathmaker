@@ -17,7 +17,7 @@
 #include "PreProcessor.h"
 #include "GlobalOptions.h"
 #include "PythonHelpers.h"
-
+#include "ConnectionSmoother.h"
 
 #ifdef STANDALONE
 #endif
@@ -190,7 +190,11 @@ int main(int argc, char** argv) {
 
   TSPConnector * sc = new TSPConnector(vet);
   sc->create_distance_matrix();
-  // sc->connect();
+  sc->connect();
+
+  ConnectionSmoother cs(vet);
+  cs.smooth();
+
   // vet->clearFill();
   // vet->  drawConnections();
 

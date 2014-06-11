@@ -65,15 +65,15 @@ private:
   spiro_seg * run_spiro(const spiro_cp *src, int n);
 public:
 	void spiro_seg_to_bpath(const double ks[4],
-		  double x0, double y0, double x1, double y1,
-		  bezctx *bc, int depth);
-  std::vector<BezierCP> spiro_to_bpath(const spiro_seg *s, int n);
-
+       double x0, double y0, double x1, double y1,
+       bezctx *bc, int depth);
+  std::vector<BezierCP> spiro_to_bpath(const spiro_seg *s, int n, bezctx * bc);
+  double get_knot_th(const spiro_seg *s, int i);
   std::vector< BezierCP > TaggedSpiroCPsToBezier(std::vector<spiro_cp> spiros_v)
   {
       spiro_seg *s;
       int n;
-      spiro_cp * spiros[] = new spiro_cp[spiros_v.size()];
+      spiro_cp * spiros = new spiro_cp[spiros_v.size()];
       for(int i = 0; i < spiros_v.size(); ++i) {
         spiros[i] = spiros_v[i];
       }
@@ -81,7 +81,7 @@ public:
       if ( spiros[n].ty == '}' ) ++n;
 
       if ( n<1 )
-        return std::vector<BezierCP>;
+        return std::vector<BezierCP>();
     
       s = run_spiro(spiros,n);
 

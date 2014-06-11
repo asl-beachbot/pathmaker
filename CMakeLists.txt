@@ -113,6 +113,7 @@ add_executable(svg_parser
     src/SimpleConnector.cpp
     src/View.cpp
     src/Spiro.cpp
+    src/ConnectionSmoother.cpp
 )
 
 if(NOGUI)
@@ -132,6 +133,7 @@ add_library(python/beachbot_pathgen SHARED
     src/PreProcessor.cpp
     src/SimpleConnector.cpp
     src/Spiro.cpp
+    src/ConnectionSmoother.cpp
 )
 
 if(32BIT)

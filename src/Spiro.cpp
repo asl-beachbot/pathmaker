@@ -806,12 +806,12 @@ Spiro::spiro_seg_to_bpath(const double ks[4],
 			 double x0, double y0, double x1, double y1,
 			 bezctx *bc, int depth)
 {
-		double bend = fabs(ks[0]) + fabs(.5 * ks[1]) + fabs(.125 * ks[2]) +
+	double bend = fabs(ks[0]) + fabs(.5 * ks[1]) + fabs(.125 * ks[2]) +
 	fabs((1./48) * ks[3]);
 
-		if (!bend > 1e-8) {
-	bc->lineto(x1, y1);
-		} else {
+	if (!bend > 1e-8) {
+		bc->lineto(x1, y1);
+	} else {
 	double seg_ch = hypot(x1 - x0, y1 - y0);
 	double seg_th = atan2(y1 - y0, x1 - x0);
 	double xy[2];
@@ -864,11 +864,11 @@ Spiro::spiro_seg_to_bpath(const double ks[4],
 spiro_seg *
 Spiro::run_spiro(const spiro_cp *src, int n)
 {
-		int nseg = src[0].ty == '{' ? n - 1 : n;
-		spiro_seg *s = setup_path(src, n);
-		if (nseg > 1)
+	int nseg = src[0].ty == '{' ? n - 1 : n;
+	spiro_seg *s = setup_path(src, n);
+	if (nseg > 1)
 	solve_spiro(s, nseg);
-		return s;
+	return s;
 }
 
 // void
@@ -878,7 +878,7 @@ Spiro::run_spiro(const spiro_cp *src, int n)
 // }
 
 std::vector<BezierCP> 
-Spiro::spiro_to_bpath(const spiro_seg *s, int n)
+Spiro::spiro_to_bpath(const spiro_seg *s, int n, bezctx * bc)
 {
 	int i;
 	int nsegs = s[n - 1].ty == '}' ? n - 1 : n;
@@ -899,13 +899,13 @@ Spiro::spiro_to_bpath(const spiro_seg *s, int n)
 double
 Spiro::get_knot_th(const spiro_seg *s, int i)
 {
-		double ends[2][4];
+	double ends[2][4];
 
-		if (i == 0) {
-	compute_ends(s[i].ks, ends, s[i].seg_ch);
-	return s[i].seg_th - ends[0][0];
-		} else {
-	compute_ends(s[i - 1].ks, ends, s[i - 1].seg_ch);
-	return s[i - 1].seg_th + ends[1][0];
-		}
+	if (i == 0) {
+		compute_ends(s[i].ks, ends, s[i].seg_ch);
+		return s[i].seg_th - ends[0][0];
+	} else {
+		compute_ends(s[i - 1].ks, ends, s[i - 1].seg_ch);
+		return s[i - 1].seg_th + ends[1][0];
+	}
 }
