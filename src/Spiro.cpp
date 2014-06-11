@@ -37,10 +37,6 @@ struct spiro_seg_s {
 		double l;
 };
 
-typedef struct {
-		double a[11]; /* band-diagonal matrix */
-		double al[5]; /* lower part of band-diagonal decomposition */
-} bandmat;
 
 int n = 4;
 
@@ -49,7 +45,7 @@ int n = 4;
 #endif
 
 /* Integrate polynomial spiral curve over range -.5 .. .5. */
-static void Spiro::integrate_spiro(const double ks[4], double xy[2])
+void Spiro::integrate_spiro(const double ks[4], double xy[2])
 {
 #if 0
 		int n = 1024;
@@ -412,7 +408,7 @@ static void Spiro::integrate_spiro(const double ks[4], double xy[2])
 #endif
 }
 
-static double
+double
 Spiro::compute_ends(const double ks[4], double ends[2][4], double seg_ch)
 {
 		double xy[2];
@@ -472,14 +468,14 @@ Spiro::compute_pderivs(const spiro_seg *s, double ends[2][4], double derivs[4][2
 		}
 }
 
-static double
+double
 Spiro::mod_2pi(double th)
 {
 		double u = th / (2 * M_PI);
 		return 2 * M_PI * (u - floor(u + 0.5));
 }
 
-static spiro_seg *
+spiro_seg *
 Spiro::setup_path(const spiro_cp *src, int n)
 {
 		int n_seg = src[0].ty == '{' ? n - 1 : n;
@@ -518,7 +514,7 @@ Spiro::setup_path(const spiro_cp *src, int n)
 		return r;
 }
 
-static void
+void
 Spiro::bandec11(bandmat *m, int *perm, int n)
 {
 		int i, j, k;
@@ -566,7 +562,7 @@ Spiro::bandec11(bandmat *m, int *perm, int n)
 		}
 }
 
-static void
+void
 Spiro::banbks11(const bandmat *m, const int *perm, double *v, int n)
 {
 		int i, k, l;
@@ -620,7 +616,7 @@ int Spiro::count_vec(const spiro_seg *s, int nseg)
 		return n;
 }
 
-static void
+void
 Spiro::add_mat_line(bandmat *m, double *v,
 			 double derivs[4], double x, double y, int j, int jj, int jinc,
 			 int nmat)
@@ -643,7 +639,7 @@ Spiro::add_mat_line(bandmat *m, double *v,
 		}
 }
 
-static double
+double
 Spiro::spiro_iter(spiro_seg *s, bandmat *m, int *perm, double *v, int n)
 {
 		int cyclic = s[0].ty != '{' && s[0].ty != 'v';
@@ -805,7 +801,7 @@ Spiro::solve_spiro(spiro_seg *s, int nseg)
 		return 0;
 }
 
-static void
+void
 Spiro::spiro_seg_to_bpath(const double ks[4],
 			 double x0, double y0, double x1, double y1,
 			 bezctx *bc, int depth)

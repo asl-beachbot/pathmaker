@@ -33,8 +33,6 @@
         data: JSON.stringify(obj),
         type: "POST",
         success: function(data) {
-          mainCanvas.activate();
-          paper.project.activeLayer.removeChildren();
           return api.loadJsonToPaper(data);
         }
       });
@@ -44,6 +42,7 @@
   window.loadJsonToPaper = function(data) {
     var c, el, i, path, seg, seg_path, _i, _j, _len, _len1, _ref, _ref1, _results;
     mainCanvas.activate();
+    paper.project.activeLayer.removeChildren();
     window.filled_segments = [];
     _ref = data.elems;
     _results = [];

@@ -31,13 +31,12 @@ window.api =
 			data: JSON.stringify(obj),
 			type: "POST",
 			success: (data) ->
-				mainCanvas.activate()
-				paper.project.activeLayer.removeChildren()
 				api.loadJsonToPaper(data)
 
 
 window.loadJsonToPaper = (data) ->
 	mainCanvas.activate()
+	paper.project.activeLayer.removeChildren()
 	window.filled_segments = [];
 	for el in data.elems
 		window.currentLoadedData = data
