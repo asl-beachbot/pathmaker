@@ -379,6 +379,18 @@ public:
     stream << json;
     return stream.str();
   }
+
+  void enforceConnection(int id1, int node1, int id2, int node2) {
+    // Enforce connection between two elements
+    // and on the two nodes described by node 1 and 2
+
+    auto el1 = getByID(id1);
+    auto el2 = getByID(id2);
+
+    el1->addEnforcedConnection(el1, node1);
+    el2->addEnforcedConnection(el2, node2);
+  }
+
   void fillPolys() {
     Tree_ElementPtr::iterator it = element_tree.begin();
     Tree_ElementPtr::iterator it_end = element_tree.end();

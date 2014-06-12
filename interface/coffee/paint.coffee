@@ -147,7 +147,7 @@ window.onload = ->
 	$('#fill').click () ->
 		fill_select_tool.activate()
 	$('#connections').click () ->
-		modify_connections.activate()
+		modify_connections_tool.activate()
 	$('#shape_transitions').click () ->
 		console.log "activating the shape transition tool"
 		shape_transition_curve_tool.activate()

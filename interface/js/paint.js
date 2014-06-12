@@ -70,7 +70,7 @@
       return fill_select_tool.activate();
     });
     $('#connections').click(function() {
-      return modify_connections.activate();
+      return modify_connections_tool.activate();
     });
     return $('#shape_transitions').click(function() {
       console.log("activating the shape transition tool");

@@ -34,6 +34,7 @@ enum FillMethods {
   SPIRAL_FILL = 2
 };
 
+
 class ElementPtr {
 public:
   bool visited;
@@ -49,6 +50,13 @@ public:
   Point_2 exit_point;
   int entry_point_index;
   int exit_point_index;
+
+  struct EnforcedConnection {
+    ElementPtr * pair_partner;
+    int index;
+  };
+
+  std::vector<EnforcedConnection> enforced_connections;
 
   ElementPtr * to;
   ElementPtr * from;
@@ -110,6 +118,24 @@ public:
       val["connection"] = bezier;
     }
   }
+
+  void addEnforcedConnection(ElementPtr * pair, int node_id) {
+    if(this->get_type() == EL_POLYLINE) {
+      for(auto it = enforced_connections.begin(); it != enforced_connections.end(); ++it) {
+        if((*it).index == node_id)
+          it = enforced_connections.erase(it);
+      }
+      enforced_connections.push_back({pair, node_id});
+    } 
+    else {
+      for(auto it = enforced_connections.begin(); it != enforced_connections.end(); ++it) {
+        if((*it).index != node_id)
+          it = enforced_connections.erase(it);
+      }
+      enforced_connections.push_back({pair, node_id});
+    }
+  };
+
   virtual Json::Value toJSON() = 0;
 };
 

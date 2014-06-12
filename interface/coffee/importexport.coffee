@@ -15,7 +15,7 @@ window.api =
 			loadJsonToPaper(data)
 
 	populatePaper: () ->
-		# loadJsonToPaper(JSON.parse(window.PolyJSON))
+		loadJsonToPaper(JSON.parse(window.PolyJSON))
 		$.get "http://localhost:5000/load_svg", (data) ->
 			loadJsonToPaper(data);
 
@@ -39,6 +39,7 @@ window.loadJsonToPaper = (data) ->
 	paper.project.activeLayer.removeChildren()
 	window.filled_segments = []
 	window.all_connections = []
+	window.painted_elements = []
 	for el in data.elems
 		window.currentLoadedData = data
 		path = new paper.Path()
@@ -49,6 +50,7 @@ window.loadJsonToPaper = (data) ->
 			path.add(c)
 		if el.type == "POLYGON" or el.type == "FILLED_POLYGON"
 			path.closed = true;
+		painted_elements.push(path)
 		# path.fillColor = new paper.Color(1,0,0)
 		i = 0
 		if el.type_int == 1 and el.segments.length

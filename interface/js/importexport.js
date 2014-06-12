@@ -16,6 +16,7 @@
       });
     },
     populatePaper: function() {
+      loadJsonToPaper(JSON.parse(window.PolyJSON));
       return $.get("http://localhost:5000/load_svg", function(data) {
         return loadJsonToPaper(data);
       });
@@ -45,6 +46,7 @@
     paper.project.activeLayer.removeChildren();
     window.filled_segments = [];
     window.all_connections = [];
+    window.painted_elements = [];
     _ref = data.elems;
     _results = [];
     for (_i = 0, _len = _ref.length; _i < _len; _i++) {
@@ -62,6 +64,7 @@
       if (el.type === "POLYGON" || el.type === "FILLED_POLYGON") {
         path.closed = true;
       }
+      painted_elements.push(path);
       i = 0;
       if (el.type_int === 1 && el.segments.length) {
         _ref2 = el.segments;
