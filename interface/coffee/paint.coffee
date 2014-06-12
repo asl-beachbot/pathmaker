@@ -72,12 +72,8 @@ window.onload = ->
 
 	$('#canvas').on 'mousewheel', (event) ->
 		mainCanvas.activate()
-		console.log(event.deltaX, event.deltaY, event.deltaFactor)
 		if event.altKey
-			console.log "Shift pressed!"
-			console.log "New Center: ", paper.view.center.add new paper.Point(event.deltaX, event.deltaY)
 			paper.view.center = paper.view.center.add new paper.Point(event.deltaX * 10, event.deltaY * 10)
-
 		else
 			d = event.deltaY
 			zoom_factor = 1
@@ -90,7 +86,6 @@ window.onload = ->
 			# if not left top, center with parent in mind
 			# var parentOffset = $(this).parent().offset(); 
 			p = new paper.Point(event.pageX, event.pageY);
-			console.log event, p
 			pc = p.subtract(paper.view.center)
 			a = p.subtract(pc.multiply(beta)).subtract(paper.view.center)
 			paper.view.zoom = curr_zoom
@@ -142,5 +137,21 @@ window.onload = ->
 			dy = vector.y
 		changeFill(segment, vector)
 	)
+	# <button id="resegment">Segmentation Tool</button>
+	# <button id="fill">Select Fill Tool</button>
+	# <button id="connections">Change Connections</button>
+	# <button id="shape_transitions">Modify Transitions</button>
+
+	$('#resegment').click () ->
+		segmentation_tool.activate()
+	$('#fill').click () ->
+		fill_select_tool.activate()
+	$('#connections').click () ->
+		modify_connections.activate()
+	$('#shape_transitions').click () ->
+		console.log "activating the shape transition tool"
+		shape_transition_curve_tool.activate()
+
+
 	# code for the direction canvas
 

@@ -1,6 +1,7 @@
 // ConnectionSmoother.cpp
 
 #include "ConnectionSmoother.h"
+#include "GlobalOptions.h"
 
 std::vector<BezierCP> ConnectionSmoother::getBezierCPS(
   Point_2 p1,
@@ -8,7 +9,7 @@ std::vector<BezierCP> ConnectionSmoother::getBezierCPS(
   Point_2 p2,
   Vector_2 d2) {
   std::vector<spiro_cp> spiro_cps;
-
+  double rr = GlobalOptions::getInstance().rounding_radius;
   cout << "Deriving Control Points for Connection from: " << endl
     << p1 << " D1: " << d1 << endl
     << p2 << " D2: " << d2 << endl;
@@ -22,14 +23,14 @@ std::vector<BezierCP> ConnectionSmoother::getBezierCPS(
    //  spiro_cps.push_back({p.x, p.y, p.ty});
    // }
   spiro_cps.push_back({p1.x(), p1.y(), '{'});
-  auto pm1 = p1 + d1 * 0.2;
+  auto pm1 = p1 + d1 * rr * 0.01;
   spiro_cps.push_back({pm1.x(), pm1.y(), ']'});
-  auto pm11 = p1 + d1 * 5;
+  auto pm11 = p1 + d1 * rr;
   spiro_cps.push_back({pm11.x(), pm11.y(), 'c'});
 
-  auto pm22 = p2 + d2 * 5;
+  auto pm22 = p2 + d2 * rr;
   spiro_cps.push_back({pm22.x(), pm22.y(), 'c'});
-  auto pm2 = p2 + d2 * 0.2;
+  auto pm2 = p2 + d2 * rr * 0.01;
   spiro_cps.push_back({pm2.x(), pm2.y(), '['});
 
   spiro_cps.push_back({p2.x(), p2.y(), '}'});

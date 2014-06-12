@@ -28,10 +28,7 @@
     $('#canvas').on('mousewheel', function(event) {
       var a, beta, d, p, pc, zoom_factor;
       mainCanvas.activate();
-      console.log(event.deltaX, event.deltaY, event.deltaFactor);
       if (event.altKey) {
-        console.log("Shift pressed!");
-        console.log("New Center: ", paper.view.center.add(new paper.Point(event.deltaX, event.deltaY)));
         return paper.view.center = paper.view.center.add(new paper.Point(event.deltaX * 10, event.deltaY * 10));
       } else {
         d = event.deltaY;
@@ -44,14 +41,13 @@
         beta = 1 / zoom_factor;
         curr_zoom = curr_zoom * zoom_factor;
         p = new paper.Point(event.pageX, event.pageY);
-        console.log(event, p);
         pc = p.subtract(paper.view.center);
         a = p.subtract(pc.multiply(beta)).subtract(paper.view.center);
         paper.view.zoom = curr_zoom;
         return paper.view.center = paper.view.center.add(a);
       }
     });
-    return $('#testbtn').click(function() {
+    $('#testbtn').click(function() {
       var dx, dy, segment, vector;
       dx = 1;
       dy = 0;
@@ -66,6 +62,19 @@
         dy = vector.y;
       }
       return changeFill(segment, vector);
+    });
+    $('#resegment').click(function() {
+      return segmentation_tool.activate();
+    });
+    $('#fill').click(function() {
+      return fill_select_tool.activate();
+    });
+    $('#connections').click(function() {
+      return modify_connections.activate();
+    });
+    return $('#shape_transitions').click(function() {
+      console.log("activating the shape transition tool");
+      return shape_transition_curve_tool.activate();
     });
   };
 

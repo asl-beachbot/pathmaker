@@ -37,7 +37,8 @@ window.api =
 window.loadJsonToPaper = (data) ->
 	mainCanvas.activate()
 	paper.project.activeLayer.removeChildren()
-	window.filled_segments = [];
+	window.filled_segments = []
+	window.all_connections = []
 	for el in data.elems
 		window.currentLoadedData = data
 		path = new paper.Path()
@@ -46,9 +47,6 @@ window.loadJsonToPaper = (data) ->
 		path._id = el.id
 		for c in el.coords
 			path.add(c)
-		if el.id == 6019205
-			path.remove()
-			path.simplify()
 		if el.type == "POLYGON" or el.type == "FILLED_POLYGON"
 			path.closed = true;
 		# path.fillColor = new paper.Color(1,0,0)
@@ -68,6 +66,7 @@ window.loadJsonToPaper = (data) ->
 					seg_path.add(c)
 		if el.connection
 			connection_path = new paper.Path()
+			all_connections.push(connection_path)
 			connection_path.strokeColor = "blue"
 			connection_path.strokeWidth = 3
 			first = true
@@ -86,3 +85,4 @@ window.loadJsonToPaper = (data) ->
 						new paper.Point([c[1][0], c[1][1]])
 						new paper.Point([c[2][0], c[2][1]])
 					)
+			connection_path.simplify()
