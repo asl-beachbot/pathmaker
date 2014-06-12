@@ -1,14 +1,14 @@
 
-p1 = [100, 100];
+p1 = [300, 100];
 
-v1 = [1, 1];
+v1 = [0.99, 0.01];
 
-p2 = [200, 100];
-v2 = [1, 0];
+p2 = [100, 100];
+v2 = [-0.99, 0.1];
 
 v1n = v1 / norm(v1);
 v2n = v2 / norm(v2);
-r = 100;
+r = 200;
 
 A = p1; %# center of the first circle
 B = p2; %# center of the second circle
@@ -27,8 +27,13 @@ pu_AB = [u_AB(2), -u_AB(1)]; %# perpendicular vector to unit vector
 intersect_1 = A + u_AB * (b*cosAlpha) + pu_AB * (b*sqrt(1-cosAlpha^2));
 intersect_2 = A + u_AB * (b*cosAlpha) - pu_AB * (b*sqrt(1-cosAlpha^2));
 
-p11 = p1 + v1n;
-p22 = p2 + v2n;
+
+
+
+
+
+p11 = p1 + v1n * 10;
+p22 = p2 - v2n * 10;
 
 % ui = intersect_1;
 str = strcat(
@@ -37,8 +42,25 @@ str = strcat(
 	sprintf('\t(] %f %f)\n', p11(1), p11(2))
 );
 
-u1 = p1 + v1n * r;
-u2 = p2 - v2n * r;
+% if angle between the two lines > Pi/2 then it should take the normals to the inside
+
+v1n
+v2n
+
+ang = acos(dot(v1n, v2n))
+r90 = [cos(pi/2), -sin(pi/2); sin(pi/2), cos(pi/2)];
+rm90 = [cos(-pi/2), -sin(-pi/2); sin(-pi/2), cos(-pi/2)];
+if ang > pi / 2
+	u1 = p1 + v1n * 10 + (r90 * v1n' * r)';
+
+	u2 = p2 + v2n * 10 + (rm90 * v2n' * r)';
+		u2 = p2 + v2n * r;
+
+else
+	u1 = p1 + v1n * r;
+	u2 = p2 + v2n * r;
+end
+
 % if(isreal(u1))
 	str = strcat(
 		str,
