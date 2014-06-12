@@ -6,12 +6,10 @@ tool.minDistance = 0
 startPoint = endPoint = cutPath = null
 
 tool.onMouseDown = (e) ->
-	console.log e
 	startPoint = e.point
-tool.onMouseMove = (e) ->
-	console.log e
+# tool.onMouseMove = (e) ->
+
 tool.onMouseDrag = (e) ->
-	console.log e
 	endPoint = e.point
 	if cutPath
 		cutPath.remove()
@@ -19,6 +17,5 @@ tool.onMouseDrag = (e) ->
 	cutPath.strokeColor = 'red'
 	cutPath.strokeWidth = 3
 tool.onKeyDown = (e) ->
-	console.log e
 	if e.key == 'enter' and startPoint and endPoint
 		api.resegmentWithLine(startPoint, endPoint)

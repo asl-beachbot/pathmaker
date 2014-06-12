@@ -11,16 +11,10 @@
   startPoint = endPoint = cutPath = null;
 
   tool.onMouseDown = function(e) {
-    console.log(e);
     return startPoint = e.point;
   };
 
-  tool.onMouseMove = function(e) {
-    return console.log(e);
-  };
-
   tool.onMouseDrag = function(e) {
-    console.log(e);
     endPoint = e.point;
     if (cutPath) {
       cutPath.remove();
@@ -31,7 +25,6 @@
   };
 
   tool.onKeyDown = function(e) {
-    console.log(e);
     if (e.key === 'enter' && startPoint && endPoint) {
       return api.resegmentWithLine(startPoint, endPoint);
     }

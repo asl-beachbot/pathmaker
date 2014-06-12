@@ -45,11 +45,11 @@ window.onload = ->
 	# fill_select_tool.activate()
 
 	# canvas move and zoom functions
-	# isDragging = false
-	# prevDragPosition = [0,0]
+	curr_zoom = 1
+	isDragging = false
+	prevDragPosition = [0,0]
 	# $('#canvas').on 'mousedown', (event) ->
-
-	# 	if(event.which != 2) {return;}
+	# 	# if(event.which != 2) {return;}
 	# 	mainCanvas.activate()
 	# 	$(window).on 'mousemove', ->
 	# 		prevDragPosition = [event.pageX, event.pageY]
@@ -70,25 +70,31 @@ window.onload = ->
 	# 		prevDragPosition = [event.pageX, event.pageY]
 	# 		paper.view.center = paper.view.center.subtract(new paper.Point(delta).multiply(1 / curr_zoom))
 
-	# $('#canvas').on 'mousewheel', (event) ->
-	# 	mainCanvas.activate()
-	# 	console.log(event.deltaX, event.deltaY, event.deltaFactor)
-	# 	d = event.deltaY
-	# 	zoom_factor = 1
-	# 	if d > 0
-	# 		zoom_factor = Math.pow(0.8, d)
-	# 	else
-	# 		zoom_factor = Math.pow(1.2, Math.abs(d))
-	# 	beta = 1 / zoom_factor
-	# 	curr_zoom = curr_zoom * zoom_factor
-	# 	# if not left top, center with parent in mind
-	# 	# var parentOffset = $(this).parent().offset(); 
-	# 	p = new paper.Point(event.pageX, event.pageY);
-	# 	console.log event, p
-	# 	pc = p.subtract(paper.view.center)
-	# 	a = p.subtract(pc.multiply(beta)).subtract(paper.view.center)
-	# 	paper.view.zoom = curr_zoom
-	# 	paper.view.center = paper.view.center.add a
+	$('#canvas').on 'mousewheel', (event) ->
+		mainCanvas.activate()
+		console.log(event.deltaX, event.deltaY, event.deltaFactor)
+		if event.altKey
+			console.log "Shift pressed!"
+			console.log "New Center: ", paper.view.center.add new paper.Point(event.deltaX, event.deltaY)
+			paper.view.center = paper.view.center.add new paper.Point(event.deltaX * 10, event.deltaY * 10)
+
+		else
+			d = event.deltaY
+			zoom_factor = 1
+			if d > 0
+				zoom_factor = Math.pow(0.8, d)
+			else
+				zoom_factor = Math.pow(1.2, Math.abs(d))
+			beta = 1 / zoom_factor
+			curr_zoom = curr_zoom * zoom_factor
+			# if not left top, center with parent in mind
+			# var parentOffset = $(this).parent().offset(); 
+			p = new paper.Point(event.pageX, event.pageY);
+			console.log event, p
+			pc = p.subtract(paper.view.center)
+			a = p.subtract(pc.multiply(beta)).subtract(paper.view.center)
+			paper.view.zoom = curr_zoom
+			paper.view.center = paper.view.center.add a
 
 	# paper.setup(document.getElementById("direction_canvas"))
 	# directionCanvas = paper.projects[1];

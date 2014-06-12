@@ -1,14 +1,14 @@
 
 p1 = [100, 100];
 
-v1 = [0.1, 1];
+v1 = [1, 1];
 
-p2 = [100, 100];
-v2 = [0.1, -1];
+p2 = [200, 100];
+v2 = [1, 0];
 
 v1n = v1 / norm(v1);
 v2n = v2 / norm(v2);
-r = 20;
+r = 100;
 
 A = p1; %# center of the first circle
 B = p2; %# center of the second circle

@@ -40,7 +40,7 @@
   };
 
   window.loadJsonToPaper = function(data) {
-    var c, el, i, path, seg, seg_path, _i, _j, _len, _len1, _ref, _ref1, _results;
+    var c, connection_path, el, first, i, path, seg, seg_path, _i, _j, _k, _l, _len, _len1, _len2, _len3, _ref, _ref1, _ref2, _ref3, _results;
     mainCanvas.activate();
     paper.project.activeLayer.removeChildren();
     window.filled_segments = [];
@@ -67,31 +67,47 @@
       }
       i = 0;
       if (el.type_int === 1 && el.segments.length) {
+        _ref2 = el.segments;
+        for (_k = 0, _len2 = _ref2.length; _k < _len2; _k++) {
+          seg = _ref2[_k];
+          seg_path = new paper.Path();
+          seg_path.strokeColor = "green";
+          seg_path.is_segment = true;
+          seg_path.fillColor = 'white';
+          seg_path.closed = true;
+          seg_path._id = el.id;
+          seg_path.segment_index = i;
+          window.filled_segments.push(seg_path);
+          i += 1;
+          _ref3 = seg.coords;
+          for (_l = 0, _len3 = _ref3.length; _l < _len3; _l++) {
+            c = _ref3[_l];
+            seg_path.add(c);
+          }
+        }
+      }
+      if (el.connection) {
+        connection_path = new paper.Path();
+        connection_path.strokeColor = "blue";
+        connection_path.strokeWidth = 3;
+        first = true;
+        console.log(el.connection);
         _results.push((function() {
-          var _k, _len2, _ref2, _results1;
-          _ref2 = el.segments;
+          var _len4, _m, _ref4, _results1;
+          _ref4 = el.connection;
           _results1 = [];
-          for (_k = 0, _len2 = _ref2.length; _k < _len2; _k++) {
-            seg = _ref2[_k];
-            seg_path = new paper.Path();
-            seg_path.strokeColor = "green";
-            seg_path.is_segment = true;
-            seg_path.fillColor = 'white';
-            seg_path.closed = true;
-            seg_path._id = el.id;
-            seg_path.segment_index = i;
-            window.filled_segments.push(seg_path);
-            i += 1;
-            _results1.push((function() {
-              var _l, _len3, _ref3, _results2;
-              _ref3 = seg.coords;
-              _results2 = [];
-              for (_l = 0, _len3 = _ref3.length; _l < _len3; _l++) {
-                c = _ref3[_l];
-                _results2.push(seg_path.add(c));
-              }
-              return _results2;
-            })());
+          for (_m = 0, _len4 = _ref4.length; _m < _len4; _m++) {
+            c = _ref4[_m];
+            if (Math.abs(c[1][0]) < 0.00001) {
+              continue;
+            }
+            if (first) {
+              connection_path.moveTo(new paper.Point([c[1][0], c[1][1]]));
+              _results1.push(first = false);
+            } else {
+              console.log("CurveTo", c[0][0], c[0][1], c[1][0], c[1][1], c[2][0], c[2][1]);
+              _results1.push(connection_path.cubicCurveTo(new paper.Point([c[0][0], c[0][1]]), new paper.Point([c[1][0], c[1][1]]), new paper.Point([c[2][0], c[2][1]])));
+            }
           }
           return _results1;
         })());

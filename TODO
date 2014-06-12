@@ -1,0 +1,16 @@
+-- work priorities:
+
+- Get Spiral to run very good and predictable!
+-- Works good, but needs to look for nearest point every time, otherwise artifacts! 
+
+- Implement user interface for custom segmentation
+- Get TSP to work
+	-- LOOKING GOOD
+- Implement either something based on libspiro (ask Raph Levien again?) or
+  use bezier and numerical analysis for the connection
+- Segmentation with Holes?!
+- Add non segmenting back and forth fill like custom segmentation (with is-inside detection) and TSP
+
+--- less priority ideas ---
+
+- something that drives on straight skeleton edges (in the tight strips)

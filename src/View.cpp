@@ -10,7 +10,7 @@
 
 void View::addText(char * txt, int x, int y) {
   // text = scene.addText("test", QFont("Arial", 10));
-  printf("text: %s, %d, %d", txt, x, y);
+  // printf("text: %s, %d, %d", txt, x, y);
   QGraphicsTextItem * text = scene.addText(QString(txt), QFont("Arial", 10));
   text->setPos(x, y);
   text->show();

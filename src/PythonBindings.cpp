@@ -8,6 +8,8 @@
 #include "GlobalOptions.h"
 #include "PreProcessor.h"
 #include "SegmentationPreProcessor.h"
+#include "ConnectionSmoother.h"
+#include "TSPConnector.h"
 
 using namespace boost::python;
 
@@ -52,6 +54,14 @@ public:
         spp->process();
       }
       vet->fillPolys();
+
+      TSPConnector * sc = new TSPConnector(vet);
+      sc->create_distance_matrix();
+  
+      ConnectionSmoother cs(vet);
+      cs.smooth();
+      delete sc;
+
       // sc = new SimpleConnector(vet);
       // sc->connect();
       return vet->toJSON();
@@ -82,6 +92,8 @@ public:
         // seg->direction = Direction_2(arguments["direction"][0].asInt())
         // int fill_method; // fill type: 1 = Skeleton, 2 = wiggle
         // Direction_2 direction; // only for wiggle fill
+
+
         vet->print_tree();
         vet->clearFill();
         vet->print_tree();

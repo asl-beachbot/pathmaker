@@ -185,15 +185,16 @@ int main(int argc, char** argv) {
   segment_connector->connect_segments();
   
   vet->fillPolys();
-  SimpleConnector * sc = new SimpleConnector(vet);
-  sc->connect();
-
-  // TSPConnector * sc = new TSPConnector(vet);
-  // sc->create_distance_matrix();
+  // SimpleConnector * sc = new SimpleConnector(vet);
   // sc->connect();
 
-  ConnectionSmoother cs(vet);
-  cs.smooth();
+  TSPConnector * sc = new TSPConnector(vet);
+  sc->create_distance_matrix();
+
+  if(GlobalOptions::getInstance().rounding_radius > 0) {
+    ConnectionSmoother cs(vet);
+    cs.smooth();
+  }
 
   // vet->clearFill();
   // vet->  drawConnections();
@@ -201,7 +202,7 @@ int main(int argc, char** argv) {
 
   // PostProcessor *  psc = new PostProcessor(vet);
   // psc->process();
-
+  cout << vet->toJSON() << endl;
   // std::string json = "var PolyJSON = '" + vet->toJSON();
   // json += "'";
   // std::ofstream of("PolyJSON.js");

@@ -85,6 +85,7 @@ public:
         cout << poly_element << endl;
         // result.push_back(poly_element); TODO handle this stuff!
       }
+      idx = findClosestIndex(prev_point, outer) + 1;
       superline.push_back(outer[idx % outer.size()]);
       prev_point = outer[idx % outer.size()];
       idx += 1;

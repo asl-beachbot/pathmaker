@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 2.6)
+ cmake_minimum_required(VERSION 2.6)
 project(pathfinder)
 
 option(32BIT "32BIT" OFF)
@@ -114,6 +114,7 @@ add_executable(svg_parser
     src/View.cpp
     src/Spiro.cpp
     src/ConnectionSmoother.cpp
+    src/TSPConnector.cpp
 )
 
 if(NOGUI)
@@ -134,6 +135,7 @@ add_library(python/beachbot_pathgen SHARED
     src/SimpleConnector.cpp
     src/Spiro.cpp
     src/ConnectionSmoother.cpp
+    src/TSPConnector.cpp
 )
 
 if(32BIT)

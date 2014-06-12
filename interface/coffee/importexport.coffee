@@ -66,3 +66,23 @@ window.loadJsonToPaper = (data) ->
 				i += 1
 				for c in seg.coords
 					seg_path.add(c)
+		if el.connection
+			connection_path = new paper.Path()
+			connection_path.strokeColor = "blue"
+			connection_path.strokeWidth = 3
+			first = true
+			console.log el.connection
+			for c in el.connection
+				if Math.abs(c[1][0]) < 0.00001
+					continue
+
+				if first
+					connection_path.moveTo(new paper.Point([c[1][0], c[1][1]]))
+					first = false
+				else
+					console.log "CurveTo", c[0][0], c[0][1], c[1][0], c[1][1], c[2][0], c[2][1]
+					connection_path.cubicCurveTo(
+						new paper.Point([c[0][0], c[0][1]])
+						new paper.Point([c[1][0], c[1][1]])
+						new paper.Point([c[2][0], c[2][1]])
+					)

@@ -42,7 +42,7 @@ public:
   bool manually_modified;
   std::map<std::string, int> attrs;
   int line_width;
-  vector<vector<float>> bezier_connector;
+  // vector<vector<float>> bezier_connector;
   RakeVector rake_states;
 
   Point_2 entry_point;
@@ -83,6 +83,32 @@ public:
   virtual std::string toString() = 0;
   bool unvisited() {
     return !this->visited;
+  }
+  void addConnectorToJSON(Json::Value & val) {
+    auto trafo = Transformation(CGAL::SCALING, GlobalOptions::getInstance().scale_for_disp);
+    if(smooth_connection.size()) {    
+      Json::Value bezier(Json::arrayValue);
+      for(auto b : smooth_connection) {
+        Json::Value c;
+        Json::Value in_pair(Json::arrayValue);
+        Point_2 in = b.in.transform(trafo);
+        Point_2 out = b.out.transform(trafo);
+        Point_2 control = b.control_point.transform(trafo);
+        in_pair.append(in.x());
+        in_pair.append(in.y());
+        Json::Value control_pair(Json::arrayValue);
+        control_pair.append(control.x());
+        control_pair.append(control.y());
+        Json::Value out_pair(Json::arrayValue);
+        out_pair.append(out.x());
+        out_pair.append(out.y());
+        c.append(in_pair);
+        c.append(control_pair);
+        c.append(out_pair);
+        bezier.append(c);
+      }  
+      val["connection"] = bezier;
+    }
   }
   virtual Json::Value toJSON() = 0;
 };
@@ -144,6 +170,7 @@ public:
       coords.append(c);
     }
     val["coords"] = coords;
+    addConnectorToJSON(val);
     return val;
   }
   std::string toString() {
@@ -307,7 +334,7 @@ public:
       segments_json.append(segment_value);
     }
     val["segments"] = segments_json;
-
+    addConnectorToJSON(val);
     return val;
   }
 
@@ -418,6 +445,7 @@ public:
       coords.append(c);
     }
     val["coords"] = coords;
+    addConnectorToJSON(val);
     return val;
   }
   std::string toString() {

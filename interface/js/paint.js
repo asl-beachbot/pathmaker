@@ -5,7 +5,7 @@
   base_url = "http://localhost:5000/";
 
   window.onload = function() {
-    var canvas, hitOptions, paper;
+    var canvas, curr_zoom, hitOptions, isDragging, paper, prevDragPosition;
     hitOptions = {
       segments: true,
       stroke: true,
@@ -22,6 +22,35 @@
     mainCanvas.activate();
     paper.view.draw();
     segmentation_tool.activate();
+    curr_zoom = 1;
+    isDragging = false;
+    prevDragPosition = [0, 0];
+    $('#canvas').on('mousewheel', function(event) {
+      var a, beta, d, p, pc, zoom_factor;
+      mainCanvas.activate();
+      console.log(event.deltaX, event.deltaY, event.deltaFactor);
+      if (event.altKey) {
+        console.log("Shift pressed!");
+        console.log("New Center: ", paper.view.center.add(new paper.Point(event.deltaX, event.deltaY)));
+        return paper.view.center = paper.view.center.add(new paper.Point(event.deltaX * 10, event.deltaY * 10));
+      } else {
+        d = event.deltaY;
+        zoom_factor = 1;
+        if (d > 0) {
+          zoom_factor = Math.pow(0.8, d);
+        } else {
+          zoom_factor = Math.pow(1.2, Math.abs(d));
+        }
+        beta = 1 / zoom_factor;
+        curr_zoom = curr_zoom * zoom_factor;
+        p = new paper.Point(event.pageX, event.pageY);
+        console.log(event, p);
+        pc = p.subtract(paper.view.center);
+        a = p.subtract(pc.multiply(beta)).subtract(paper.view.center);
+        paper.view.zoom = curr_zoom;
+        return paper.view.center = paper.view.center.add(a);
+      }
+    });
     return $('#testbtn').click(function() {
       var dx, dy, segment, vector;
       dx = 1;
