@@ -31,7 +31,25 @@ window.api =
 			data: JSON.stringify(obj),
 			type: "POST",
 			success: (data) ->
-				api.loadJsonToPaper(data)
+				loadJsonToPaper(data)
+
+	enforceConnection: (segment1, segment2) ->
+		id1 = segment1.path.id
+		id2 = segment2.path.id
+		idx1 = segment1.index
+		idx2 = segment2.index
+		obj =
+			pair1: segment1.path.id
+			pair2: segment2.path.id
+			pair1_idx: segment1.index
+			pair2_idx: segment2.index
+
+		$.ajax
+			url: mainUrl + "add_enforced_connection",
+			data: JSON.stringify(obj),
+			type: "POST",
+			success: (data) ->
+				loadJsonToPaper(data)
 
 
 window.loadJsonToPaper = (data) ->
@@ -50,6 +68,7 @@ window.loadJsonToPaper = (data) ->
 			path.add(c)
 		if el.type == "POLYGON" or el.type == "FILLED_POLYGON"
 			path.closed = true;
+		path.type = el.type
 		painted_elements.push(path)
 		# path.fillColor = new paper.Color(1,0,0)
 		i = 0

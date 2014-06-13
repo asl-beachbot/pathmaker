@@ -188,6 +188,21 @@ int main(int argc, char** argv) {
   // SimpleConnector * sc = new SimpleConnector(vet);
   // sc->connect();
 
+  auto t = &(vet->element_tree);
+  int i = 0;
+  int id1, id2;
+  for(auto it = ++t->begin(); it != t->end(); ++it) {
+    if(i == 2) {
+      id1 = (*it)->id;
+    }
+    if(i == 3) {
+      id2 = (*it)->id;
+    }
+    i++;
+  }
+  cout << "Test connecting " << id1 << " at " << 0 << " and " << id2 << " at -1" << endl;
+  vet->enforceConnection(id1, 0, id2, -1);
+
   TSPConnector * sc = new TSPConnector(vet);
   sc->create_distance_matrix();
 

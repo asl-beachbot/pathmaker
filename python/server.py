@@ -47,5 +47,15 @@ def resegment_with_line():
     resp.headers['Access-Control-Allow-Origin'] = "*"
     return resp
 
+@app.route('/add_enforced_connection', methods=['POST'])
+def add_enforced_connection():
+    print("enforcing a new connection")
+    j = request.get_data()
+    return_j = generator.add_enforced_connection(j);
+    resp = make_response(return_j, 200)
+    resp.headers['Content-Type'] = "application/json"
+    resp.headers['Access-Control-Allow-Origin'] = "*"
+    return resp
+
 if __name__ == '__main__':
     app.run(debug=False)

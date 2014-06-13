@@ -346,8 +346,22 @@ public:
         // remove connections
         (*it)->from = nullptr;
         (*it)->to = nullptr;
+        (*it)->visited = false;
         ++it;
       }
+    }
+  }
+
+  void clearConnections() {
+    auto it = element_tree.begin();
+    auto it_end = element_tree.end();
+
+    while(it != it_end) {
+      (*it)->from = nullptr;
+      (*it)->to = nullptr;
+      (*it)->visited = false;
+      (*it)->smooth_connection.clear();
+      ++it;
     }
   }
 
@@ -362,7 +376,6 @@ public:
       return NULL;
     }
   }
-
   std::string toJSON() {
     Json::Value json;
     Json::Value elem_json_arr(Json::arrayValue);
@@ -387,8 +400,8 @@ public:
     auto el1 = getByID(id1);
     auto el2 = getByID(id2);
 
-    el1->addEnforcedConnection(el1, node1);
-    el2->addEnforcedConnection(el2, node2);
+    el1->addEnforcedConnection(el2, node1);
+    el2->addEnforcedConnection(el1, node2);
   }
 
   void fillPolys() {

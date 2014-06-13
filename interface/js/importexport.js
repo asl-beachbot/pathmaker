@@ -34,7 +34,28 @@
         data: JSON.stringify(obj),
         type: "POST",
         success: function(data) {
-          return api.loadJsonToPaper(data);
+          return loadJsonToPaper(data);
+        }
+      });
+    },
+    enforceConnection: function(segment1, segment2) {
+      var id1, id2, idx1, idx2, obj;
+      id1 = segment1.path.id;
+      id2 = segment2.path.id;
+      idx1 = segment1.index;
+      idx2 = segment2.index;
+      obj = {
+        pair1: segment1.path.id,
+        pair2: segment2.path.id,
+        pair1_idx: segment1.index,
+        pair2_idx: segment2.index
+      };
+      return $.ajax({
+        url: mainUrl + "add_enforced_connection",
+        data: JSON.stringify(obj),
+        type: "POST",
+        success: function(data) {
+          return loadJsonToPaper(data);
         }
       });
     }
@@ -64,6 +85,7 @@
       if (el.type === "POLYGON" || el.type === "FILLED_POLYGON") {
         path.closed = true;
       }
+      path.type = el.type;
       painted_elements.push(path);
       i = 0;
       if (el.type_int === 1 && el.segments.length) {

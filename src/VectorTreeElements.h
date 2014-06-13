@@ -118,8 +118,18 @@ public:
       val["connection"] = bezier;
     }
   }
-
+  void addConnectionJSON(Json::Value & val) {
+    if(this->from) {
+      val["from"] = this->from->id;
+      val["entry_point_index"] = this->entry_point_index;
+    }
+    if(this->to) {
+      val["to"] = this->to->id;
+      val["exit_point_index"] = this->exit_point_index;
+    }
+  }
   void addEnforcedConnection(ElementPtr * pair, int node_id) {
+    if(node_id == getSize()) node_id == -1;
     if(this->get_type() == EL_POLYLINE) {
       for(auto it = enforced_connections.begin(); it != enforced_connections.end(); ++it) {
         if((*it).index == node_id)
@@ -197,6 +207,7 @@ public:
     }
     val["coords"] = coords;
     addConnectorToJSON(val);
+    addConnectionJSON(val);
     return val;
   }
   std::string toString() {
@@ -361,6 +372,7 @@ public:
     }
     val["segments"] = segments_json;
     addConnectorToJSON(val);
+    addConnectionJSON(val);
     return val;
   }
 
@@ -472,6 +484,8 @@ public:
     }
     val["coords"] = coords;
     addConnectorToJSON(val);
+    addConnectionJSON(val);
+
     return val;
   }
   std::string toString() {

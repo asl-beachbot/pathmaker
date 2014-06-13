@@ -61,7 +61,6 @@ public:
       ConnectionSmoother cs(vet);
       cs.smooth();
       delete sc;
-
       // sc = new SimpleConnector(vet);
       // sc->connect();
       return vet->toJSON();
@@ -123,6 +122,33 @@ public:
         vet->fillPolys();
         return vet->toJSON();
     }
+    std::string add_enforced_connection(std::string arguments_as_json) {
+        Json::Reader jsonreader;
+        Json::Value arguments;
+        bool success = jsonreader.parse(arguments_as_json, arguments);
+        if(!success) {
+            std::cout << "Failed to parse arguments, bailing" << endl;
+            return "{\"error\":\"Error Parsing JSON\"}";
+        }
+        int pair1_id, pair2_id, pair1_idx, pair2_idx;
+        pair1_id = arguments.get("pair1", 0).asInt();
+        pair2_id = arguments.get("pair2", 0).asInt();
+        pair1_idx = arguments.get("pair1_idx", 0).asInt();
+        pair2_idx = arguments.get("pair2_idx", 0).asInt();
+        vet->clearConnections();
+        vet->enforceConnection(pair1_id, pair1_idx, pair2_id, pair2_idx);
+
+        TSPConnector * sc = new TSPConnector(vet);
+        sc->create_distance_matrix();
+  
+        ConnectionSmoother cs(vet);
+        cs.smooth();
+        delete sc;
+        // ConnectionSmoother cs(vet);
+        // cs.smooth();
+        // delete sc;
+        return vet->toJSON();
+    }
     ~Generator() {
         delete ps;
         delete vet;
@@ -140,5 +166,6 @@ BOOST_PYTHON_MODULE(beachbot_pathgen)
         .def("run_routine", &Generator::run_routine)
         .def("update_fill_for_element", &Generator::update_fill_for_element)
         .def("resegment_with_line", &Generator::resegment_with_line)
+        .def("add_enforced_connection", &Generator::add_enforced_connection)
     ;
 }

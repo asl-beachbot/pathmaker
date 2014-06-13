@@ -6,6 +6,7 @@ hitOptions =
 	tolerance: 20
 
 circles = []
+new_conn_path = null;
 node1 = node2 = null
 tool.onMouseDown = (event) ->
 	for c in window.painted_elements
@@ -21,10 +22,13 @@ tool.onMouseDown = (event) ->
 		circles.push circle
 		if hitResult.type == 'segment'
 			if not node1
-				node1 = hitResult.segment.point
-			else node2 = hitResult.segment.point
+				node1 = hitResult.segment
+			else node2 = hitResult.segment
 			if node1 and node2
-				new_conn_path = new paper.Path(node1.point, node2.point)
+				console.log(node1)
+				console.log "paointing path"
+				new_conn_path = new paper.Path([[node1.point.x, node1.point.y], [node2.point.x, node2.point.y]])
 				new_conn_path.strokeWidth = 2
 				new_conn_path.strokeColor = 'magenta'
-				null
+				api.enforceConnection(node1, node2)
+				node1 = node2 = null

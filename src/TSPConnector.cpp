@@ -133,6 +133,8 @@ void TSPConnector::project_result_to_tree(std::vector<int> solution) {
   // Which is a list of cities in the order it 
   // should be traversed. Now it has to be projected
   // to our element tree
+
+  cout << "Projecting result to tree" << endl;
   int start_traverse = 0;
   bool startpoint = false;
   int index_add = -2; // TODO: change
@@ -166,6 +168,7 @@ void TSPConnector::project_result_to_tree(std::vector<int> solution) {
   }
   ElementPtr * prev_elem = nullptr;
   for(int i = start_traverse; i < solution.size() + start_traverse; ++i) {
+    cout << "I: " << i << endl;
     // if no startpoint defined, just start anywhere
     int curr_ind = solution.at(i % solution.size()) + index_add;
     ElementPtr * curr_elem = city_order[curr_ind].element;
@@ -187,21 +190,68 @@ void TSPConnector::project_result_to_tree(std::vector<int> solution) {
         curr_elem->exit_point = curr_elem->entry_point;
         curr_elem->exit_point_index = city_order[curr_ind].node_index;
       }
+      if(curr_elem->enforced_connections.size() > 0) {
+        auto enforced_conn = curr_elem->enforced_connections[0];
+        auto next_elem = enforced_conn.pair_partner;
+        curr_elem->to = next_elem;
+        curr_elem->exit_point_index = enforced_conn.index;
+        curr_elem->exit_point = curr_elem->getFromIndex(enforced_conn.index);
+        curr_elem->visited = true;
+        auto prev_curr = curr_elem;
+        while(next_elem->enforced_connections.size() == 2) {
+          // connect these elements
+          // TODO
+        }
+        next_elem->from = prev_curr;
+        auto next_enforced_conn = next_elem->enforced_connections[0];
+        next_elem->entry_point_index = next_enforced_conn.index;
+        next_elem->entry_point = next_elem->getFromIndex(next_enforced_conn.index);
+        curr_elem = next_elem;
+      }
       curr_elem->visited = true;
       prev_elem = curr_elem;
     }
   }
 }
 
+bool elementIsReached(ElementPtr * el1, ElementPtr * el2) {
+  auto ef1 = el1->enforced_connections[0];
+  auto prev_el = el1;
+  ElementPtr * next = ef1.pair_partner;
+  cout << "El " << el1 << " Reaching: " << el2 << endl;
+  cout << "Next: " << ef1.pair_partner << endl;
+  int i = 0;
+  while(i < 10000) {
+    if(next->enforced_connections.size() == 2) {
+      if(next->enforced_connections[0].pair_partner == prev_el)
+        next = next->enforced_connections[1].pair_partner;
+      else 
+        next = next->enforced_connections[0].pair_partner;
+      cout << "Next: " << next << endl;
+    } else {
+      // we reached an "end"
+      if(next == el2) {
+        cout << "Element Reached" << endl;
+        return true;
+      }
+      cout << "Element Not Reached" << endl;
+      return false;
+    }
+    i++; // this is an unnecessary cycle protection
+  }
+}
+
 vector<int> TSPConnector::create_distance_matrix_row(Tree_ElementPtr::iterator row_it, 
                                               int element_index, int column_index) {
   vector<int> row;
+  row.push_back(1); // push back weight for going back to the start
+  cout << "\n\n";
   this->city_order.push_back(TourCity(*row_it, element_index));
   auto it = ++element_tree->begin();
   auto it_end = element_tree->end();
   Point_2 current_point;
-  row.push_back(1);
-  if((*row_it)->get_type() != EL_POLYLINE) {
+
+  if((*row_it)->get_type() != EL_POLYLINE && (*row_it)->enforced_connections.size() == 0) {
     // This is the magic part, where the current city 
     // gets shifted for one! 
     current_point = (*row_it)->getFromIndex(element_index + 1);
@@ -209,35 +259,62 @@ vector<int> TSPConnector::create_distance_matrix_row(Tree_ElementPtr::iterator r
     current_point = (*row_it)->getFromIndex(element_index);
   }
   for(; it != it_end; ++it) {
+    cout << *it << endl;
+    cout << "Enforced Connections: " << (*it)->enforced_connections.size() << endl;
+    for(auto e :  (*it)->enforced_connections) {
+      cout << e.pair_partner << " " << e.index << endl;
+    }
+    cout << endl;
     if(*it != *row_it) {
-      // cout << "Equal elements" << endl;
-      if((*it)->get_type() == EL_POLYLINE) {
-        row.push_back(ceil(CGAL::squared_distance(current_point, (*it)->getFromIndex(0)) * 100));
-        row.push_back(ceil(CGAL::squared_distance(current_point, (*it)->getFromIndex(-1)) * 100));
+      if((*it)->enforced_connections.size() == 1) {
+        auto ef = (*it)->enforced_connections[0];
+        if((*row_it)->enforced_connections.size() > 0 && elementIsReached(*row_it, *it)) {
+          // these are like connected with a line == weight 0
+          row.push_back(0);
+        } else {    
+          if((*it)->get_type() == EL_POLYLINE) {
+            // there is just one point reachable
+            if(ef.index == 0) row.push_back(ceil(CGAL::squared_distance(current_point, (*it)->getFromIndex(-1)) * 100));
+            else row.push_back(ceil(CGAL::squared_distance(current_point, (*it)->getFromIndex(0)) * 100));
+          } else {
+            row.push_back(ceil(CGAL::squared_distance(current_point, (*it)->getFromIndex(ef.index)) * 100));
+          }
+        }
+      } else if((*it)->enforced_connections.size() == 2) {
+        // do nothing! this city cannot be reached from the outside
       } else {
-        for(int i = 0; i < (*it)->getSize(); i++) {
-          row.push_back(ceil(CGAL::squared_distance(current_point, (*it)->getFromIndex(i)) * 100));
+        if((*it)->get_type() == EL_POLYLINE) {
+          row.push_back(ceil(CGAL::squared_distance(current_point, (*it)->getFromIndex(0)) * 100));
+          row.push_back(ceil(CGAL::squared_distance(current_point, (*it)->getFromIndex(-1)) * 100));
+        } else {
+          for(int i = 0; i < (*it)->getSize(); i++) {
+            row.push_back(ceil(CGAL::squared_distance(current_point, (*it)->getFromIndex(i)) * 100));
+          }
         }
       }
     } else {
       // we're on the same element now! 
       // special properties?!
-      if((*it)->get_type() == EL_POLYLINE) {
-        if(element_index == 0) {
-          row.push_back(9999999);
-          row.push_back(0); // zero distance to travel to next point
-        } else {
-          row.push_back(0);
-          row.push_back(9999999); // zero distance to travel to next point          
-        }
-      } else {
-        for(int i = 0; i < (*it)->getSize(); i++) {
-          if(i == (element_index + 1) % (*it)->getSize()) {
-            row.push_back(0); // cycle through
+      if((*row_it)->enforced_connections.size() == 0) {
+        if((*it)->get_type() == EL_POLYLINE) {
+          if(element_index == 0) {
+            row.push_back(9999999);
+            row.push_back(0); // zero distance to travel to next point
           } else {
-            row.push_back(9999999); // never jump around
+            row.push_back(0);
+            row.push_back(9999999); // zero distance to travel to next point          
+          }
+        } else {
+          for(int i = 0; i < (*it)->getSize(); i++) {
+            if(i == (element_index + 1) % (*it)->getSize()) {
+              row.push_back(0); // cycle through
+            } else {
+              row.push_back(9999999); // never jump around
+            }
           }
         }
+      } else {
+        row.push_back(9999999);
       }
     }
   }
@@ -248,12 +325,25 @@ vector<int> TSPConnector::create_startpoint_distance_matrix_row(Point_2 sp) {
   vector<int> row;
   row.push_back(9999999);
   for(auto it = ++element_tree->begin(); it != element_tree->end(); ++it) {
-    if((*it)->get_type() == EL_POLYLINE) {
-      row.push_back(ceil(CGAL::squared_distance(sp, (*it)->getFromIndex(0)) * 100));
-      row.push_back(ceil(CGAL::squared_distance(sp, (*it)->getFromIndex(-1)) * 100));
+    if((*it)->enforced_connections.size() == 1) {
+      auto ef = (*it)->enforced_connections[0];
+      if((*it)->get_type() == EL_POLYLINE) {
+        // there is just one point reachable
+        if(ef.index == 0) row.push_back(ceil(CGAL::squared_distance(sp, (*it)->getFromIndex(-1)) * 100));
+        else row.push_back(ceil(CGAL::squared_distance(sp, (*it)->getFromIndex(0)) * 100));
+      } else {
+        row.push_back(ceil(CGAL::squared_distance(sp, (*it)->getFromIndex(ef.index)) * 100));
+      }
+    } else if((*it)->enforced_connections.size() == 2) {
+      // do nothing! this city cannot be reached from the outside
     } else {
-      for(int i = 0; i < (*it)->getSize(); i++) {
-        row.push_back(ceil(CGAL::squared_distance(sp, (*it)->getFromIndex(i)) * 100));
+      if((*it)->get_type() == EL_POLYLINE) {
+        row.push_back(ceil(CGAL::squared_distance(sp, (*it)->getFromIndex(0)) * 100));
+        row.push_back(ceil(CGAL::squared_distance(sp, (*it)->getFromIndex(-1)) * 100));
+      } else {
+        for(int i = 0; i < (*it)->getSize(); i++) {
+          row.push_back(ceil(CGAL::squared_distance(sp, (*it)->getFromIndex(i)) * 100));
+        }
       }
     }
   }
@@ -275,16 +365,31 @@ void TSPConnector::create_distance_matrix() {
     matrix.push_back(create_startpoint_distance_matrix_row(Point_2(0,0)));
   }
   for(; it != it_end; ++it) {
-    if((*it)->get_type() == EL_POLYLINE) {
-      matrix.push_back(create_distance_matrix_row(it, 0, act_col));
-      act_col++;
-      matrix.push_back(create_distance_matrix_row(it, -1, act_col));
-      act_col++;
-    } else {
-      for(int i = 0; i < (*it)->getSize(); i++) {
-        matrix.push_back(create_distance_matrix_row(it, i, act_col));
+    if((*it)->enforced_connections.size() == 1) {
+      auto ef = (*it)->enforced_connections[0];
+      if((*it)->get_type() == EL_POLYLINE) {
+        // there is just one point reachable
+        if(ef.index == 0) matrix.push_back(create_distance_matrix_row(it, -1, act_col));
+        else matrix.push_back(create_distance_matrix_row(it, 0, act_col));
         act_col++;
-      } 
+      } else {
+        matrix.push_back(create_distance_matrix_row(it, ef.index, act_col));
+        act_col++;
+      }
+    } else if((*it)->enforced_connections.size() == 2) {
+      // do nothing! this city cannot be reached from the outside
+    } else {
+      if((*it)->get_type() == EL_POLYLINE) {
+        matrix.push_back(create_distance_matrix_row(it, 0, act_col));
+        act_col++;
+        matrix.push_back(create_distance_matrix_row(it, -1, act_col));
+        act_col++;
+      } else {
+        for(int i = 0; i < (*it)->getSize(); i++) {
+          matrix.push_back(create_distance_matrix_row(it, i, act_col));
+          act_col++;
+        } 
+      }
     }
   }
 
