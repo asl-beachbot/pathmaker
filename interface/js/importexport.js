@@ -62,7 +62,7 @@
   };
 
   window.loadJsonToPaper = function(data) {
-    var c, connection_path, el, first, i, path, seg, seg_path, _i, _j, _k, _l, _len, _len1, _len2, _len3, _len4, _m, _ref, _ref1, _ref2, _ref3, _ref4, _results;
+    var c, connection_path, el, first, i, path, seg, seg_path, _i, _j, _k, _l, _len, _len1, _len2, _len3, _ref, _ref1, _ref2, _ref3, _results;
     mainCanvas.activate();
     paper.project.activeLayer.removeChildren();
     window.filled_segments = [];
@@ -75,6 +75,7 @@
       window.currentLoadedData = data;
       path = new paper.Path();
       path.strokeColor = 'black';
+      path.strokeWidth = el.stroke_width;
       path.strokeWidth = 3;
       path._id = el.id;
       _ref1 = el.coords;
@@ -115,21 +116,25 @@
         connection_path.strokeWidth = 3;
         first = true;
         console.log(el.connection);
-        _ref4 = el.connection;
-        for (_m = 0, _len4 = _ref4.length; _m < _len4; _m++) {
-          c = _ref4[_m];
-          if (Math.abs(c[1][0]) < 0.00001) {
-            continue;
+        _results.push((function() {
+          var _len4, _m, _ref4, _results1;
+          _ref4 = el.connection;
+          _results1 = [];
+          for (_m = 0, _len4 = _ref4.length; _m < _len4; _m++) {
+            c = _ref4[_m];
+            if (Math.abs(c[1][0]) < 0.00001) {
+              continue;
+            }
+            if (first) {
+              connection_path.moveTo(new paper.Point([c[1][0], c[1][1]]));
+              _results1.push(first = false);
+            } else {
+              console.log("CurveTo", c[0][0], c[0][1], c[1][0], c[1][1], c[2][0], c[2][1]);
+              _results1.push(connection_path.cubicCurveTo(new paper.Point([c[0][0], c[0][1]]), new paper.Point([c[1][0], c[1][1]]), new paper.Point([c[2][0], c[2][1]])));
+            }
           }
-          if (first) {
-            connection_path.moveTo(new paper.Point([c[1][0], c[1][1]]));
-            first = false;
-          } else {
-            console.log("CurveTo", c[0][0], c[0][1], c[1][0], c[1][1], c[2][0], c[2][1]);
-            connection_path.cubicCurveTo(new paper.Point([c[0][0], c[0][1]]), new paper.Point([c[1][0], c[1][1]]), new paper.Point([c[2][0], c[2][1]]));
-          }
-        }
-        _results.push(connection_path.simplify());
+          return _results1;
+        })());
       } else {
         _results.push(void 0);
       }

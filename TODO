@@ -5,7 +5,7 @@
 - Segmentation with Holes?! Holes?!
 - Implement all the tools
 - Add non segmenting back and forth fill like custom segmentation (with is-inside detection) and TSP
-
+- add view options button
 --- less priority ideas ---
 
 - something that drives on straight skeleton edges (in the tight strips)

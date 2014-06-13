@@ -29,7 +29,6 @@
     var hitResult, location, prev_selected, seg, _i, _len;
     prev_selected = paper.project.selectedItems;
     paper.project.deselectAll();
-    segment = path = null;
     if (movePath) {
       startVector = event.point;
     }
@@ -41,6 +40,7 @@
       }
     }
     if (!hitResult) {
+      startVector = event.point;
       return;
     }
     hitResult.item.selected = true;
@@ -49,16 +49,11 @@
       $("#select_fill").show();
     }
     if (hitResult) {
-      path = hitResult.item;
-      if (hitResult.type === 'segment') {
-        segment = hitResult.segment;
-      } else if (hitResult.type === 'stroke') {
-        location = hitResult.location;
-      } else if (hitResult.type === 'handle-in') {
-        handle = hitResult.segment.handleIn;
-      } else if (hitResult.type === 'handle-out') {
-        handle = hitResult.segment.handleOut;
-      }
+      segment = path = hitResult.item;
+    } else if (hitResult.type === 'stroke') {
+      console.log(hitResult);
+      location = hitResult.location;
+      segment = hitResult.item;
     }
     return movePath = hitResult.type === 'fill';
   };
@@ -86,5 +81,14 @@
   };
 
   curr_zoom = 1;
+
+  tool.onMouseUp = function(event) {
+    var p;
+    if (segment && vector) {
+      p = (startVector.subtract(endVector)).divide((startVector.subtract(endVector)).length);
+      console.log(p);
+      return api.changeFill(segment, p);
+    }
+  };
 
 }).call(this);

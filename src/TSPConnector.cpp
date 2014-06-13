@@ -206,6 +206,12 @@ void TSPConnector::project_result_to_tree(std::vector<int> solution) {
         auto next_enforced_conn = next_elem->enforced_connections[0];
         next_elem->entry_point_index = next_enforced_conn.index;
         next_elem->entry_point = next_elem->getFromIndex(next_enforced_conn.index);
+        if(next_elem->get_type() == EL_POLYLINE)
+          next_elem->exit_point_index = next_enforced_conn.index == 0 ? -1 : 0;
+        else 
+          next_elem->exit_point_index = next_enforced_conn.index;
+        next_elem->exit_point = next_elem->getFromIndex(next_elem->exit_point_index);
+        next_elem->visited = true;
         curr_elem = next_elem;
       }
       curr_elem->visited = true;

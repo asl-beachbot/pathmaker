@@ -16,7 +16,6 @@ startVector = endVector = vector = null
 tool.onMouseDown = (event) -> 
 	prev_selected = paper.project.selectedItems
 	paper.project.deselectAll()
-	segment = path = null
 	# todo only check segments and polys
 	if movePath
 		startVector = event.point
@@ -25,6 +24,7 @@ tool.onMouseDown = (event) ->
 		if hitResult
 			break
 	if not hitResult
+		startVector = event.point
 		return
 	hitResult.item.selected = true
 	
@@ -39,18 +39,20 @@ tool.onMouseDown = (event) ->
 		console.log "selected a segment!"
 		$("#select_fill").show()
 
-	if (hitResult)
-		path = hitResult.item
-		if (hitResult.type == 'segment')
-			segment = hitResult.segment
+	if hitResult
+		segment = path = hitResult.item
+		# if (hitResult.type == 'segment')
+		# 	segment = hitResult.segment
 			# hitResult.item.fullySelected = true
-		else if (hitResult.type == 'stroke') 
-			location = hitResult.location;
-			# segment = path.insert(location.index + 1, event.point)
-		else if (hitResult.type == 'handle-in') 
-			handle = hitResult.segment.handleIn
-		else if hitResult.type == 'handle-out'
-			handle = hitResult.segment.handleOut
+	else if (hitResult.type == 'stroke')
+		console.log(hitResult)
+		location = hitResult.location;
+		segment = hitResult.item
+		# segment = path.insert(location.index + 1, event.point)
+		# else if (hitResult.type == 'handle-in') 
+		# 	handle = hitResult.segment.handleIn
+		# else if hitResult.type == 'handle-out'
+		# 	handle = hitResult.segment.handleOut
 		
 	movePath = hitResult.type == 'fill'
 	# if movePath
@@ -79,3 +81,8 @@ tool.onMouseDrag = (event) ->
 		handle.position = handle.position.add(event.delta)
 curr_zoom = 1
 
+tool.onMouseUp = (event) ->
+	if segment and vector
+		p = (startVector.subtract(endVector)).divide((startVector.subtract(endVector)).length)
+		console.log(p)
+		api.changeFill(segment, p)

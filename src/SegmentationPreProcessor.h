@@ -104,6 +104,9 @@ private:
     int i = 1;
     std::vector<Polygon_2> result_polys;
     result_polys.push_back(p);
+    if(intersects.size() < 2) {
+      return result_polys;
+    }
     for(; i < intersects.size(); i++) {
       cout << "Iterating intersects!" << endl;
       cout << intersects[0].p << " " << i << " " << intersects[i-1].p << endl;
@@ -193,10 +196,10 @@ public:
     //   }
     // }
 
+    std::vector<ElementPtr *> new_elems;
     for(Segment_2 cl : cut_lines) {
       cout << "Segmenting with line: " << cl << endl;
-      std::vector<ElementPtr *> new_elems;
-      for(; it != it_end; ++it) {
+      for(;; it != it_end) {
         if((*it)->get_type() == EL_FILLED_POLYGON) {
           // This shape should be segmented, if not convex...
           FilledPolygonElementPtr * poly_element_ptr = static_cast<FilledPolygonElementPtr * >(*it);
@@ -212,8 +215,11 @@ public:
           }
           it = element_tree->erase(it);
           if(it == it_end) break;
+        } else {
+          ++it;
         }
       }
+      cut_lines.clear();
       cout << "Inserting new Elements " << new_elems.size() << endl;
       for(ElementPtr * e : new_elems) {
         e->print();

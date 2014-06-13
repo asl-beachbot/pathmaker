@@ -62,6 +62,7 @@ window.loadJsonToPaper = (data) ->
 		window.currentLoadedData = data
 		path = new paper.Path()
 		path.strokeColor = 'black';
+		path.strokeWidth = el.stroke_width
 		path.strokeWidth = 3
 		path._id = el.id
 		for c in el.coords
@@ -106,4 +107,4 @@ window.loadJsonToPaper = (data) ->
 						new paper.Point([c[1][0], c[1][1]])
 						new paper.Point([c[2][0], c[2][1]])
 					)
-			connection_path.simplify()
+			# connection_path.simplify()

@@ -18,7 +18,7 @@
   };
 
   tool.onMouseDown = function(event) {
-    var c, hitResult, location, segment, _i, _len, _ref;
+    var c, hitResult, _i, _len, _ref;
     node = handle = handle2 = null;
     console.log(event);
     _ref = window.all_connections;
@@ -28,6 +28,9 @@
       if (hitResult) {
         break;
       }
+    }
+    if (!hitResult) {
+      paper.project.deselectAll();
     }
     if (hitResult) {
       console.log(hitResult);
@@ -40,9 +43,6 @@
         return handle = hitResult.segment.handleOut;
       } else if (hitResult.type === 'segment') {
         return node = hitResult.segment.point;
-      } else if (hitResult.type === 'stroke') {
-        location = hitResult.location;
-        return segment = path.insert(location.index + 1, event.point);
       }
     }
   };

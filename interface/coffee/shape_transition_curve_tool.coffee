@@ -30,6 +30,8 @@ tool.onMouseDown = (event) ->
 		hitResult = c.hitTest(event.point, hitOptions)
 		if hitResult
 			break
+	if not hitResult
+		paper.project.deselectAll()
 	if hitResult
 		console.log hitResult
 		hitResult.item.fullySelected = true
@@ -41,9 +43,9 @@ tool.onMouseDown = (event) ->
 			handle = hitResult.segment.handleOut
 		else if hitResult.type == 'segment'
 			node = hitResult.segment.point
-		else if (hitResult.type == 'stroke') 
-			location = hitResult.location;
-			segment = path.insert(location.index + 1, event.point)
+		# else if (hitResult.type == 'stroke') 
+		# 	location = hitResult.location;
+		# 	segment = hitResult.item.insert(location.index + 1, event.point)
 tool.onMouseDrag = (event) ->
 	if (handle)
 		handle.x += event.delta.x
