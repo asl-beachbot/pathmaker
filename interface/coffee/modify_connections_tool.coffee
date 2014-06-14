@@ -8,24 +8,40 @@ hitOptions =
 circles = []
 new_conn_path = null;
 node1 = node2 = null
+
+getNode = (seg) ->
+	p = seg.path
+	node = null
+	if not p.closed
+		if seg in [p.firstSegment, p.lastSegment]
+			node = seg
+		else
+			i = seg.index
+			console.log i, p.segments.length
+			if p.segments.length - i < i
+				node = p.lastSegment
+			else 
+				node = p.firstSegment
+	else
+		node = seg
+	return node
+
 tool.onMouseDown = (event) ->
 	if event.event.button != 0
 		return
 	for c in window.painted_elements
 		hitResult = c.hitTest(event.point, hitOptions)
+		console.log hitResult
 		if hitResult
 			break
 	if hitResult
-		console.log hitResult
-		hitResult.segment.selected = true
-		circle = new paper.Path.Circle(hitResult.segment.point, 10)
-		circle.strokeColor = 'magenta'
-		circle.strokeWidth = 3
-		circles.push circle
 		if hitResult.type == 'segment'
 			if not node1
-				node1 = hitResult.segment
-			else node2 = hitResult.segment
+				node1 = getNode(hitResult.segment)
+				selected_node = node1
+			else 
+				node2 = getNode(hitResult.segment)
+				selected_node = node2
 			if node1 and node2
 				console.log(node1)
 				console.log "paointing path"
@@ -34,3 +50,11 @@ tool.onMouseDown = (event) ->
 				new_conn_path.strokeColor = 'magenta'
 				api.enforceConnection(node1, node2)
 				node1 = node2 = null
+		console.log hitResult
+		selected_node.selected = true
+		circle = new paper.Path.Circle(selected_node.point, 10)
+		circle.strokeColor = 'magenta'
+		circle.strokeWidth = 3
+		circles.push circle
+tool.onKeyDown = (event) ->
+	console.log event

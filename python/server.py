@@ -63,5 +63,17 @@ def add_enforced_connection():
     resp.headers['Access-Control-Allow-Origin'] = "*"
     return resp
 
+@app.route('/change_glob_options', methods=['POST'])
+def change_glob_options():
+    print("enforcing a new connection")
+    j = request.get_data()
+    return_j = generator.change_glob_options(j);
+    print return_j
+
+    resp = make_response(return_j, 200)
+    resp.headers['Content-Type'] = "application/json"
+    resp.headers['Access-Control-Allow-Origin'] = "*"
+    return resp
+
 if __name__ == '__main__':
     app.run(debug=False)

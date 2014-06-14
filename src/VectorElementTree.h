@@ -407,16 +407,19 @@ public:
   void fillPolys() {
     Tree_ElementPtr::iterator it = element_tree.begin();
     Tree_ElementPtr::iterator it_end = element_tree.end();
-    WiggleFillProcedure * wiggle = new WiggleFillProcedure();
-    SpiralFillProcedure * spiral = new SpiralFillProcedure();
+    // WiggleFillProcedure * wiggle = new WiggleFillProcedure();
+    // SpiralFillProcedure * spiral = new SpiralFillProcedure();
+    FillFactory f;
     for(; it != it_end; ++it) {
       if((*it)->get_type() == EL_FILLED_POLYGON) {
-        FilledPolygonElementPtr * el_ptr = static_cast<FilledPolygonElementPtr *>((*it));
-        if(el_ptr->fill_method == SPIRAL_FILL) {
-          el_ptr->fill_elements = spiral->fill(el_ptr);
-        } else {
-          el_ptr->fill_elements = wiggle->fill(el_ptr);
-        }
+        FilledPolygonElementPtr * el_ptr = static_cast<FilledPolygonElementPtr *>((*it)); 
+        // if(el_ptr->fill_method == SPIRAL_FILL) {
+        //   el_ptr->fill_elements = spiral->fill(el_ptr);
+        // } else {
+        //   el_ptr->fill_elements = wiggle->fill(el_ptr);
+        // }
+
+        el_ptr->fill_elements = f.fill(el_ptr);
         for(ElementPtr * e : el_ptr->fill_elements) {
           if(!e) {cout << "Error null pointer!" << endl; continue;}
           findSpot(e);

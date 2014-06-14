@@ -10,7 +10,7 @@ hitOptions =
 	segments: true
 	stroke: true
 	handles: true
-	tolerance: 5
+	tolerance: 20
 
 # bezier_Path = new paper.Path()
 # bezier_Path.add([10, 10])
@@ -24,7 +24,16 @@ hitOptions =
 # test if last: 
 # bezier_Path.segments[bezierPath.segments.length] === hitResult.segment 
 curr_seg = null
+
+$(document).ready () ->
+	$('#simplify_transition').click () ->
+		console.log "simplifying path"
+		if(curr_seg)
+			p = curr_seg.path
+			p.simplify()
+
 tool.onMouseDown = (event) ->
+	console.log event
 	if event.event.button != 0
 		return
 	node = handle = handle2 = null
@@ -33,23 +42,28 @@ tool.onMouseDown = (event) ->
 		hitResult = c.hitTest(event.point, hitOptions)
 		if hitResult
 			break
-	if not hitResult
-		paper.project.deselectAll()
+	paper.project.deselectAll()
 	if hitResult
 		console.log hitResult
 		curr_seg = hitResult.segment
-		hitResult.item.fullySelected = true
+
 		if hitResult.type == 'handle-in'
 			handle2 = hitResult.segment.handleOut
 			handle = hitResult.segment.handleIn
+			hitResult.segment.selected = true
 		else if hitResult.type == 'handle-out'
 			handle2 = hitResult.segment.handleIn
 			handle = hitResult.segment.handleOut
+			hitResult.segment.selected = true
 		else if hitResult.type == 'segment'
 			node = hitResult.segment.point
-		# else if (hitResult.type == 'stroke') 
-		# 	location = hitResult.location;
-		# 	segment = hitResult.item.insert(location.index + 1, event.point)
+			hitResult.segment.selected = true
+		else if (hitResult.type == 'stroke') and event.event.ctrlKey
+			location = hitResult.location;
+			segment = hitResult.item.insert(location.index + 1, event.point)
+			hitResult.item.smooth()
+		else if hitResult.type == 'stroke'
+			hitResult.item.selected = true
 	return true
 
 tool.onMouseDrag = (event) ->

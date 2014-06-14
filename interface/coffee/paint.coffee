@@ -53,7 +53,6 @@ window.onload = ->
 	isDragging = false
 	prevDragPosition = [0,0]
 	$('#canvas').on 'mousedown', (event) ->
-		console.log event
 		if event.which != 3
 			return
 		mainCanvas.activate()
@@ -71,7 +70,6 @@ window.onload = ->
 	$('#canvas').on 'mousemove', (event) ->
 		if isDragging
 			mainCanvas.activate()
-			console.log 'dragging'
 			delta = [event.pageX - prevDragPosition[0], event.pageY - prevDragPosition[1]]
 			prevDragPosition = [event.pageX, event.pageY]
 			paper.view.center = paper.view.center.subtract(new paper.Point(delta))
@@ -123,7 +121,6 @@ window.onload = ->
 			# 	w.strokeWidth = 1
 
 			for el in paper.project.getItems({class: paper.Path})
-				console.log el.origStrokeWidth
 				el.strokeWidth = el.origStrokeWidth
 		paper.view.update()
 

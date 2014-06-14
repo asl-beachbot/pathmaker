@@ -30,7 +30,6 @@
     isDragging = false;
     prevDragPosition = [0, 0];
     $('#canvas').on('mousedown', function(event) {
-      console.log(event);
       if (event.which !== 3) {
         return;
       }
@@ -52,7 +51,6 @@
       var delta;
       if (isDragging) {
         mainCanvas.activate();
-        console.log('dragging');
         delta = [event.pageX - prevDragPosition[0], event.pageY - prevDragPosition[1]];
         prevDragPosition = [event.pageX, event.pageY];
         return paper.view.center = paper.view.center.subtract(new paper.Point(delta));
@@ -111,7 +109,6 @@
         });
         for (_j = 0, _len1 = _ref1.length; _j < _len1; _j++) {
           el = _ref1[_j];
-          console.log(el.origStrokeWidth);
           el.strokeWidth = el.origStrokeWidth;
         }
       }

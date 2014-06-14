@@ -60,6 +60,12 @@ window.loadJsonToPaper = (data) ->
 	window.all_connections = []
 	window.painted_elements = []
 	window.simple_all_connections = []
+	# cc = new paper.Path.Circle([100, 100], 50)
+	# cc.fillColor = 
+	# 	hue: Math.random() * 360,
+	# 	saturation: 1,
+	# 	brightness: 1
+
 	for el in data.elems
 		window.currentLoadedData = data
 		path = new paper.Path()
@@ -96,7 +102,6 @@ window.loadJsonToPaper = (data) ->
 			connection_path.strokeWidth = 1
 			connection_path.origStrokeWidth = 1
 			first = true
-			# console.log el.connection
 			for c in el.connection
 				if Math.abs(c[1][0]) < 0.00001
 					continue
@@ -105,25 +110,12 @@ window.loadJsonToPaper = (data) ->
 					connection_path.moveTo(new paper.Point([c[1][0], c[1][1]]))
 					first = false
 				else
-					# console.log "CurveTo", c[0][0], c[0][1], c[1][0], c[1][1], c[2][0], c[2][1]
 					connection_path.cubicCurveTo(
 						new paper.Point([c[0][0], c[0][1]])
 						new paper.Point([c[1][0], c[1][1]])
 						new paper.Point([c[2][0], c[2][1]])
 					)
-	# 					var arrowVector = vector.normalize(10);
-	# var end = vectorStart + vector;
-	# vectorItem = new Group([
-	# 	new Path([vectorStart, end]),
-	# 	new Path([
-	# 		end + arrowVector.rotate(135),
-	# 		end,
-	# 		end + arrowVector.rotate(-135)
-	# 	])
-	# ]);
-			# simple_connection =  new paper.Group(
 
-			# )
 			c = el.connection[0]
 			p1 = new paper.Point([c[1][0], c[1][1]])
 			c = el.connection[el.connection.length - 1]
@@ -146,7 +138,6 @@ window.loadJsonToPaper = (data) ->
 			simple_connection.origStrokeWidth = 1
 			simple_connection.visible = 0
 
-			# connection_path.simplify()
 	if(window.changeOutline)
 		changeOutline()
 		changeDispConn()

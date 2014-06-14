@@ -12,13 +12,25 @@
     segments: true,
     stroke: true,
     handles: true,
-    tolerance: 5
+    tolerance: 20
   };
 
   curr_seg = null;
 
+  $(document).ready(function() {
+    return $('#simplify_transition').click(function() {
+      var p;
+      console.log("simplifying path");
+      if (curr_seg) {
+        p = curr_seg.path;
+        return p.simplify();
+      }
+    });
+  });
+
   tool.onMouseDown = function(event) {
-    var c, hitResult, _i, _len, _ref;
+    var c, hitResult, location, segment, _i, _len, _ref;
+    console.log(event);
     if (event.event.button !== 0) {
       return;
     }
@@ -31,21 +43,27 @@
         break;
       }
     }
-    if (!hitResult) {
-      paper.project.deselectAll();
-    }
+    paper.project.deselectAll();
     if (hitResult) {
       console.log(hitResult);
       curr_seg = hitResult.segment;
-      hitResult.item.fullySelected = true;
       if (hitResult.type === 'handle-in') {
         handle2 = hitResult.segment.handleOut;
         handle = hitResult.segment.handleIn;
+        hitResult.segment.selected = true;
       } else if (hitResult.type === 'handle-out') {
         handle2 = hitResult.segment.handleIn;
         handle = hitResult.segment.handleOut;
+        hitResult.segment.selected = true;
       } else if (hitResult.type === 'segment') {
         node = hitResult.segment.point;
+        hitResult.segment.selected = true;
+      } else if ((hitResult.type === 'stroke') && event.event.ctrlKey) {
+        location = hitResult.location;
+        segment = hitResult.item.insert(location.index + 1, event.point);
+        hitResult.item.smooth();
+      } else if (hitResult.type === 'stroke') {
+        hitResult.item.selected = true;
       }
     }
     return true;

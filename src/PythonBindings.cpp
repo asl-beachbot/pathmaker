@@ -96,12 +96,17 @@ public:
         // int fill_method; // fill type: 1 = Skeleton, 2 = wiggle
         // Direction_2 direction; // only for wiggle fill
 
-
-        vet->print_tree();
         vet->clearFill();
-        vet->print_tree();
+        vet->clearConnections();
+
         vet->fillPolys();
-        vet->print_tree();
+
+        TSPConnector * sc = new TSPConnector(vet);
+        sc->create_distance_matrix();
+
+        ConnectionSmoother cs(vet);
+        cs.smooth();
+
         return vet->toJSON();
     }
     std::string resegment_with_line(std::string arguments_as_json) {

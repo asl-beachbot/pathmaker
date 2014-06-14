@@ -115,6 +115,7 @@ add_executable(svg_parser
     src/Spiro.cpp
     src/ConnectionSmoother.cpp
     src/TSPConnector.cpp
+    src/FillProcedures.cpp
 )
 
 if(NOGUI)
@@ -135,6 +136,7 @@ add_library(python/beachbot_pathgen SHARED
     src/SimpleConnector.cpp
     src/Spiro.cpp
     src/ConnectionSmoother.cpp
+    src/FillProcedures.cpp
     src/TSPConnector.cpp
 )
 
