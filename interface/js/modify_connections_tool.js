@@ -19,6 +19,9 @@
 
   tool.onMouseDown = function(event) {
     var c, circle, hitResult, _i, _len, _ref;
+    if (event.event.button !== 0) {
+      return;
+    }
     _ref = window.painted_elements;
     for (_i = 0, _len = _ref.length; _i < _len; _i++) {
       c = _ref[_i];

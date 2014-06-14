@@ -6,8 +6,11 @@
 - Implement all the tools
 - Add non segmenting back and forth fill like custom segmentation (with is-inside detection) and TSP
 - add view options button
---- less priority ideas ---
+- solve containment problem for polygon_with_hole spiral fill! both "sides" are generated at the same time
+- change global options from interface
 
+--- less priority ideas ---
+- playback?
 - something that drives on straight skeleton edges (in the tight strips)
 
 -- DONE --

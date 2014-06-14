@@ -4,8 +4,12 @@
 
   base_url = "http://localhost:5000/";
 
+  window.pp_opts = {
+    outline: true
+  };
+
   window.onload = function() {
-    var canvas, curr_zoom, hitOptions, isDragging, paper, prevDragPosition;
+    var canvas, changeDispConn, changeOutline, curr_zoom, hitOptions, isDragging, paper, prevDragPosition;
     hitOptions = {
       segments: true,
       stroke: true,
@@ -25,6 +29,35 @@
     curr_zoom = 1;
     isDragging = false;
     prevDragPosition = [0, 0];
+    $('#canvas').on('mousedown', function(event) {
+      console.log(event);
+      if (event.which !== 3) {
+        return;
+      }
+      mainCanvas.activate();
+      return $(window).on('mousemove', function() {
+        prevDragPosition = [event.pageX, event.pageY];
+        isDragging = true;
+        return $(window).off('mousemove');
+      });
+    });
+    $('#canvas').on('mouseup', function() {
+      var wasDragging;
+      mainCanvas.activate();
+      wasDragging = isDragging;
+      isDragging = false;
+      return $(window).off("mousemove");
+    });
+    $('#canvas').on('mousemove', function(event) {
+      var delta;
+      if (isDragging) {
+        mainCanvas.activate();
+        console.log('dragging');
+        delta = [event.pageX - prevDragPosition[0], event.pageY - prevDragPosition[1]];
+        prevDragPosition = [event.pageX, event.pageY];
+        return paper.view.center = paper.view.center.subtract(new paper.Point(delta));
+      }
+    });
     $('#canvas').on('mousewheel', function(event) {
       var a, beta, d, p, pc, zoom_factor;
       mainCanvas.activate();
@@ -40,41 +73,97 @@
         }
         beta = 1 / zoom_factor;
         curr_zoom = curr_zoom * zoom_factor;
-        p = new paper.Point(event.pageX, event.pageY);
+        p = new paper.Point(event.pageX, -event.pageY);
+        p.multiply(zoom_factor);
         pc = p.subtract(paper.view.center);
         a = p.subtract(pc.multiply(beta)).subtract(paper.view.center);
         paper.view.zoom = curr_zoom;
         return paper.view.center = paper.view.center.add(a);
       }
     });
-    $('#testbtn').click(function() {
-      var dx, dy, segment, vector;
-      dx = 1;
-      dy = 0;
-      mainCanvas.activate();
-      segment = mainCanvas.selectedItems[0];
-      if (!segment.is_segment) {
-        return;
-      }
-      if (vector) {
-        vector = vector.normalize();
-        dx = vector.x;
-        dy = vector.y;
-      }
-      return changeFill(segment, vector);
-    });
     $('#resegment').click(function() {
       return segmentation_tool.activate();
     });
     $('#fill').click(function() {
-      return fill_select_tool.activate();
+      fill_select_tool.activate();
+      return $('#fill_options').show();
     });
     $('#connections').click(function() {
       return modify_connections_tool.activate();
     });
-    return $('#shape_transitions').click(function() {
+    $('#shape_transitions').click(function() {
       console.log("activating the shape transition tool");
       return shape_transition_curve_tool.activate();
+    });
+    changeOutline = function() {
+      var el, _i, _j, _len, _len1, _ref, _ref1;
+      if (window.pp_opts.outline) {
+        _ref = paper.project.getItems({
+          "class": paper.Path
+        });
+        for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+          el = _ref[_i];
+          el.strokeWidth = 1;
+        }
+      } else {
+        _ref1 = paper.project.getItems({
+          "class": paper.Path
+        });
+        for (_j = 0, _len1 = _ref1.length; _j < _len1; _j++) {
+          el = _ref1[_j];
+          console.log(el.origStrokeWidth);
+          el.strokeWidth = el.origStrokeWidth;
+        }
+      }
+      return paper.view.update();
+    };
+    changeDispConn = function() {
+      var c, _i, _j, _len, _len1, _results, _results1;
+      if (window.pp_opts.show_conn === 0) {
+        _results = [];
+        for (_i = 0, _len = all_connections.length; _i < _len; _i++) {
+          c = all_connections[_i];
+          _results.push(c.visible = false);
+        }
+        return _results;
+      } else {
+        _results1 = [];
+        for (_j = 0, _len1 = all_connections.length; _j < _len1; _j++) {
+          c = all_connections[_j];
+          _results1.push(c.visible = true);
+        }
+        return _results1;
+      }
+    };
+    $('#outline').on('change', function() {
+      if ($(this).is(':checked')) {
+        window.pp_opts.outline = true;
+        return changeOutline();
+      }
+    });
+    $('#real').on('change', function() {
+      if ($(this).is(':checked')) {
+        window.pp_opts.outline = false;
+        return changeOutline();
+      }
+    });
+    $('#hide_conn').on('change', function() {
+      if ($(this).is(':checked')) {
+        window.pp_opts.show_conn = 0;
+        return changeDispConn();
+      }
+    });
+    $('#show_conn').on('change', function() {
+      if ($(this).is(':checked')) {
+        window.pp_opts.show_conn = 1;
+        return changeDispConn();
+      }
+    });
+    return $('#simple_conn').on('change', function() {
+      if ($(this).is(':checked')) {
+        window.pp_opts.show_conn = 2;
+        return changeDispConn();
+      }
     });
   };
 

@@ -22,6 +22,10 @@
 #    arbitrary points
 
 base_url = "http://localhost:5000/"
+
+window.pp_opts = 
+	outline: true
+
 window.onload = ->
 	hitOptions =
 		segments: true
@@ -48,27 +52,29 @@ window.onload = ->
 	curr_zoom = 1
 	isDragging = false
 	prevDragPosition = [0,0]
-	# $('#canvas').on 'mousedown', (event) ->
-	# 	# if(event.which != 2) {return;}
-	# 	mainCanvas.activate()
-	# 	$(window).on 'mousemove', ->
-	# 		prevDragPosition = [event.pageX, event.pageY]
-	# 		isDragging = true
-	# 		$(window).off 'mousemove'
+	$('#canvas').on 'mousedown', (event) ->
+		console.log event
+		if event.which != 3
+			return
+		mainCanvas.activate()
+		$(window).on 'mousemove', ->
+			prevDragPosition = [event.pageX, event.pageY]
+			isDragging = true
+			$(window).off 'mousemove'
 
-	# $('#canvas').on 'mouseup', ->
-	# 	mainCanvas.activate()
-	# 	wasDragging = isDragging
-	# 	isDragging = false;
-	# 	$(window).off("mousemove")
+	$('#canvas').on 'mouseup', ->
+		mainCanvas.activate()
+		wasDragging = isDragging
+		isDragging = false;
+		$(window).off("mousemove")
 
-	# $('#canvas').on 'mousemove', (event) ->
-	# 	mainCanvas.activate()
-	# 	if isDragging and not paper.project.selectedItems.length
-	# 		console.log 'dragging'
-	# 		delta = [event.pageX - prevDragPosition[0], event.pageY - prevDragPosition[1]]
-	# 		prevDragPosition = [event.pageX, event.pageY]
-	# 		paper.view.center = paper.view.center.subtract(new paper.Point(delta).multiply(1 / curr_zoom))
+	$('#canvas').on 'mousemove', (event) ->
+		if isDragging
+			mainCanvas.activate()
+			console.log 'dragging'
+			delta = [event.pageX - prevDragPosition[0], event.pageY - prevDragPosition[1]]
+			prevDragPosition = [event.pageX, event.pageY]
+			paper.view.center = paper.view.center.subtract(new paper.Point(delta))
 
 	$('#canvas').on 'mousewheel', (event) ->
 		mainCanvas.activate()
@@ -81,77 +87,77 @@ window.onload = ->
 				zoom_factor = Math.pow(0.8, d)
 			else
 				zoom_factor = Math.pow(1.2, Math.abs(d))
+
 			beta = 1 / zoom_factor
 			curr_zoom = curr_zoom * zoom_factor
 			# if not left top, center with parent in mind
 			# var parentOffset = $(this).parent().offset(); 
-			p = new paper.Point(event.pageX, event.pageY);
+			p = new paper.Point(event.pageX, -event.pageY);
+			p.multiply(zoom_factor)
 			pc = p.subtract(paper.view.center)
 			a = p.subtract(pc.multiply(beta)).subtract(paper.view.center)
 			paper.view.zoom = curr_zoom
 			paper.view.center = paper.view.center.add a
 
-	# paper.setup(document.getElementById("direction_canvas"))
-	# directionCanvas = paper.projects[1];
-	# vectorItem = null
-	# vector = null
-	# paintVector = (pos) ->
-	# 	directionCanvas.activate()
-	# 	vectorStart = new paper.Point(75, 75)
-	# 	vectorEnd = pos
-	# 	vector =  vectorEnd.subtract(vectorStart);
-	# 	if (vectorItem)
-	# 		vectorItem.remove();
-	# 	items = [];
-	# 	arrowVector = vector.normalize(10);
-	# 	end = vectorStart + vector;
-	# 	vectorItem = new paper.Group([
-	# 		new paper.Path([vectorStart, vectorEnd]),
-	# 		new paper.Path([
-	# 			vectorEnd.add(arrowVector.rotate(135)),
-	# 			vectorEnd,
-	# 			vectorEnd.add(arrowVector.rotate(-135))
-	# 		])
-	# 	]);
-	# 	vectorItem.strokeColor = 'black';
-	# 	vectorItem.strokeWidth = 3
-	# paintVector(new paper.Point(0,0))
-	# directionCanvas.activate()
-	# vectorTool = new paper.Tool()
-	# vectorTool.activate()
-	# vectorTool.onMouseDrag = (event) ->
-	# 	paintVector(event.point)
-
-	# directionCanvas.view.draw()
-
-	$('#testbtn').click( () ->
-		dx = 1
-		dy = 0
-		mainCanvas.activate(	)
-		segment = mainCanvas.selectedItems[0];
-		if !segment.is_segment 
-			return
-		if vector
-			vector = vector.normalize()
-			dx = vector.x
-			dy = vector.y
-		changeFill(segment, vector)
-	)
-	# <button id="resegment">Segmentation Tool</button>
-	# <button id="fill">Select Fill Tool</button>
-	# <button id="connections">Change Connections</button>
-	# <button id="shape_transitions">Modify Transitions</button>
-
 	$('#resegment').click () ->
 		segmentation_tool.activate()
 	$('#fill').click () ->
 		fill_select_tool.activate()
+		$('#fill_options').show()
 	$('#connections').click () ->
 		modify_connections_tool.activate()
 	$('#shape_transitions').click () ->
 		console.log "activating the shape transition tool"
 		shape_transition_curve_tool.activate()
 
+	changeOutline = () ->
+		if window.pp_opts.outline
+			# for w in window.painted_elements
+			# 	w.strokeWidth = w.origStrokeWidth
+			# 	console.log w.origStrokeWidth
 
-	# code for the direction canvas
+			for el in paper.project.getItems({class: paper.Path})
+				el.strokeWidth = 1
+		else 
+			# for w in window.painted_elements
+			# 	w.strokeWidth = 1
+
+			for el in paper.project.getItems({class: paper.Path})
+				console.log el.origStrokeWidth
+				el.strokeWidth = el.origStrokeWidth
+		paper.view.update()
+
+	changeDispConn = () ->
+		if window.pp_opts.show_conn == 0
+			for c in all_connections
+				c.visible = false
+		else
+			for c in all_connections
+				c.visible = true
+
+	$('#outline').on 'change', () ->
+		if $(this).is(':checked')
+			window.pp_opts.outline = true
+			changeOutline()
+
+	$('#real').on 'change', () ->
+		if $(this).is(':checked')
+			window.pp_opts.outline = false
+			changeOutline()
+
+
+	$('#hide_conn').on 'change', () ->
+		if $(this).is(':checked')
+			window.pp_opts.show_conn = 0
+			changeDispConn()
+
+	$('#show_conn').on 'change', () ->
+		if $(this).is(':checked')
+			window.pp_opts.show_conn = 1
+			changeDispConn()
+
+	$('#simple_conn').on 'change', () ->
+		if $(this).is(':checked')
+			window.pp_opts.show_conn = 2
+			changeDispConn()
 

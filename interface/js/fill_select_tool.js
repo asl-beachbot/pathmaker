@@ -25,8 +25,22 @@
 
   startVector = endVector = vector = null;
 
+  $(document).ready(function() {
+    $('#spiral_fill').click(function() {
+      var p;
+      console.log('click spirals');
+      if (segment) {
+        p = new paper.Point(0, 1);
+        return api.changeFill(segment, p, 2);
+      }
+    });
+  });
+
   tool.onMouseDown = function(event) {
     var hitResult, location, prev_selected, seg, _i, _len;
+    if (event.event.button !== 0) {
+      return;
+    }
     prev_selected = paper.project.selectedItems;
     paper.project.deselectAll();
     if (movePath) {
@@ -59,6 +73,9 @@
   };
 
   tool.onMouseDrag = function(event) {
+    if (event.event.button !== 0) {
+      return;
+    }
     if (startVector) {
       endVector = event.point;
       if (vector) {
@@ -84,6 +101,9 @@
 
   tool.onMouseUp = function(event) {
     var p;
+    if (event.event.button !== 0) {
+      return;
+    }
     if (segment && vector) {
       p = (startVector.subtract(endVector)).divide((startVector.subtract(endVector)).length);
       console.log(p);

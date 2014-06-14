@@ -41,9 +41,13 @@ public:
     superline.push_back(outer[idx % offset_poly_wh[0]->size()]);
     while(offset_poly_wh.size() > 0) {
       cout << "adding poly" << count << " l o " << lOffset << *offset_poly_wh[0]<<  endl;
+      for(auto p : offset_poly_wh) {
+        cout << "Polygon: " << p << endl;
+      }
       count++;
       // no more polys
       if(offset_poly_wh.size() > 1) {
+        cout << "Split event: " << offset_poly_wh.size() << endl;
         // decide which poly should continue this spiral
         // and with the rest, start a new recursion!
         int index_of_spiral_cont = 0;
@@ -64,6 +68,7 @@ public:
           }
         }
         Polygon_with_holes_2 temp_poly((*offset_poly_wh[index_of_spiral_cont]), poly->holes_begin(), poly->holes_end());
+        cout << " Temp Poly : " << temp_poly << endl; 
         // get a new idx! 
         idx = findClosestIndex(prev_point, (*offset_poly_wh[index_of_spiral_cont])) + 1;
         cout << "Temp Poly: " << temp_poly << endl;
@@ -82,7 +87,7 @@ public:
         }
         ElementPtr * poly_element = new PolygonElementPtr(outer, Rake::RAKE_FULL);
         poly_element->fill_element = true;
-        cout << poly_element << endl;
+        // cout << poly_element << endl;
         // result.push_back(poly_element); TODO handle this stuff!
       }
       idx = findClosestIndex(prev_point, outer) + 1;

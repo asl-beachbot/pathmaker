@@ -9,6 +9,8 @@ circles = []
 new_conn_path = null;
 node1 = node2 = null
 tool.onMouseDown = (event) ->
+	if event.event.button != 0
+		return
 	for c in window.painted_elements
 		hitResult = c.hitTest(event.point, hitOptions)
 		if hitResult

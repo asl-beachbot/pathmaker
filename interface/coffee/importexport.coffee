@@ -19,12 +19,13 @@ window.api =
 		$.get "http://localhost:5000/load_svg", (data) ->
 			loadJsonToPaper(data);
 
-	changeFill: (segment, direction) ->
+	changeFill: (segment, direction, fm = 1) ->
 		obj =
 			id: segment._id
 			segment_index: segment.segment_index 
 			dx: direction.x
 			dy: direction.y
+			fill_method: fm
 
 		$.ajax
 			url: mainUrl + "update_fill_for_element",
@@ -62,8 +63,8 @@ window.loadJsonToPaper = (data) ->
 		window.currentLoadedData = data
 		path = new paper.Path()
 		path.strokeColor = 'black';
-		path.strokeWidth = el.stroke_width
-		path.strokeWidth = 3
+		path.strokeWidth = if pp_opts.outline then 1 else el.stroke_width
+		path.origStrokeWidth = el.stroke_width
 		path._id = el.id
 		for c in el.coords
 			path.add(c)
@@ -79,6 +80,7 @@ window.loadJsonToPaper = (data) ->
 				seg_path.strokeColor = "green"
 				seg_path.is_segment = true
 				seg_path.fillColor = 'white'
+				seg_path.origStrokeWidth = 1
 				seg_path.closed = true
 				seg_path._id = el.id
 				seg_path.segment_index = i
@@ -90,9 +92,10 @@ window.loadJsonToPaper = (data) ->
 			connection_path = new paper.Path()
 			all_connections.push(connection_path)
 			connection_path.strokeColor = "blue"
-			connection_path.strokeWidth = 3
+			connection_path.strokeWidth = 2
+			connection_path.origStrokeWidth = 2
 			first = true
-			console.log el.connection
+			# console.log el.connection
 			for c in el.connection
 				if Math.abs(c[1][0]) < 0.00001
 					continue
@@ -101,10 +104,11 @@ window.loadJsonToPaper = (data) ->
 					connection_path.moveTo(new paper.Point([c[1][0], c[1][1]]))
 					first = false
 				else
-					console.log "CurveTo", c[0][0], c[0][1], c[1][0], c[1][1], c[2][0], c[2][1]
+					# console.log "CurveTo", c[0][0], c[0][1], c[1][0], c[1][1], c[2][0], c[2][1]
 					connection_path.cubicCurveTo(
 						new paper.Point([c[0][0], c[0][1]])
 						new paper.Point([c[1][0], c[1][1]])
 						new paper.Point([c[2][0], c[2][1]])
 					)
 			# connection_path.simplify()
+	paper.view.update()

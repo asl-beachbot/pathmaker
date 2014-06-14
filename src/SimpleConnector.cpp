@@ -195,12 +195,15 @@ void SimpleConnector::connect() {
   cout << "startpoint " << this->tree->startpoint_elem << endl;
 
   if(this->tree->startpoint_elem != nullptr) {
-    Tree_ElementPtr::iterator start_iter = std::find(element_tree->begin(), element_tree->end(), tree->startpoint_elem);
+    Tree_ElementPtr::iterator start_iter = element_tree->append_child(element_tree->begin(), tree->startpoint_elem);
+    // Tree_ElementPtr::iterator start_iter = std::find(element_tree->begin(), element_tree->end(), tree->startpoint_elem);
     cout << "startpoint found: ";
     (*start_iter)->print();
     // TODO reverse start iter as needed (sometimes the line shows in the wrong direction)
     cout << endl;
     connect_recursive(start_iter, NULL);
+    (*start_iter)->to->from = nullptr;
+    element_tree->erase(start_iter);
   }
   else{
     Tree_ElementPtr::post_order_iterator start_iter = element_tree->begin_post();

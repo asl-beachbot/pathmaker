@@ -84,6 +84,10 @@ public:
         double dy = arguments.get("dy", 0).asDouble();
         auto casted_el = static_cast<FilledPolygonElementPtr *>(el);
         int segment_index = arguments.get("segment_index", 0).asInt();
+        if(segment_index == -1) {
+            // no segmentation, spiral fill!
+            // TODO
+        }
         auto seg = &(casted_el->segments.at(segment_index));
         int fill_method = arguments.get("fill_method", 1).asInt();
         seg->fill_method = fill_method;

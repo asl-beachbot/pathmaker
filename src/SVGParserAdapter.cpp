@@ -185,8 +185,6 @@ int main(int argc, char** argv) {
   segment_connector->connect_segments();
   
   vet->fillPolys();
-  // SimpleConnector * sc = new SimpleConnector(vet);
-  // sc->connect();
 
   auto t = &(vet->element_tree);
   int i = 0;
@@ -200,24 +198,26 @@ int main(int argc, char** argv) {
     }
     i++;
   }
-  cout << "Test connecting " << id1 << " at " << 0 << " and " << id2 << " at -1" << endl;
-  vet->enforceConnection(id1, 0, id2, -1);
+  // cout << "Test connecting " << id1 << " at " << 0 << " and " << id2 << " at -1" << endl;
+  // vet->enforceConnection(id1, 0, id2, -1);
 
-  TSPConnector * sc = new TSPConnector(vet);
-  sc->create_distance_matrix();
+  SimpleConnector * sc = new SimpleConnector(vet);
+  sc->connect();
+  // TSPConnector * sc = new TSPConnector(vet);
+  // sc->create_distance_matrix();
 
-  if(GlobalOptions::getInstance().rounding_radius > 0) {
-    ConnectionSmoother cs(vet);
-    cs.smooth();
-  }
+  // if(GlobalOptions::getInstance().rounding_radius > 0) {
+  //   ConnectionSmoother cs(vet);
+  //   cs.smooth();
+  // }
 
   // vet->clearFill();
   // vet->  drawConnections();
 
 
-  // PostProcessor *  psc = new PostProcessor(vet);
-  // psc->process();
-  cout << vet->toJSON() << endl;
+  PostProcessor *  psc = new PostProcessor(vet);
+  psc->process();
+  // cout << vet->toJSON() << endl;
   // std::string json = "var PolyJSON = '" + vet->toJSON();
   // json += "'";
   // std::ofstream of("PolyJSON.js");

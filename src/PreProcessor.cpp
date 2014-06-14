@@ -74,12 +74,12 @@ void PreProcessor::process(double scale, double trans_x, double trans_y) {
 			break;
 			case EL_FILLED_POLYGON: { // Todo transform holes!
 				FilledPolygonElementPtr * fp = static_cast<FilledPolygonElementPtr *>(*it);
-				Polygon_2 p = fp->element.outer_boundary();
-				for(auto poly_it = p.vertices_begin(); poly_it != p.vertices_end(); ++poly_it) {
-					*poly_it = poly_it->transform(trafo);
+				Polygon_with_holes_2 scaled_pwh(transform(trafo, fp->element.outer_boundary()));
+				for(auto hit = fp->element.holes_begin(); hit != fp->element.holes_end(); ++hit) {
+					scaled_pwh.add_hole(transform(trafo, (*hit)));
 				}
-				Polygon_with_holes_2 pwh_new = Polygon_with_holes_2(p);
-				fp->element = pwh_new;
+				cout << "Scaled PWH = " << scaled_pwh << endl;
+				fp->element = scaled_pwh;
 			}
 			break;
 			case EL_POLYLINE: {

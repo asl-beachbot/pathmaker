@@ -6,15 +6,19 @@
 
   tool = segmentation_tool;
 
-  tool.minDistance = 0;
-
   startPoint = endPoint = cutPath = null;
 
   tool.onMouseDown = function(e) {
+    if (e.event.button !== 0) {
+      return;
+    }
     return startPoint = e.point;
   };
 
   tool.onMouseDrag = function(e) {
+    if (e.event.button !== 0) {
+      return;
+    }
     endPoint = e.point;
     if (cutPath) {
       cutPath.remove();

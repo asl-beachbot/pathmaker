@@ -13,7 +13,18 @@ hitOptions =
 	stroke: true
 
 startVector = endVector = vector = null
+$(document).ready () ->
+	$('#spiral_fill').click () ->
+		console.log 'click spirals'
+		if segment
+			p = new paper.Point(0, 1)
+			api.changeFill(segment, p, 2)
+	return
+
 tool.onMouseDown = (event) -> 
+	if event.event.button != 0
+		return
+
 	prev_selected = paper.project.selectedItems
 	paper.project.deselectAll()
 	# todo only check segments and polys
@@ -63,6 +74,9 @@ tool.onMouseDown = (event) ->
 # 		event.item.selected = true
 
 tool.onMouseDrag = (event) ->
+	if event.event.button != 0
+		return
+
 	if startVector
 		endVector = event.point
 		if vector
@@ -82,6 +96,9 @@ tool.onMouseDrag = (event) ->
 curr_zoom = 1
 
 tool.onMouseUp = (event) ->
+	if event.event.button != 0
+		return
+
 	if segment and vector
 		p = (startVector.subtract(endVector)).divide((startVector.subtract(endVector)).length)
 		console.log(p)

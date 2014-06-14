@@ -16,26 +16,56 @@
 	<script type="text/javascript" src="js/shape_transition_curve_tool.js"></script>
 	<script type="text/javascript" src="js/paint.js"></script>
 </head >
-<body>
+<body oncontextmenu="return false;">
 <canvas resize="true" id="canvas" width="100%" height="100%"></canvas>
 <div id="select_fill">
 	<h3>Toolbox</h3>
-	<button id="resegment">Segmentation Tool</button>
-	<button id="fill">Select Fill Tool</button>
-	<button id="connections">Change Connections</button>
-	<button id="shape_transitions">Modify Transitions</button>
-	<div class="options">
-		<input type="radio" name="fill" value="spiral">Spiral Fill<br>
-		<input type="radio" name="fill" value="wiggle">Wiggle Fill<br>
-		<div>
-			<input type="radio" name="fill_direction" value="0,1">0,1<br>
-			<input type="radio" name="fill_direction" value="1,1">1,1<br>
-			<input type="radio" name="fill_direction" value="1,0">1,0<br>
-			<input type="radio" name="fill_direction" value="1,0.5">1,0.5<br>
+	<fieldset>
+	    <legend>View</legend>
+	    <div class="dist_flex">
+		    <input id="outline" name="view" type="radio" checked>
+	    	<label for="outline">Outline</label>
+	    	<input id="real" name="view" type="radio">
+	    	<label for="real">Real</label>
+	    </div>
+	    <span></span>
+	</fieldset>	<fieldset>
+	    <legend>Connections</legend>
+	    <div class="dist_flex">
+			<input id="show_conn" name="connections" type="radio" checked>
+	    	<label for="show_conn">Show</label>
+	    	<input id="hide_conn" name="connections" type="radio">
+	    	<label for="hide_conn">Hide</label>
+	    	<input id="simple_conn" name="connections" type="radio">
+	    	<label for="simple_conn">Simple</label>
+	    </div>
+	    <span></span>
+	</fieldset>
+	<fieldset>
+	    <legend>Tools</legend>
+	    <div class="hor_flex">
+	    <input id="resegment" name="tool" type="radio" checked>
+    	<label for="resegment">Segmentation Tool</label>
+    	<input id="fill" name="tool" type="radio">
+    	<label for="fill">Select Fill Tool</label>
+    	<input id="connections" name="tool" type="radio">
+    	<label for="connections">Change Connections</label>
+    	<input id="shape_transitions" name="tool" type="radio">
+    	<label for="shape_transitions">Modify Transitions</label>
+    	</div>
+	</fieldset>
+	<fieldset id="fill_options">
+	    <legend>Fill Settings</legend>
+		<button id="spiral_fill">Use Spiral Fill</button>
+	</fieldset>
+	<fieldset id="transition_options">
+	    <legend>Transition Options</legend>
+		<button id="simplify_transition">Simplify Path</button>
+	</fieldset>
+	<fieldset id="transition_options">
+		<button id="post_animate">Post Process and Animate</button>
+	</fieldset>
 
-		</div>
-		<button id="testbtn">Test!</button>
-	</div>
 	<canvas resize="true" id="direction_canvas" width="100%" height="100%"></canvas>
 </div>
 </body>
