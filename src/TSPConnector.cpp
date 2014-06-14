@@ -305,21 +305,21 @@ vector<int> TSPConnector::create_distance_matrix_row(Tree_ElementPtr::iterator r
         } else {    
           if((*it)->get_type() == EL_POLYLINE) {
             // there is just one point reachable
-            if(ef.index == 0) row.push_back(ceil(CGAL::squared_distance(current_point, (*it)->getFromIndex(-1)) * 100));
-            else row.push_back(ceil(CGAL::squared_distance(current_point, (*it)->getFromIndex(0)) * 100));
+            if(ef.index == 0) row.push_back(ceil(sqrt(CGAL::squared_distance(current_point, (*it)->getFromIndex(-1))) * 100));
+            else row.push_back(ceil(sqrt(CGAL::squared_distance(current_point, (*it)->getFromIndex(0))) * 100));
           } else {
-            row.push_back(ceil(CGAL::squared_distance(current_point, (*it)->getFromIndex(ef.index)) * 100));
+            row.push_back(ceil(sqrt(CGAL::squared_distance(current_point, (*it)->getFromIndex(ef.index))) * 100));
           }
         }
       } else if((*it)->enforced_connections.size() == 2) {
         // do nothing! this city cannot be reached from the outside
       } else {
         if((*it)->get_type() == EL_POLYLINE) {
-          row.push_back(ceil(CGAL::squared_distance(current_point, (*it)->getFromIndex(0)) * 100));
+          row.push_back(ceil(sqrt(CGAL::squared_distance(current_point, (*it)->getFromIndex(0))) * 100));
           row.push_back(ceil(CGAL::squared_distance(current_point, (*it)->getFromIndex(-1)) * 100));
         } else {
           for(int i = 0; i < (*it)->getSize(); i++) {
-            row.push_back(ceil(CGAL::squared_distance(current_point, (*it)->getFromIndex(i)) * 100));
+            row.push_back(ceil(sqrt(CGAL::squared_distance(current_point, (*it)->getFromIndex(i))) * 100));
           }
         }
       }
@@ -360,8 +360,8 @@ vector<int> TSPConnector::create_startpoint_distance_matrix_row(Point_2 sp) {
       auto ef = (*it)->enforced_connections[0];
       if((*it)->get_type() == EL_POLYLINE) {
         // there is just one point reachable
-        if(ef.index == 0) row.push_back(ceil(CGAL::squared_distance(sp, (*it)->getFromIndex(-1)) * 100));
-        else row.push_back(ceil(CGAL::squared_distance(sp, (*it)->getFromIndex(0)) * 100));
+        if(ef.index == 0) row.push_back(ceil(sqrt(CGAL::squared_distance(sp, (*it)->getFromIndex(-1))) * 100));
+        else row.push_back(ceil(sqrt(CGAL::squared_distance(sp, (*it)->getFromIndex(0))) * 100));
       } else {
         row.push_back(ceil(CGAL::squared_distance(sp, (*it)->getFromIndex(ef.index)) * 100));
       }
@@ -369,11 +369,11 @@ vector<int> TSPConnector::create_startpoint_distance_matrix_row(Point_2 sp) {
       // do nothing! this city cannot be reached from the outside
     } else {
       if((*it)->get_type() == EL_POLYLINE) {
-        row.push_back(ceil(CGAL::squared_distance(sp, (*it)->getFromIndex(0)) * 100));
-        row.push_back(ceil(CGAL::squared_distance(sp, (*it)->getFromIndex(-1)) * 100));
+        row.push_back(ceil(sqrt(CGAL::squared_distance(sp, (*it)->getFromIndex(0))) * 100));
+        row.push_back(ceil(sqrt(CGAL::squared_distance(sp, (*it)->getFromIndex(-1))) * 100));
       } else {
         for(int i = 0; i < (*it)->getSize(); i++) {
-          row.push_back(ceil(CGAL::squared_distance(sp, (*it)->getFromIndex(i)) * 100));
+          row.push_back(ceil(sqrt(CGAL::squared_distance(sp, (*it)->getFromIndex(i))) * 100));
         }
       }
     }
