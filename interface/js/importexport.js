@@ -66,12 +66,13 @@
   };
 
   window.loadJsonToPaper = function(data) {
-    var c, connection_path, el, first, i, path, seg, seg_path, _i, _j, _k, _l, _len, _len1, _len2, _len3, _len4, _m, _ref, _ref1, _ref2, _ref3, _ref4;
+    var arrowVector, c, connection_path, el, end, first, i, p1, p2, path, seg, seg_path, simple_connection, vec, _i, _j, _k, _l, _len, _len1, _len2, _len3, _len4, _m, _ref, _ref1, _ref2, _ref3, _ref4;
     mainCanvas.activate();
     paper.project.activeLayer.removeChildren();
     window.filled_segments = [];
     window.all_connections = [];
     window.painted_elements = [];
+    window.simple_all_connections = [];
     _ref = data.elems;
     for (_i = 0, _len = _ref.length; _i < _len; _i++) {
       el = _ref[_i];
@@ -133,7 +134,25 @@
             connection_path.cubicCurveTo(new paper.Point([c[0][0], c[0][1]]), new paper.Point([c[1][0], c[1][1]]), new paper.Point([c[2][0], c[2][1]]));
           }
         }
+        c = el.connection[0];
+        p1 = new paper.Point([c[1][0], c[1][1]]);
+        c = el.connection[el.connection.length - 1];
+        p2 = new paper.Point([c[1][0], c[1][1]]);
+        vec = p1.subtract(p2);
+        arrowVector = vec.normalize(10);
+        console.log(arrowVector);
+        end = p1.add(vec);
+        simple_connection = new paper.Group([new paper.Path([p1, p2]), new paper.Path([p2.add(arrowVector.rotate(-55)), p2, p2.add(arrowVector.rotate(+55))])]);
+        simple_all_connections.push(simple_connection);
+        simple_connection.strokeColor = "blue";
+        simple_connection.strokeWidth = 1;
+        simple_connection.origStrokeWidth = 1;
+        simple_connection.visible = 0;
       }
+    }
+    if (window.changeOutline) {
+      changeOutline();
+      changeDispConn();
     }
     return paper.view.update();
   };

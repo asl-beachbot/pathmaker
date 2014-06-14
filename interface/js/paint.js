@@ -9,7 +9,7 @@
   };
 
   window.onload = function() {
-    var canvas, changeDispConn, changeOutline, curr_zoom, hitOptions, isDragging, paper, prevDragPosition;
+    var canvas, curr_zoom, hitOptions, isDragging, paper, prevDragPosition;
     hitOptions = {
       segments: true,
       stroke: true,
@@ -95,7 +95,7 @@
       console.log("activating the shape transition tool");
       return shape_transition_curve_tool.activate();
     });
-    changeOutline = function() {
+    window.changeOutline = function() {
       var el, _i, _j, _len, _len1, _ref, _ref1;
       if (window.pp_opts.outline) {
         _ref = paper.project.getItems({
@@ -117,23 +117,40 @@
       }
       return paper.view.update();
     };
-    changeDispConn = function() {
-      var c, _i, _j, _len, _len1, _results, _results1;
+    window.changeDispConn = function() {
+      var c, _i, _j, _k, _l, _len, _len1, _len2, _len3, _len4, _len5, _m, _n, _ref, _ref1, _ref2;
       if (window.pp_opts.show_conn === 0) {
-        _results = [];
         for (_i = 0, _len = all_connections.length; _i < _len; _i++) {
           c = all_connections[_i];
-          _results.push(c.visible = false);
+          c.visible = false;
         }
-        return _results;
-      } else {
-        _results1 = [];
-        for (_j = 0, _len1 = all_connections.length; _j < _len1; _j++) {
-          c = all_connections[_j];
-          _results1.push(c.visible = true);
+        _ref = window.simple_all_connections;
+        for (_j = 0, _len1 = _ref.length; _j < _len1; _j++) {
+          c = _ref[_j];
+          c.visible = false;
         }
-        return _results1;
+      } else if (window.pp_opts.show_conn === 1) {
+        for (_k = 0, _len2 = all_connections.length; _k < _len2; _k++) {
+          c = all_connections[_k];
+          c.visible = true;
+        }
+        _ref1 = window.simple_all_connections;
+        for (_l = 0, _len3 = _ref1.length; _l < _len3; _l++) {
+          c = _ref1[_l];
+          c.visible = false;
+        }
+      } else if (window.pp_opts.show_conn === 2) {
+        _ref2 = window.simple_all_connections;
+        for (_m = 0, _len4 = _ref2.length; _m < _len4; _m++) {
+          c = _ref2[_m];
+          c.visible = true;
+        }
+        for (_n = 0, _len5 = all_connections.length; _n < _len5; _n++) {
+          c = all_connections[_n];
+          c.visible = false;
+        }
       }
+      return paper.view.update;
     };
     $('#outline').on('change', function() {
       if ($(this).is(':checked')) {

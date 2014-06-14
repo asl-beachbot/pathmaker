@@ -5,6 +5,7 @@
 - Segmentation with Holes?! Holes?!
 - solve containment problem for polygon_with_hole spiral fill! both "sides" are generated at the same time
 - change global options from interface
+- connect stuff and segments and everything
 
 --- less priority ideas ---
 - Add non segmenting back and forth fill like custom segmentation (with is-inside detection) and TSP

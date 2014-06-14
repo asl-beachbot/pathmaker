@@ -110,7 +110,7 @@ window.onload = ->
 		console.log "activating the shape transition tool"
 		shape_transition_curve_tool.activate()
 
-	changeOutline = () ->
+	window.changeOutline = () ->
 		if window.pp_opts.outline
 			# for w in window.painted_elements
 			# 	w.strokeWidth = w.origStrokeWidth
@@ -127,13 +127,24 @@ window.onload = ->
 				el.strokeWidth = el.origStrokeWidth
 		paper.view.update()
 
-	changeDispConn = () ->
+	window.changeDispConn = () ->
 		if window.pp_opts.show_conn == 0
 			for c in all_connections
 				c.visible = false
-		else
+			for c in window.simple_all_connections
+				c.visible = false
+		else if window.pp_opts.show_conn == 1
 			for c in all_connections
 				c.visible = true
+			for c in window.simple_all_connections
+				c.visible = false
+		else if window.pp_opts.show_conn == 2
+			for c in window.simple_all_connections
+				c.visible = true
+			for c in all_connections
+				c.visible = false
+		paper.view.update
+				# simple_conns.push(simple_c)
 
 	$('#outline').on 'change', () ->
 		if $(this).is(':checked')

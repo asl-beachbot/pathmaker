@@ -59,6 +59,7 @@ window.loadJsonToPaper = (data) ->
 	window.filled_segments = []
 	window.all_connections = []
 	window.painted_elements = []
+	window.simple_all_connections = []
 	for el in data.elems
 		window.currentLoadedData = data
 		path = new paper.Path()
@@ -110,5 +111,43 @@ window.loadJsonToPaper = (data) ->
 						new paper.Point([c[1][0], c[1][1]])
 						new paper.Point([c[2][0], c[2][1]])
 					)
+	# 					var arrowVector = vector.normalize(10);
+	# var end = vectorStart + vector;
+	# vectorItem = new Group([
+	# 	new Path([vectorStart, end]),
+	# 	new Path([
+	# 		end + arrowVector.rotate(135),
+	# 		end,
+	# 		end + arrowVector.rotate(-135)
+	# 	])
+	# ]);
+			# simple_connection =  new paper.Group(
+
+			# )
+			c = el.connection[0]
+			p1 = new paper.Point([c[1][0], c[1][1]])
+			c = el.connection[el.connection.length - 1]
+			p2 = new paper.Point([c[1][0], c[1][1]])
+			vec = p1.subtract(p2)
+			arrowVector = vec.normalize(10)
+			console.log arrowVector
+			end = p1.add(vec)
+			simple_connection = new paper.Group([
+					new paper.Path([p1, p2]),
+					new paper.Path([
+						p2.add(arrowVector.rotate(-55)),
+						p2,
+						p2.add(arrowVector.rotate(+55))
+					])
+				]);
+			simple_all_connections.push(simple_connection)
+			simple_connection.strokeColor = "blue"
+			simple_connection.strokeWidth = 1
+			simple_connection.origStrokeWidth = 1
+			simple_connection.visible = 0
+
 			# connection_path.simplify()
+	if(window.changeOutline)
+		changeOutline()
+		changeDispConn()
 	paper.view.update()
