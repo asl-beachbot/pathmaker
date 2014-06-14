@@ -92,8 +92,8 @@ window.loadJsonToPaper = (data) ->
 			connection_path = new paper.Path()
 			all_connections.push(connection_path)
 			connection_path.strokeColor = "blue"
-			connection_path.strokeWidth = 2
-			connection_path.origStrokeWidth = 2
+			connection_path.strokeWidth = 1
+			connection_path.origStrokeWidth = 1
 			first = true
 			# console.log el.connection
 			for c in el.connection

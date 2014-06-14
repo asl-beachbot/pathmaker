@@ -191,6 +191,7 @@ void TSPConnector::project_result_to_tree(std::vector<int> solution) {
         curr_elem->exit_point_index = city_order[curr_ind].node_index;
       }
       if(curr_elem->enforced_connections.size() > 0) {
+        cout << "Current El enf Cons size: " << curr_elem->enforced_connections.size() << endl;
         auto enforced_conn = curr_elem->enforced_connections[0];
         auto next_elem = enforced_conn.pair_partner;
         curr_elem->to = next_elem;
@@ -200,7 +201,31 @@ void TSPConnector::project_result_to_tree(std::vector<int> solution) {
         auto prev_curr = curr_elem;
         while(next_elem->enforced_connections.size() == 2) {
           // connect these elements
-          // TODO
+          cout << "2 Enforced Connections " << endl;
+          next_elem->from = prev_curr;
+          
+          ElementPtr::EnforcedConnection back, forward;
+          if(next_elem->enforced_connections[0].pair_partner == prev_curr) {
+            back = next_elem->enforced_connections[0];
+            forward = next_elem->enforced_connections[1];
+          } else {            
+            back = next_elem->enforced_connections[1];
+            forward = next_elem->enforced_connections[0];
+          }
+
+          cout << "Backward: " << back.pair_partner << " " << back.index << endl;
+          cout << "Forward: " << forward.pair_partner << " " << forward.index << endl;
+
+          next_elem->entry_point_index = back.index;
+          next_elem->entry_point = next_elem->getFromIndex(back.index);
+
+          next_elem->to = forward.pair_partner;
+          next_elem->exit_point_index = forward.index;
+          next_elem->exit_point = next_elem->getFromIndex(forward.index);
+          next_elem->visited = true;
+
+          prev_curr = next_elem;
+          next_elem = forward.pair_partner;
         }
         next_elem->from = prev_curr;
         auto next_enforced_conn = next_elem->enforced_connections[0];

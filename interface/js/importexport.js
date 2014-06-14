@@ -117,8 +117,8 @@
         connection_path = new paper.Path();
         all_connections.push(connection_path);
         connection_path.strokeColor = "blue";
-        connection_path.strokeWidth = 2;
-        connection_path.origStrokeWidth = 2;
+        connection_path.strokeWidth = 1;
+        connection_path.origStrokeWidth = 1;
         first = true;
         _ref4 = el.connection;
         for (_m = 0, _len4 = _ref4.length; _m < _len4; _m++) {
