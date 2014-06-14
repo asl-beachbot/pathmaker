@@ -37,6 +37,13 @@ public:
 
 class Exporter {
 private:
+	std::vector<AnnotatedPoint> annotated_export_points;
+	PolyLine_P * export_poly;
+	RakeVector * export_rake;
+	std::vector<Point_2> * turn_points;
+	double scale_for_disp;
+	// VectorElementTree * tree;
+public:
 	float rake_to_disp(unsigned char r) { // uint8 = rakeinformation
  		switch(r) {
 			case Rake::RAKE_ZERO: return 0.5;
@@ -46,13 +53,6 @@ private:
 			case Rake::RAKE_FULL: return 0.42 * scale_for_disp;
 		}
 	}
-	std::vector<AnnotatedPoint> annotated_export_points;
-	PolyLine_P * export_poly;
-	RakeVector * export_rake;
-	std::vector<Point_2> * turn_points;
-	double scale_for_disp;
-	// VectorElementTree * tree;
-public:
 	Exporter() {
 			 scale_for_disp = GlobalOptions::getInstance().scale_for_disp;
 	}

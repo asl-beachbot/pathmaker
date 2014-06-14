@@ -145,6 +145,16 @@ public:
       enforced_connections.push_back({pair, node_id});
     }
   };
+  float rakeToDisp(unsigned char r) { // uint8 = rakeinformation
+    auto scale_for_disp = GlobalOptions::getInstance().scale_for_disp;
+    switch(r) {
+      case Rake::RAKE_ZERO: return 0.5;
+      case Rake::RAKE_SMALL: return 0.04 * scale_for_disp;
+      case Rake::RAKE_MEDIUM: return 0.16 * scale_for_disp;
+      case Rake::RAKE_LARGE: return 0.32 * scale_for_disp;
+      case Rake::RAKE_FULL: return 0.42 * scale_for_disp;
+    }
+  }
 
   virtual Json::Value toJSON() = 0;
 };
@@ -193,6 +203,8 @@ public:
     val["type"] = "POLYGON";
     val["type_int"] = EL_POLYGON;
     val["id"] = id;
+    val["stroke_width"] = rakeToDisp(line_width);
+    val["line_width"] = line_width;
     Polygon_2 scaled_elem = transform(
       Transformation(CGAL::SCALING, GlobalOptions::getInstance().scale_for_disp), 
       element);
@@ -319,6 +331,9 @@ public:
     val["type"] = "FILLED_POLYGON";
     val["type_int"] = EL_FILLED_POLYGON;
     val["id"] = id;
+    val["stroke_width"] = rakeToDisp(line_width);
+    val["line_width"] = line_width;
+
     Transformation disp_trafo = Transformation(CGAL::SCALING, GlobalOptions::getInstance().scale_for_disp);
     Polygon_2 scaled_outer = transform(disp_trafo, element.outer_boundary());
     auto it = scaled_outer.vertices_begin();
@@ -468,7 +483,8 @@ public:
     val["type"] = "POLYLINE";
     val["type_int"] = EL_POLYLINE;
     val["manually_modified"] = manually_modified;
-    val["stroke_width"] = line_width;
+    val["rake_width"] = line_width;
+    val["stroke_width"] = rakeToDisp(line_width);
     
     val["id"] = id;
     auto it = element.begin();

@@ -92,19 +92,16 @@ public:
   int parseConfigFile(std::string cfg_filename = "config.cfg") {
     cout << "Parsing Config: " << cfg_filename << endl;
     std::ifstream ifs(cfg_filename);
+    cout << ifs << endl;
     po::store(po::parse_config_file(ifs, desc), vm);
+#ifndef STANDALONE
+    po::notify(vm);
+    extractFromVM();
+#endif
     return 1;
   }
 
-#ifdef STANDALONE
-  int parseCommandLine(int argc, char ** argv) {
-    po::store(po::parse_command_line(argc, argv, desc), vm);
-    if(vm.count("config_file")) {
-      this->parseConfigFile((std::string) vm["config_file"].as<std::string>());
-    }
-    this->parseConfigFile();
-    po::notify(vm);
-
+  int extractFromVM() {
     if (vm.count("help")) {
         cout << desc << "\n";
         return 1;
@@ -176,6 +173,18 @@ public:
     if(vm.count("number_segments_bezier_connect")) {
       this->number_of_bezier_segs = (int) vm["number_segments_bezier_connect"].as<int>();
     }
+
+  }
+
+#ifdef STANDALONE
+  int parseCommandLine(int argc, char ** argv) {
+    po::store(po::parse_command_line(argc, argv, desc), vm);
+    if(vm.count("config_file")) {
+      this->parseConfigFile((std::string) vm["config_file"].as<std::string>());
+    }
+    this->parseConfigFile();
+    po::notify(vm);
+    extractFromVM();
 
     return 0;
   }

@@ -21,9 +21,9 @@ ElemList FillFactory::fill(FilledPolygonElementPtr * el) {
       ElemList temp_res;
       if(seg.fill_method == 1) {
         w.setDirection(seg.direction);
-        temp_res = w.fill(Polygon_with_holes_2(seg_el));
+        temp_res = w.fill(Polygon_with_holes_2(seg_el), true);
       } else {
-        temp_res = s.fill(Polygon_with_holes_2(seg_el));
+        temp_res = s.fill(Polygon_with_holes_2(seg_el), true);
       }
       result.insert(result.end(), temp_res.begin(), temp_res.end());
     }
@@ -127,6 +127,20 @@ ElemList SpiralFillProcedure::fill(Polygon_with_holes_2 poly, bool is_segment) {
   for(ElementPtr * e : result) {
     cout << "Element: " << e << endl;
   }
+
+  if(is_segment) {
+    // add segment to line
+    // auto r = static_cast<PolyLineElementPtr *>(result.back());
+
+    // Point_2 p = r->getFromIndex(0);
+    // auto ob = poly.outer_boundary();
+    // int i = findClosestIndex(p, poly.outer_boundary());
+    // for(; i < i + ob.size(); i++) {
+    //   r->element.insert(r->element.begin(), ob[i % ob.size()]);
+    // }
+    result.push_back(new PolygonElementPtr(poly.outer_boundary(), Rake::RAKE_FULL));
+  }
+
   return result;
 }
 SpiralFillProcedure::~SpiralFillProcedure() {}
@@ -293,5 +307,10 @@ ElemList WiggleFillProcedure::fill(Polygon_with_holes_2 poly, bool is_segment) {
   //   fill_polygon(filled_poly_ptr->element.outer_boundary(), Direction_2(1, 0));
   // }
   fill_polygon(poly.outer_boundary(), this->d);
+  if(is_segment) {
+    // add segment to result
+    result.push_back(new PolygonElementPtr(poly.outer_boundary(), Rake::RAKE_FULL));
+  }
+
   return result;
 }

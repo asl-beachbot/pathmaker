@@ -13,23 +13,32 @@ std::vector<BezierCP> ConnectionSmoother::getBezierCPS(
   cout << "Deriving Control Points for Connection from: " << endl
     << p1 << " D1: " << d1 << endl
     << p2 << " D2: " << d2 << endl;
-   spiro_cp points[4];
 
-   // points[0].x = -100; points[0].y =    0; points[0].ty = '{';
-   // points[1].x =    0; points[1].y =  100; points[1].ty = 'o';
-   // points[2].x =  100; points[2].y =    0; points[2].ty = 'o';
-   // points[3].x =    0; points[3].y = -100; points[3].ty = '}';
-   // for(auto p : points) {
-   //  spiro_cps.push_back({p.x, p.y, p.ty});
-   // }
   spiro_cps.push_back({p1.x(), p1.y(), '{'});
   auto pm1 = p1 + d1 * rr * 0.01;
   spiro_cps.push_back({pm1.x(), pm1.y(), ']'});
-  auto pm11 = p1 + d1 * rr;
-  spiro_cps.push_back({pm11.x(), pm11.y(), 'c'});
 
-  auto pm22 = p2 + d2 * rr;
-  spiro_cps.push_back({pm22.x(), pm22.y(), 'c'});
+
+  auto dist_points = sqrt((p1 - p2).squared_length());
+
+  auto conn_line = p1 - p2;
+  auto conn_line_n = conn_line / sqrt(conn_line.squared_length());
+  auto conn_angle_1 = acos(d1 * conn_line_n);
+  auto conn_angle_2 = acos(d2 * conn_line_n);
+  auto vec_angle = acos(d1 * (-1 * d2));
+  auto no_curve_points = false;
+
+  if (conn_angle_1 < M_PI/5 && conn_angle_2 < M_PI/5 && vec_angle < M_PI/5)
+    no_curve_points = true;
+
+  if (!no_curve_points) {
+    auto pm11 = p1 + d1 * rr;
+    spiro_cps.push_back({pm11.x(), pm11.y(), 'c'});
+
+    auto pm22 = p2 + d2 * rr;
+    spiro_cps.push_back({pm22.x(), pm22.y(), 'c'});
+  }
+
   auto pm2 = p2 + d2 * rr * 0.01;
   spiro_cps.push_back({pm2.x(), pm2.y(), '['});
 
@@ -91,13 +100,13 @@ void ConnectionSmoother::smooth() {
   while(elem->to != nullptr && elem->to != *element_tree->begin()) {
     cout << elem << " " << elem->to << endl;
 
-      Point_2 p1 = elem->exit_point;
-      Point_2 p2 = elem->to->entry_point;
+    Point_2 p1 = elem->exit_point;
+    Point_2 p2 = elem->to->entry_point;
 
-      Point_2 p1_after = pointAfter(elem);
-      Point_2 p2_before = pointBefore(elem->to);
+    Point_2 p1_after = pointAfter(elem);
+    Point_2 p2_before = pointBefore(elem->to);
 
-      Vector_2 d1 = (p1 - p1_after) / sqrt((p1_after - p1).squared_length());
+    Vector_2 d1 = (p1 - p1_after) / sqrt((p1_after - p1).squared_length());
     Vector_2 d2 = (p2 - p2_before) / sqrt((p2_before - p2).squared_length());
 
     elem->smooth_connection = getBezierCPS(p1, d1, p2, d2);

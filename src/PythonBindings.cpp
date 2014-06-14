@@ -158,6 +158,9 @@ public:
         // delete sc;
         return vet->toJSON();
     }
+    std::string get_post_processed_result(std::string arguments_as_json) {
+        
+    }
     ~Generator() {
         delete ps;
         delete vet;
