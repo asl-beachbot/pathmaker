@@ -57,8 +57,8 @@ std::vector<BezierCP> ConnectionSmoother::getBezierCPS(
 
       auto mid_point = pm11 + ((pm22 - pm11) / 2);
 
-      pm11 = mid_point + (conn_line_n * (rr));
-      pm22 = mid_point - (conn_line_n * (rr));
+      pm11 = mid_point + (conn_line_n * (rr / 2));
+      pm22 = mid_point - (conn_line_n * (rr / 2));
 
       spiro_cps.push_back({pm11.x(), pm11.y(), 'c'});
       spiro_cps.push_back({pm22.x(), pm22.y(), 'c'});

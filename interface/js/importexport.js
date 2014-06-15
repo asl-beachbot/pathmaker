@@ -117,7 +117,7 @@
       if (el.connection) {
         connection_path = new paper.Path();
         all_connections.push(connection_path);
-        connection_path.strokeColor = "blue";
+        connection_path.strokeColor = "red";
         connection_path.strokeWidth = 1;
         connection_path.origStrokeWidth = 1;
         first = true;
@@ -144,7 +144,7 @@
         end = p1.add(vec);
         simple_connection = new paper.Group([new paper.Path([p1, p2]), new paper.Path([p2.add(arrowVector.rotate(-55)), p2, p2.add(arrowVector.rotate(+55))])]);
         simple_all_connections.push(simple_connection);
-        simple_connection.strokeColor = "blue";
+        simple_connection.strokeColor = "red";
         simple_connection.strokeWidth = 1;
         simple_connection.origStrokeWidth = 1;
         simple_connection.visible = 0;

@@ -22,6 +22,7 @@
 #    arbitrary points
 
 base_url = "http://localhost:5000/"
+outline_size = 2
 
 window.pp_opts = 
 	outline: true
@@ -115,7 +116,7 @@ window.onload = ->
 			# 	console.log w.origStrokeWidth
 
 			for el in paper.project.getItems({class: paper.Path})
-				el.strokeWidth = 1
+				el.strokeWidth = outline_size
 		else 
 			# for w in window.painted_elements
 			# 	w.strokeWidth = 1

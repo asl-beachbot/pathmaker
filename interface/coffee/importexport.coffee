@@ -65,7 +65,6 @@ window.loadJsonToPaper = (data) ->
 	# 	hue: Math.random() * 360,
 	# 	saturation: 1,
 	# 	brightness: 1
-
 	for el in data.elems
 		window.currentLoadedData = data
 		path = new paper.Path()
@@ -98,7 +97,7 @@ window.loadJsonToPaper = (data) ->
 		if el.connection
 			connection_path = new paper.Path()
 			all_connections.push(connection_path)
-			connection_path.strokeColor = "blue"
+			connection_path.strokeColor = "red"
 			connection_path.strokeWidth = 1
 			connection_path.origStrokeWidth = 1
 			first = true
@@ -133,7 +132,7 @@ window.loadJsonToPaper = (data) ->
 					])
 				]);
 			simple_all_connections.push(simple_connection)
-			simple_connection.strokeColor = "blue"
+			simple_connection.strokeColor = "red"
 			simple_connection.strokeWidth = 1
 			simple_connection.origStrokeWidth = 1
 			simple_connection.visible = 0
