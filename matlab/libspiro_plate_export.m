@@ -1,10 +1,11 @@
 clear
-p1 = [400, 200];
+p1 = [519.048 745.714];
 
-v1 = [0.75, 0.25];
+% v1 = [0.75, 0.25];
+v1 = [518.875, 745.96] - p1 
 
-p2 = [300, 200];
-v2 = [-0.75, 0.25];
+p2 = [302.011 763.138];
+v2 = p2 - [301.905 762.857];
 
 v1n = v1 / norm(v1);
 v2n = v2 / norm(v2);
@@ -57,16 +58,17 @@ if ~no_curve_points
 	if(du1u2 < r)
 		% edge case!
 		% push d1 and d2 away from each other
+		disp('pushing away')
 		conn_line = u1 - u2
 		if(norm(conn_line) == 0)
 			conn_line_n  = r90 * v1n;
 			% conn_line_n = conn_line / sqrt(norm(conn_line))
 		else
-			conn_line_n = conn_line / sqrt(norm(conn_line))
+			conn_line_n = conn_line / norm(conn_line)
 		end
 		mid_point = u1 + (u1 - u2) / 2
-		u1 = mid_point - conn_line_n * r/2
-		u2 = mid_point + conn_line_n * r/2
+		u1 = mid_point + conn_line_n * r/2
+		u2 = mid_point - conn_line_n * r/2
 		% str = strcat(
 		% 	str,
 		% 	sprintf('\t(o %f %f)\n', u1(1), u1(2))
@@ -74,6 +76,7 @@ if ~no_curve_points
 	% else
 	end
 	if(vec_angle > 3*pi/5 && du1u2 > r)
+		disp('pushing away2')
 		conn_line = u1 - u2
 		conn_line_n = conn_line / norm(conn_line)
 		mid_point = u1 + (u2 - u1) / 2

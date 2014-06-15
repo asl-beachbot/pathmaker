@@ -228,7 +228,8 @@ void WiggleFillProcedure::fill_polygon(Polygon_2 poly, Direction_2 direction) {
         intersections.push_back(temp_intersect[1]);
         intersections.push_back(temp_intersect[0]);
         ElementPtr * poly_element = new PolyLineElementPtr(
-          std::list<Point_2>{temp_intersect[1], temp_intersect[0]}
+          std::list<Point_2>{temp_intersect[1], temp_intersect[0]},
+          Rake::RAKE_FULL
         );
         poly_element->fill_element = true;
         
@@ -244,7 +245,8 @@ void WiggleFillProcedure::fill_polygon(Polygon_2 poly, Direction_2 direction) {
         intersections.push_back(temp_intersect[0]);
         intersections.push_back(temp_intersect[1]);
         ElementPtr * poly_element = new PolyLineElementPtr(
-          std::list<Point_2>{temp_intersect[0], temp_intersect[1]}
+          std::list<Point_2>{temp_intersect[0], temp_intersect[1]},
+          Rake::RAKE_FULL
         );
 
         poly_element->fill_element = true;

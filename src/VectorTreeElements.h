@@ -129,19 +129,29 @@ public:
       val["exit_point_index"] = this->exit_point_index;
     }
   }
+  void removeEnforcedConnection(ElementPtr * ptr) {
+    for(auto it = enforced_connections.begin(); it != enforced_connections.end(); ++it) {
+      if((*it).pair_partner == ptr) {
+        it = enforced_connections.erase(it);
+      }
+    }
+  }
   void addEnforcedConnection(ElementPtr * pair, int node_id) {
     if(node_id == getSize()) node_id == -1;
     if(this->get_type() == EL_POLYLINE) {
       for(auto it = enforced_connections.begin(); it != enforced_connections.end(); ++it) {
-        if((*it).index == node_id)
+        if((*it).index == node_id) {
+          (*it).pair_partner->removeEnforcedConnection(this);
           it = enforced_connections.erase(it);
+        }
       }
       enforced_connections.push_back({pair, node_id});
     } 
     else {
       for(auto it = enforced_connections.begin(); it != enforced_connections.end(); ++it) {
-        if((*it).index != node_id)
+        if((*it).index != node_id) {
           it = enforced_connections.erase(it);
+        }
       }
       enforced_connections.push_back({pair, node_id});
     }
@@ -417,7 +427,6 @@ public:
     this->rake_states = RakeVector(polyline.size(), lw);
   };
   PolyLineElementPtr(std::list<Point_2> polyline, int lw = Rake::RAKE_MEDIUM) {
-    marked_start_index = -1;
     this->element = PolyLine_P{std::begin(polyline),
                                std::end(polyline)};
     this->rake_states = RakeVector(polyline.size(), lw);

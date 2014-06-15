@@ -23,9 +23,9 @@ std::vector<BezierCP> ConnectionSmoother::getBezierCPS(
 
   auto conn_line = p1 - p2;
   auto conn_line_n = conn_line / sqrt(conn_line.squared_length());
-  auto conn_angle_1 = acos(d1 * conn_line_n);
+  auto conn_angle_1 = acos(-d1 * conn_line_n);
   auto conn_angle_2 = acos(d2 * conn_line_n);
-  auto vec_angle = acos(d1 * (-1 * d2));
+  auto vec_angle = acos(-d1 * d2);
   auto no_curve_points = false;
 
   if (conn_angle_1 < M_PI/5 && conn_angle_2 < M_PI/5 && vec_angle < M_PI/5)
@@ -35,72 +35,81 @@ std::vector<BezierCP> ConnectionSmoother::getBezierCPS(
   auto pm22 = p2 + d2 * rr;
   
   auto d_cp = sqrt((pm11 - pm22).squared_length());
-  if(d_cp < rr) {
-    // edge case: control points to close
-    // push outside
-    cout << "Special Case 1: Control points too close!" << endl;
 
-    auto conn_line = pm11 - pm22;
-    Vector_2 conn_line_n;
-    
-    if(conn_line.squared_length() == 0)
-      conn_line_n = d1.transform(Transformation(CGAL::ROTATION, sin(-M_PI/2), cos(-M_PI/2)));
-    else 
-      conn_line_n = conn_line / sqrt(conn_line.squared_length());
+  cout << "conn_angle_1 " << conn_angle_1 << " conn_angle_2 " << conn_angle_2 << " vec_angle " << vec_angle << endl;
 
-    auto mid_point = pm11 + ((pm11 - pm22) / 2);
-
-    pm11 = mid_point + conn_line * (rr);
-    pm22 = mid_point - conn_line * (rr);
-
-    spiro_cps.push_back({pm11.x(), pm11.y(), 'c'});
-    spiro_cps.push_back({pm22.x(), pm22.y(), 'c'});
-
+  if (conn_angle_1 < M_PI/5 && conn_angle_2 < M_PI/5 && vec_angle < M_PI/5) {
     no_curve_points = true;
-  }  
-  if(vec_angle > 3 * M_PI / 5 && d_cp > rr && conn_angle_1 > 3 * M_PI / 5) {
-    // Points to far away!
-    // test ray to back for distance
+  }
+  else {
+    if(d_cp < rr) {
+      // edge case: control points to close
+      // push outside
+      cout << "Special Case 1: Control points too close!" << endl;
 
-    cout << "Special Case 2: Points too far away" << endl;
-    auto conn_line = pm11 - pm22;
-    Vector_2 conn_line_n;
-
-    if(conn_line.squared_length() == 0)
-      conn_line_n = d1.transform(Transformation(CGAL::ROTATION, sin(-M_PI/2), cos(-M_PI/2)));
-    else 
-      conn_line_n = conn_line / sqrt(conn_line.squared_length());
-
-    auto mid_point = pm11 + (pm22 - pm11) / 2;
-    pm11 = mid_point + conn_line_n * (rr / 2);
-    pm22 = mid_point - conn_line_n * (rr / 2);
-
-    if((pm11 - p1).squared_length() > rr*rr) {
-      conn_line = pm11 - p1;
+      auto conn_line = pm11 - pm22;
+      Vector_2 conn_line_n;
+      
       if(conn_line.squared_length() == 0)
         conn_line_n = d1.transform(Transformation(CGAL::ROTATION, sin(-M_PI/2), cos(-M_PI/2)));
       else 
         conn_line_n = conn_line / sqrt(conn_line.squared_length());
-      pm11 = pm11 + conn_line_n * (rr / sqrt((pm11 - p1).squared_length()));
-    }
 
-    if((pm22 - p2).squared_length() > rr*rr) {
-      conn_line = pm22 - p2;
+      auto mid_point = pm11 + ((pm22 - pm11) / 2);
+
+      pm11 = mid_point + (conn_line_n * (rr));
+      pm22 = mid_point - (conn_line_n * (rr));
+
+      spiro_cps.push_back({pm11.x(), pm11.y(), 'c'});
+      spiro_cps.push_back({pm22.x(), pm22.y(), 'c'});
+
+      no_curve_points = true;
+    }
+    cout << vec_angle << " " << d_cp << " " << rr << " "  << conn_angle_1 << endl;
+    if(vec_angle > 3 * M_PI / 5 && d_cp > rr && conn_angle_1 > 3 * M_PI / 5 && conn_angle_2 > 3 * M_PI / 5) {
+      // Points to far away!
+      // test ray to back for distance
+
+      cout << "Special Case 2: Points too far away" << endl;
+      auto conn_line = pm11 - pm22;
+      Vector_2 conn_line_n;
+
       if(conn_line.squared_length() == 0)
         conn_line_n = d1.transform(Transformation(CGAL::ROTATION, sin(-M_PI/2), cos(-M_PI/2)));
       else 
         conn_line_n = conn_line / sqrt(conn_line.squared_length());
-      pm22 = pm22 + conn_line_n * (rr / sqrt((pm22 - p2).squared_length()));
+
+      auto mid_point = pm11 + (pm22 - pm11) / 2;
+      pm11 = mid_point + (conn_line_n * (rr / 2));
+      pm22 = mid_point - (conn_line_n * (rr / 2));
+
+      if((pm11 - p1).squared_length() > rr*rr) {
+        conn_line = pm11 - p1;
+        if(conn_line.squared_length() == 0)
+          conn_line_n = d1.transform(Transformation(CGAL::ROTATION, sin(-M_PI/2), cos(-M_PI/2)));
+        else 
+          conn_line_n = conn_line / sqrt(conn_line.squared_length());
+        pm11 = pm11 + conn_line_n * (rr / sqrt((pm11 - p1).squared_length()));
+      }
+
+      if((pm22 - p2).squared_length() > rr*rr) {
+        conn_line = pm22 - p2;
+        if(conn_line.squared_length() == 0)
+          conn_line_n = d1.transform(Transformation(CGAL::ROTATION, sin(-M_PI/2), cos(-M_PI/2)));
+        else 
+          conn_line_n = conn_line / sqrt(conn_line.squared_length());
+        pm22 = pm22 + conn_line_n * (rr / sqrt((pm22 - p2).squared_length()));
+      }
+
+      spiro_cps.push_back({pm11.x(), pm11.y(), 'c'});
+      spiro_cps.push_back({pm22.x(), pm22.y(), 'c'});
+
+      no_curve_points = true;
     }
-
-    spiro_cps.push_back({pm11.x(), pm11.y(), 'c'});
-    spiro_cps.push_back({pm22.x(), pm22.y(), 'c'});
-
-    no_curve_points = true;
-  } 
-  if (!no_curve_points) {
-    spiro_cps.push_back({pm11.x(), pm11.y(), 'c'});
-    spiro_cps.push_back({pm22.x(), pm22.y(), 'c'});
+    if (!no_curve_points) {
+      spiro_cps.push_back({pm11.x(), pm11.y(), 'c'});
+      spiro_cps.push_back({pm22.x(), pm22.y(), 'c'});
+    }
   }
 
   auto pm2 = p2 + d2 * rr * 0.01;
