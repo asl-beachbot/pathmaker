@@ -58,7 +58,7 @@ std::vector<BezierCP> ConnectionSmoother::getBezierCPS(
 
     no_curve_points = true;
   }  
-  if(vec_angle > 3 * M_PI / 5 && d_cp > rr && conn_angle_1 > 4 * M_PI / 5) {
+  if(vec_angle > 3 * M_PI / 5 && d_cp > rr && conn_angle_1 > 3 * M_PI / 5) {
     // Points to far away!
     // test ray to back for distance
 

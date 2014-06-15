@@ -234,9 +234,9 @@ void WiggleFillProcedure::fill_polygon(Polygon_2 poly, Direction_2 direction) {
         
         if(prev) {
           poly_element->addEnforcedConnection(prev, 0);
-          prev->addEnforcedConnection(poly_element, 1);
+          prev->addEnforcedConnection(poly_element, -1);
         }
-
+        prev = poly_element;
         result.push_back(poly_element);
 
         prev_line_endpoint = temp_intersect[1];
@@ -251,9 +251,10 @@ void WiggleFillProcedure::fill_polygon(Polygon_2 poly, Direction_2 direction) {
 
         if(prev) {
           poly_element->addEnforcedConnection(prev, 0);
-          prev->addEnforcedConnection(poly_element, 1);
+          prev->addEnforcedConnection(poly_element, -1);
         }
 
+        prev = poly_element;
         result.push_back(poly_element);
         prev_line_endpoint = temp_intersect[0];
       }
