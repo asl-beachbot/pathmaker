@@ -238,7 +238,7 @@ void TSPConnector::project_result_to_tree(std::vector<int> solution) {
         next_elem->exit_point = next_elem->getFromIndex(next_elem->exit_point_index);
         next_elem->visited = true;
         curr_elem = next_elem;
-      }
+      } 
       curr_elem->visited = true;
       prev_elem = curr_elem;
     }
@@ -315,8 +315,19 @@ vector<int> TSPConnector::create_distance_matrix_row(Tree_ElementPtr::iterator r
         // do nothing! this city cannot be reached from the outside
       } else {
         if((*it)->get_type() == EL_POLYLINE) {
-          row.push_back(ceil(sqrt(CGAL::squared_distance(current_point, (*it)->getFromIndex(0))) * 100));
-          row.push_back(ceil(CGAL::squared_distance(current_point, (*it)->getFromIndex(-1)) * 100));
+          if (static_cast<PolyLineElementPtr * >((*it))->marked_start_index) {
+            int sid = static_cast<PolyLineElementPtr * >((*it))->marked_start_index.get();
+            if(sid == -1) {
+              row.push_back(9999999);
+              row.push_back(ceil(sqrt(CGAL::squared_distance(current_point, (*it)->getFromIndex(-1))) * 100));
+            } else {
+              row.push_back(ceil(sqrt(CGAL::squared_distance(current_point, (*it)->getFromIndex(0))) * 100));              
+              row.push_back(9999999);
+            }              
+          } else {
+            row.push_back(ceil(sqrt(CGAL::squared_distance(current_point, (*it)->getFromIndex(0))) * 100));
+            row.push_back(ceil(sqrt(CGAL::squared_distance(current_point, (*it)->getFromIndex(-1))) * 100));
+          }
         } else {
           for(int i = 0; i < (*it)->getSize(); i++) {
             row.push_back(ceil(sqrt(CGAL::squared_distance(current_point, (*it)->getFromIndex(i))) * 100));
@@ -369,8 +380,19 @@ vector<int> TSPConnector::create_startpoint_distance_matrix_row(Point_2 sp) {
       // do nothing! this city cannot be reached from the outside
     } else {
       if((*it)->get_type() == EL_POLYLINE) {
-        row.push_back(ceil(sqrt(CGAL::squared_distance(sp, (*it)->getFromIndex(0))) * 100));
-        row.push_back(ceil(sqrt(CGAL::squared_distance(sp, (*it)->getFromIndex(-1))) * 100));
+        if (static_cast<PolyLineElementPtr * >((*it))->marked_start_index) {
+          int sid = static_cast<PolyLineElementPtr * >((*it))->marked_start_index.get();
+          if(sid == -1) {
+            row.push_back(9999999);
+            row.push_back(ceil(sqrt(CGAL::squared_distance(sp, (*it)->getFromIndex(-1))) * 100));
+          } else {
+            row.push_back(ceil(sqrt(CGAL::squared_distance(sp, (*it)->getFromIndex(0))) * 100));              
+            row.push_back(9999999);
+          }              
+        } else {
+          row.push_back(ceil(sqrt(CGAL::squared_distance(sp, (*it)->getFromIndex(0))) * 100));
+          row.push_back(ceil(sqrt(CGAL::squared_distance(sp, (*it)->getFromIndex(-1))) * 100));
+        }
       } else {
         for(int i = 0; i < (*it)->getSize(); i++) {
           row.push_back(ceil(sqrt(CGAL::squared_distance(sp, (*it)->getFromIndex(i))) * 100));

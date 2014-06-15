@@ -3,6 +3,7 @@
 #include "CGAL_Headers.h"
 #include <json/json.h>
 #include <boost/format.hpp>
+#include <boost/optional.hpp>
 #include <stdlib.h>
 #include "Spiro.h"
 
@@ -165,13 +166,13 @@ public:
   Polygon_2 element;
   // int visited_vertices[];
   PolygonElementPtr(Polygon_2 poly, int lw = Rake::RAKE_MEDIUM) {
-    if(!poly.is_clockwise_oriented()) {
-       // think about turning direction of polygon here!
-      // std::reverse(poly.vertex_begin(), poly.vertex_end());
-      cout << "Polygon counterclockwise" << endl;
-    } else {
-      cout << "Polygon clockwise" << endl;      
-    }
+    // if(!poly.is_clockwise_oriented()) {
+    //    // think about turning direction of polygon here!
+    //   // std::reverse(poly.vertex_begin(), poly.vertex_end());
+    //   cout << "Polygon counterclockwise" << endl;
+    // } else {
+    //   cout << "Polygon clockwise" << endl;      
+    // }
     this->element = poly;
     this->rake_states = RakeVector(poly.size(), lw);
     this->visited = false;
@@ -406,14 +407,17 @@ public:
 class PolyLineElementPtr : public ElementPtr {
 public:
   // Change implementation to Curve_2!
+
   PolyLine_P element;
+  boost::optional<int> marked_start_index;
   std::list< PolyLine_P > graphx_elem;
-  // int visited_vertices[];
+
   PolyLineElementPtr(PolyLine_P polyline, int lw = Rake::RAKE_MEDIUM) : element(polyline) {
     this->line_width = lw;
     this->rake_states = RakeVector(polyline.size(), lw);
   };
   PolyLineElementPtr(std::list<Point_2> polyline, int lw = Rake::RAKE_MEDIUM) {
+    marked_start_index = -1;
     this->element = PolyLine_P{std::begin(polyline),
                                std::end(polyline)};
     this->rake_states = RakeVector(polyline.size(), lw);

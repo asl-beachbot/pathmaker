@@ -43,7 +43,7 @@ void SpiralFillProcedure::run(const Polygon_with_holes_2 * poly, Point_2 * start
   float lOffset = line_distance / poly->outer_boundary().size();
   int count = 0;
   int idx = 0;
-  Point_2 prev_point;
+  Point_2 prev_point, last_point;
   Polygon_2 outer;
 
   SSPtr ss = CGAL::create_interior_straight_skeleton_2(*poly);
@@ -53,16 +53,17 @@ void SpiralFillProcedure::run(const Polygon_with_holes_2 * poly, Point_2 * start
     idx = findClosestIndex((*start_point), *offset_poly_wh[0]);
   }
 
-  cout << "Closest index: " << idx << endl;
+  // cout << "Closest index: " << idx << endl;
   PolyLine_P superline;
   outer = *offset_poly_wh[0];
   // superline.push_back(outer[idx - 1 % offset_poly_wh[0]->size()]); (check if diagonal would be better...)
   superline.push_back(outer[idx % offset_poly_wh[0]->size()]);
+  prev_point = outer[idx % offset_poly_wh[0]->size()];
   while(offset_poly_wh.size() > 0) {
-    cout << "adding poly" << count << " l o " << lOffset << *offset_poly_wh[0]<<  endl;
-    for(auto p : offset_poly_wh) {
-      cout << "Polygon: " << p << endl;
-    }
+    // cout << "adding poly" << count << " l o " << lOffset << *offset_poly_wh[0]<<  endl;
+    // for(auto p : offset_poly_wh) {
+    //   cout << "Polygon: " << p << endl;
+    // }
     count++;
     // no more polys
     if(offset_poly_wh.size() > 1) {
@@ -87,10 +88,10 @@ void SpiralFillProcedure::run(const Polygon_with_holes_2 * poly, Point_2 * start
         }
       }
       Polygon_with_holes_2 temp_poly((*offset_poly_wh[index_of_spiral_cont]), poly->holes_begin(), poly->holes_end());
-      cout << " Temp Poly : " << temp_poly << endl; 
+      // cout << " Temp Poly : " << temp_poly << endl; 
       // get a new idx! 
       idx = findClosestIndex(prev_point, (*offset_poly_wh[index_of_spiral_cont])) + 1;
-      cout << "Temp Poly: " << temp_poly << endl;
+      // cout << "Temp Poly: " << temp_poly << endl;
       ss = CGAL::create_interior_straight_skeleton_2(temp_poly);
       lOffset = 0; // restart lOffset
       offset_poly_wh = CGAL::create_offset_polygons_2(lOffset, *ss);
@@ -98,7 +99,7 @@ void SpiralFillProcedure::run(const Polygon_with_holes_2 * poly, Point_2 * start
     }
     for(auto i = offset_poly_wh.begin(); i != offset_poly_wh.end(); ++i) {
       outer = (**i);
-      cout << "Area: " << outer.area() << endl; 
+      // cout << "Area: " << outer.area() << endl; 
 
       if(max_area_for_deletion != 0 && max_area_for_deletion > std::abs(outer.area())) { // area is signed ccw or cw
         cout << "Skipping / Removing inside poly" << endl;
@@ -112,11 +113,16 @@ void SpiralFillProcedure::run(const Polygon_with_holes_2 * poly, Point_2 * start
     idx = findClosestIndex(prev_point, outer) + 1;
     superline.push_back(outer[idx % outer.size()]);
     prev_point = outer[idx % outer.size()];
+    cout << outer.size() << " " <<  outer[(idx + 1) % outer.size()] << endl;
+    last_point = outer[(idx + 1) % outer.size()];
     idx += 1;
     lOffset = lOffset + (line_distance / outer.size());
     offset_poly_wh = CGAL::create_offset_polygons_2(lOffset, *ss);
   }
+  cout << "Last Point: " << last_point << endl;
+  superline.push_back(last_point);
   ElementPtr * superline_element = new PolyLineElementPtr(superline, Rake::RAKE_FULL);
+  static_cast<PolyLineElementPtr * >(superline_element)->marked_start_index.reset(-1); // start at end!
   result.push_back(superline_element);
 }
 
@@ -124,9 +130,6 @@ ElemList SpiralFillProcedure::fill(Polygon_with_holes_2 poly, bool is_segment) {
   result.clear();
   line_distance = GlobalOptions::getInstance().line_distance;
   this->run(&poly);
-  for(ElementPtr * e : result) {
-    cout << "Element: " << e << endl;
-  }
 
   if(is_segment) {
     // add segment to line
@@ -152,7 +155,6 @@ SpiralFillProcedure::SpiralFillProcedure() : max_area_for_deletion(0) {
 int SpiralFillProcedure::findClosestIndex(Point_2 p, Polygon_2 poly) {
   double curr_dist = 99999999;
   int idx = 0;
-  cout << "searching closest indx" << endl;
   for(int i = 0; i < poly.size(); ++i) {
     Point_2 q = poly[i];
     if(CGAL::squared_distance(p, q) < curr_dist) {
@@ -203,6 +205,7 @@ void WiggleFillProcedure::fill_polygon(Polygon_2 poly, Direction_2 direction) {
   int i = 0;
   int count = 0;
   float act_x = 0;
+  ElementPtr * prev = nullptr;
   while(!done) {
     for(Segment_2 segment : poly_lines) {
       CGAL::Object intersect = CGAL::intersection (l_test, segment);
@@ -228,6 +231,12 @@ void WiggleFillProcedure::fill_polygon(Polygon_2 poly, Direction_2 direction) {
           std::list<Point_2>{temp_intersect[1], temp_intersect[0]}
         );
         poly_element->fill_element = true;
+        
+        if(prev) {
+          poly_element->addEnforcedConnection(prev, 0);
+          prev->addEnforcedConnection(poly_element, 1);
+        }
+
         result.push_back(poly_element);
 
         prev_line_endpoint = temp_intersect[1];
@@ -237,7 +246,14 @@ void WiggleFillProcedure::fill_polygon(Polygon_2 poly, Direction_2 direction) {
         ElementPtr * poly_element = new PolyLineElementPtr(
           std::list<Point_2>{temp_intersect[0], temp_intersect[1]}
         );
+
         poly_element->fill_element = true;
+
+        if(prev) {
+          poly_element->addEnforcedConnection(prev, 0);
+          prev->addEnforcedConnection(poly_element, 1);
+        }
+
         result.push_back(poly_element);
         prev_line_endpoint = temp_intersect[0];
       }

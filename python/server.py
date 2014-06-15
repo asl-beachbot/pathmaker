@@ -32,7 +32,7 @@ def update_fill_for_element():
     j = request.get_data()
     print(j)
     return_j = generator.update_fill_for_element(j)
-    print return_j
+    print "got return j"
 
     resp = make_response(return_j, 200)
     resp.headers['Content-Type'] = "application/json"
@@ -44,7 +44,7 @@ def resegment_with_line():
     print("new segmentation")
     j = request.get_data()
     return_j = generator.resegment_with_line(j);
-    print return_j
+    print "got return j"
 
     resp = make_response(return_j, 200)
     resp.headers['Content-Type'] = "application/json"
@@ -56,7 +56,7 @@ def add_enforced_connection():
     print("enforcing a new connection")
     j = request.get_data()
     return_j = generator.add_enforced_connection(j);
-    print return_j
+    print "got return j"
 
     resp = make_response(return_j, 200)
     resp.headers['Content-Type'] = "application/json"
@@ -68,8 +68,7 @@ def change_glob_options():
     print("enforcing a new connection")
     j = request.get_data()
     return_j = generator.change_glob_options(j);
-    print return_j
-
+    print "got return j"
     resp = make_response(return_j, 200)
     resp.headers['Content-Type'] = "application/json"
     resp.headers['Access-Control-Allow-Origin'] = "*"
