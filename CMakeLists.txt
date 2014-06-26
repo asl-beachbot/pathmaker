@@ -1,8 +1,7 @@
- cmake_minimum_required(VERSION 2.6)
+cmake_minimum_required(VERSION 2.6)
 project(pathfinder)
 
 option(32BIT "32BIT" OFF)
-option(OLD "OLD" OFF)
 option(NOGUI "NOGUI" OFF)
 
 # The version number
@@ -29,7 +28,7 @@ include_directories("${PROJECT_SRC_DIR}")
 ADD_DEFINITIONS(
     -std=c++0x
     -frounding-math
-    -O0
+    -O3
     # -H
 )
 

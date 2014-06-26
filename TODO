@@ -3,9 +3,12 @@
 - Implement either something based on libspiro (ask Raph Levien again?) or
   use bezier and numerical analysis for the connection
 - Segmentation with Holes?! Holes?!
+	-- Holes: Use polygon fill again and afterwards connect with TSP but weights adjusted for vectorial transition between the shapes or something else that's cool
 - solve containment problem for polygon_with_hole spiral fill! both "sides" are generated at the same time
 - change global options from interface
 - connect stuff and segments and everything
+
+
 
 --- less priority ideas ---
 - Add non segmenting back and forth fill like custom segmentation (with is-inside detection) and TSP

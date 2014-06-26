@@ -40,6 +40,11 @@ ElemList FillFactory::fill(FilledPolygonElementPtr * el) {
 
 void SpiralFillProcedure::run(const Polygon_with_holes_2 * poly, Point_2 * start_point) {
   cout << "Area smaller than " << max_area_for_deletion << " will get deleted" << endl;
+  cout << *poly << endl;
+  if(!poly || !&poly->outer_boundary()) {
+    cout << "Poly is a null ptr!" << endl;
+    return;
+  }
   float lOffset = line_distance / poly->outer_boundary().size();
   int count = 0;
   int idx = 0;
@@ -48,7 +53,7 @@ void SpiralFillProcedure::run(const Polygon_with_holes_2 * poly, Point_2 * start
 
   SSPtr ss = CGAL::create_interior_straight_skeleton_2(*poly);
   PolygonPtrVector offset_poly_wh = CGAL::create_offset_polygons_2(lOffset, *ss);
-
+  if(offset_poly_wh.size() == 0) {return;}
   if(start_point) {
     idx = findClosestIndex((*start_point), *offset_poly_wh[0]);
   }

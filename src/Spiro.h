@@ -34,7 +34,7 @@ public:
     cps.push_back({Point_2(x1, y1), Point_2(x2, y2), Point_2(x3, y3)});
   }
   void mark_knot(int knot_idx) {
-    cout << "marking knot?" << endl;
+    // cout << "marking knot?" << endl;
   }
 };
 
