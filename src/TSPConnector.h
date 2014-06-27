@@ -47,6 +47,7 @@ class TSPConnector : public Connector {
 private:
   float curr_min;
   int path_size;
+  VectorElementTree * vet;
   Tour best_tour;
   std::vector<TourCity> city_order;
   // vector<TourElement *> current_tour;
@@ -55,7 +56,7 @@ private:
                        float length, int level);
   vector<int> create_distance_matrix_row(Tree_ElementPtr::iterator row_it, 
                                                 int element_index, int column_index);
-
+  bool isChild(Tree_ElementPtr::iterator it, Tree_ElementPtr::iterator maybe_child);
 public:
   void connect();
   void connect(std::vector<FilledSegment>::iterator begin, std::vector<FilledSegment>::iterator end);

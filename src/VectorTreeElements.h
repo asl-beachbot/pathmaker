@@ -470,7 +470,7 @@ public:
     cout << std::endl;
   }
   Polygon_2 * convexHull() {
-    // return NULL;
+    return NULL;
     std::list<Point_2> convex_hull_list;
     CGAL::convex_hull_2(
       element.begin(), element.end(),

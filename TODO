@@ -1,5 +1,10 @@
 -- work priorities:
 
+- Implement the method to use containment data for TSP weights: Disallow moving from parent to child
+
+
+
+
 - Implement either something based on libspiro (ask Raph Levien again?) or
   use bezier and numerical analysis for the connection
 - Segmentation with Holes?! Holes?!

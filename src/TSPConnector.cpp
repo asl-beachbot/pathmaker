@@ -249,8 +249,8 @@ bool elementIsReached(ElementPtr * el1, ElementPtr * el2) {
   auto ef1 = el1->enforced_connections[0];
   auto prev_el = el1;
   ElementPtr * next = ef1.pair_partner;
-  cout << "El " << el1 << " Reaching: " << el2 << endl;
-  cout << "Next: " << ef1.pair_partner << endl;
+  // cout << "El " << el1 << " Reaching: " << el2 << endl;
+  // cout << "Next: " << ef1.pair_partner << endl;
   int i = 0;
   while(i < 10000) {
     if(next->enforced_connections.size() == 2) {
@@ -258,25 +258,37 @@ bool elementIsReached(ElementPtr * el1, ElementPtr * el2) {
         next = next->enforced_connections[1].pair_partner;
       else 
         next = next->enforced_connections[0].pair_partner;
-      cout << "Next: " << next << endl;
+      // cout << "Next: " << next << endl;
     } else {
       // we reached an "end"
       if(next == el2) {
-        cout << "Element Reached" << endl;
+        // cout << "Element Reached" << endl;
         return true;
       }
-      cout << "Element Not Reached" << endl;
+      // cout << "Element Not Reached" << endl;
       return false;
     }
     i++; // this is an unnecessary cycle protection
   }
 }
 
+bool TSPConnector::isChild(Tree_ElementPtr::iterator it, Tree_ElementPtr::iterator maybe_child) {
+  // helper function to find if given element is contained in another
+  if(element_tree->depth(it) >= element_tree->depth(maybe_child)) {return false;}
+  Tree_ElementPtr::pre_order_iterator search_it(it);
+  Tree_ElementPtr::iterator search_end = element_tree->end();
+  for(; search_it != search_end; ++search_it) {
+    cout << "Checking: " << *search_it << " & " << *maybe_child << endl; 
+    if(*search_it == *maybe_child) return true; 
+  }
+  return false;
+}
+
 vector<int> TSPConnector::create_distance_matrix_row(Tree_ElementPtr::iterator row_it, 
                                               int element_index, int column_index) {
   vector<int> row;
   row.push_back(1); // push back weight for going back to the start
-  cout << "\n\n";
+  // cout << "\n\n";
   this->city_order.push_back(TourCity(*row_it, element_index));
   auto it = ++element_tree->begin();
   auto it_end = element_tree->end();
@@ -291,7 +303,7 @@ vector<int> TSPConnector::create_distance_matrix_row(Tree_ElementPtr::iterator r
   }
   for(; it != it_end; ++it) {
     cout << *it << endl;
-    cout << "Enforced Connections: " << (*it)->enforced_connections.size() << endl;
+    // cout << "Enforced Connections: " << (*it)->enforced_connections.size() << endl;
     for(auto e :  (*it)->enforced_connections) {
       cout << e.pair_partner << " " << e.index << endl;
     }
@@ -319,18 +331,37 @@ vector<int> TSPConnector::create_distance_matrix_row(Tree_ElementPtr::iterator r
             int sid = static_cast<PolyLineElementPtr * >((*it))->marked_start_index.get();
             if(sid == -1) {
               row.push_back(9999999);
-              row.push_back(ceil(sqrt(CGAL::squared_distance(current_point, (*it)->getFromIndex(-1))) * 100));
+              if(!isChild(row_it, it)) {
+                row.push_back(ceil(sqrt(CGAL::squared_distance(current_point, (*it)->getFromIndex(-1))) * 100));
+              } else {
+                row.push_back(9999999);
+              }
             } else {
-              row.push_back(ceil(sqrt(CGAL::squared_distance(current_point, (*it)->getFromIndex(0))) * 100));              
+              if(!isChild(row_it, it)) {
+                row.push_back(ceil(sqrt(CGAL::squared_distance(current_point, (*it)->getFromIndex(0))) * 100));              
+              } else {
+                row.push_back(9999999);
+              }
               row.push_back(9999999);
             }              
           } else {
-            row.push_back(ceil(sqrt(CGAL::squared_distance(current_point, (*it)->getFromIndex(0))) * 100));
-            row.push_back(ceil(sqrt(CGAL::squared_distance(current_point, (*it)->getFromIndex(-1))) * 100));
+            if(!isChild(row_it, it)) {
+              row.push_back(ceil(sqrt(CGAL::squared_distance(current_point, (*it)->getFromIndex(0))) * 100));
+              row.push_back(ceil(sqrt(CGAL::squared_distance(current_point, (*it)->getFromIndex(-1))) * 100));
+            } else {
+              row.push_back(9999999);
+              row.push_back(9999999);
+            }
           }
         } else {
-          for(int i = 0; i < (*it)->getSize(); i++) {
-            row.push_back(ceil(sqrt(CGAL::squared_distance(current_point, (*it)->getFromIndex(i))) * 100));
+          if(!isChild(row_it, it)) {
+            for(int i = 0; i < (*it)->getSize(); i++) {
+              row.push_back(ceil(sqrt(CGAL::squared_distance(current_point, (*it)->getFromIndex(i))) * 100));
+            }
+          } else {
+            for(int i = 0; i < (*it)->getSize(); i++) {
+              row.push_back(9999999);
+            }
           }
         }
       }
@@ -406,7 +437,7 @@ vector<int> TSPConnector::create_startpoint_distance_matrix_row(Point_2 sp) {
 void TSPConnector::create_distance_matrix() {
   // 2 dimensional iteration through the complete tree
   // always calculating the squared distance between all possible cities
-
+  tree->print_tree();
   auto it = ++element_tree->begin();
   auto it_end = element_tree->end();
   // float[][] result = new float[]

@@ -59,6 +59,7 @@ private:
         Point_2 start = static_cast<PolyLineElementPtr*>(tested_elem)->element.front();
         Point_2 end = static_cast<PolyLineElementPtr*>(tested_elem)->element.back();
         Polygon_2 * test_hull = elem->convexHull();
+        cout << "Test Hull" << test_hull << endl;
         int start_bounded = CGAL::bounded_side_2(
           test_hull->vertices_begin(),
           test_hull->vertices_end(), start);
@@ -87,6 +88,8 @@ private:
       //it->convexHull().onBounded
       return false;
     }
+    // Todo add polyline check
+    return false;
   }
   Tree_ElementPtr::iterator findSpot(ElementPtr * elem_ptr) {
     // if(element_tree.size() == 1) {
@@ -120,16 +123,16 @@ private:
     // If yes: reparent!
     Tree_ElementPtr::sibling_iterator sit = element_tree.begin(curr_parent);
     Tree_ElementPtr::sibling_iterator sit_end = element_tree.end(curr_parent);
-    // for(; sit != sit_end; ++sit) {
-    //   if((*sit) == elem_ptr) { continue; }
-    //   if(isInside(elem_ptr, (*sit))) {
-    //     // reparent subtree
-    //     cout << "reparenting" << endl;
-    //     Tree_ElementPtr::iterator it = (Tree_ElementPtr::iterator) sit;
-    //     element_tree.append_child(new_element_iter, it);
-    //     element_tree.erase(sit);
-    //   }
-    // }
+    for(; sit != sit_end; ++sit) {
+      if((*sit) == elem_ptr) { continue; }
+      if(isInside(elem_ptr, (*sit))) {
+        // reparent subtree
+        cout << "reparenting" << endl;
+        Tree_ElementPtr::iterator it = (Tree_ElementPtr::iterator) sit;
+        element_tree.append_child(new_element_iter, it);
+        element_tree.erase(sit);
+      }
+    }
     return NULL;
   }
   ElementPtr * getElementRepresentation(VectorElement * ve) {

@@ -304,7 +304,11 @@ class Group(Transformable, Stylable):
 
     def append(self, element):
         for elt in element:
+
             elt_class = svgClass.get(elt.tag, None)
+            if elt_class == Path and not elt.get('d'):
+                print('Empty path command list')
+                continue
             if elt_class is None:
                 print('No handler for element %s' % elt.tag)
                 continue
