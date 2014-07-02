@@ -65,8 +65,8 @@ std::vector<BezierCP> ConnectionSmoother::getBezierCPS(
     if(
         sgn(side1) == sgn(side2) && 
         conn_angle_1 > M_PI/2 && 
-        conn_angle_2 > M_PI/2 && 
-        vec_angle > M_PI / 3
+        conn_angle_2 > M_PI/2  
+        // && vec_angle > M_PI / 3
         && conn_line.squared_length() > rr * rr  
         // || vec_angle > 3/4 * M_PI && (conn_angle_1 > M_PI /2 || conn_angle_2 > M_PI / 2)
       ) {
