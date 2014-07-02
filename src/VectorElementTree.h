@@ -65,7 +65,7 @@ private:
           test_hull->vertices_end(), start);
         switch(start_bounded) {
           case CGAL::ON_BOUNDED_SIDE:
-          case CGAL::ON_BOUNDARY:
+          // case CGAL::ON_BOUNDARY:
             // cout << "Inside: " << elem << endl;
             return true;
             break;
@@ -75,7 +75,7 @@ private:
           test_hull->vertices_end(), end);
         switch(end_bounded) {
           case CGAL::ON_BOUNDED_SIDE:
-          case CGAL::ON_BOUNDARY:
+          // case CGAL::ON_BOUNDARY:
             // cout << "Inside: " << elem << endl;
             return true;
             break;
